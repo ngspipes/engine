@@ -1,0 +1,33 @@
+import dsl.entities.Pipe;
+import dsl.language.Pipeline;
+import exceptions.DSLException;
+import progressReporter.ConsoleReporter;
+
+public class %1$s {
+
+	public static Pipe loadPipeline(String repositoryUri) throws DSLException {
+		try {
+			return new Pipeline(%2$s, repositoryUri).%3$sbuild();
+		} catch(DSLException e) {
+			throw new DSLException(":: Error creating pipeline instance :: " + e.getMessage(), e);
+		}
+	}
+
+	public static void main(String[] args) throws DSLException {
+		if(args.length == 0 || args[0].isEmpty())
+			throw new DSLException(":: Error running pipeline :: no repository uri especified.");
+		try {
+			Pipe pipe = loadPipeline(args[0]);
+
+			if(args.length == 2)
+				pipe.run(new ConsoleReporter(), Integer.parseInt(args[1]));
+			else
+				if(args.length == 3)
+					pipe.run(new ConsoleReporter(), Integer.parseInt(args[1]), Integer.parseInt(args[2]));
+				else
+					pipe.run(new ConsoleReporter());
+		} catch(DSLException e) {
+			throw new DSLException(":: Error running pipeline :: " + e.getMessage(), e);
+		}
+	}
+}

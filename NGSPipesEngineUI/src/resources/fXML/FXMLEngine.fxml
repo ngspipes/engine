@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<SplitPane dividerPositions="0.2756183745583039" orientation="VERTICAL" prefHeight="633.0" prefWidth="471.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ngspipesengine.userInterface.controllers.FXMLEngineController">
+   <items>
+      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="147.0" prefWidth="563.0">
+         <children>
+            <VBox prefHeight="158.0" prefWidth="563.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <HBox prefHeight="63.0" prefWidth="469.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <ImageView pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
+                           <image>
+                              <Image url="@../images/NGSPipes-icon.png" />
+                           </image>
+                           <HBox.margin>
+                              <Insets left="5.0" right="75.0" top="20.0" />
+                           </HBox.margin>
+                        </ImageView>
+                        <Button id="infoBtn" fx:id="bInfo" mnemonicParsing="false" prefHeight="48.0" prefWidth="51.0" styleClass="buttons">
+                           <HBox.margin>
+                              <Insets bottom="20.0" left="10.0" right="10.0" top="20.0" />
+                           </HBox.margin>
+                           <stylesheets>
+                              <URL value="@../css/Buttons.css" />
+                              <URL value="@../css/InfoButton.css" />
+                           </stylesheets>
+                           <padding>
+                              <Insets top="10.0" />
+                           </padding>
+                        </Button>
+                        <Button id="helpBtn" fx:id="bHelp" mnemonicParsing="false" prefHeight="48.0" prefWidth="52.0" styleClass="buttons">
+                           <stylesheets>
+                              <URL value="@../css/Buttons.css" />
+                              <URL value="@../css/HelpButton.css" />
+                           </stylesheets>
+                           <padding>
+                              <Insets top="10.0" />
+                           </padding>
+                           <HBox.margin>
+                              <Insets bottom="20.0" left="10.0" right="10.0" top="20.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="565.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Button id="playBtn" fx:id="bPlay" mnemonicParsing="false" prefHeight="43.0" prefWidth="38.0" styleClass="buttons">
+                           <HBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </HBox.margin>
+                           <stylesheets>
+                              <URL value="@../css/Buttons.css" />
+                              <URL value="@../css/PlayButton.css" />
+                           </stylesheets>
+                        </Button>
+                        <Button id="addBtn" fx:id="bAdd" mnemonicParsing="false" prefHeight="39.0" prefWidth="35.0" styleClass="buttons">
+                           <HBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </HBox.margin>
+                           <stylesheets>
+                              <URL value="@../css/Buttons.css" />
+                              <URL value="@../css/AddButton.css" />
+                           </stylesheets>
+                        </Button>
+                        <Button id="removeBtn" fx:id="bRemove" mnemonicParsing="false" prefHeight="41.0" prefWidth="35.0" styleClass="buttons">
+                           <HBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </HBox.margin>
+                           <stylesheets>
+                              <URL value="@../css/Buttons.css" />
+                              <URL value="@../css/RemoveButton.css" />
+                           </stylesheets>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </AnchorPane>
+      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="246.0" prefWidth="563.0">
+         <children>
+            <TabPane fx:id="tPPipelines" prefHeight="453.0" prefWidth="469.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <tabs>
+                <Tab closable="false" text="Recent Pipelines">
+                     <content>
+                        <VBox prefHeight="249.0" prefWidth="563.0" style="-fx-background-color: #D4D4D4;">
+                           <children>
+                              <TextField fx:id="tFPipelinesFilter" prefHeight="31.0" prefWidth="510.0" style="-fx-background-radius: 20;">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </TextField>
+                              <ListView fx:id="lvPipelines" />
+                           </children>
+                        </VBox>
+                     </content>
+                </Tab>
+                  <Tab closable="false" text="Engines">
+                     <content>
+                        <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #D4D4D4;">
+                           <children>
+                              <TextField fx:id="tFEnginesFilter" style="-fx-background-radius: 20;">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </TextField>
+                              <ListView fx:id="lvEngines" />
+                           </children>
+                        </VBox>
+                     </content>
+                  </Tab>
+              </tabs>
+            </TabPane>
+         </children>
+      </AnchorPane>
+   </items>
+</SplitPane>
