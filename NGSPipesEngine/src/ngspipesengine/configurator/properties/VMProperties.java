@@ -9,7 +9,7 @@ import ngspipesengine.exceptions.EngineException;
 import ngspipesengine.utils.Pair;
 import ngspipesengine.utils.Uris;
 import ngspipesengine.utils.Utils;
-import dsl.entities.Pipe;
+import dsl.entities.Pipeline;
 
 public class VMProperties extends Properties {
 
@@ -114,7 +114,7 @@ public class VMProperties extends Properties {
 		return sharedFolderCommand.toString();
 	}
 
-	private static int getRequiredMemory(Pipe pipe, int from, int to) {
+	private static int getRequiredMemory(Pipeline pipe, int from, int to) {
 		if(to == -1 && from == -1)
 			return pipe.getRequiredMemory();
 		return (to == -1) ? pipe.getRequiredMemory(from) : pipe.getRequiredMemory(from, to);
