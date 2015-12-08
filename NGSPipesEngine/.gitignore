@@ -1,5 +1,4 @@
 /bin/
-.settings/
-.classpath
+*.classpath
 *.class
 Engine/NGSPipesEngine/bin/
