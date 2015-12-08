@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/JavaFXUtils"/>
-	<classpathentry kind="lib" path="D:/Desktop/ISEL/6_Semestre/PS/Repositories/s1415v-g8/Impl/Engine/NGSPipesEngineUI/libs/java-json.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/NGSPipesEngine"/>
-	<classpathentry kind="output" path="bin"/>
-</classpath>
