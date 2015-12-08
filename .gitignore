@@ -1,0 +1,5 @@
+NGSPipesEngine/bin/
+NGSPipesEngineUI/bin/
+.settings/
+*.classpath
+*.class

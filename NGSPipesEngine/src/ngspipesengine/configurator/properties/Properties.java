@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import configurator.IConfigurator;
+import dsl.entities.Pipeline;
 import ngspipesengine.compiler.CompilerProperties;
 import ngspipesengine.compiler.ICompiler;
 import ngspipesengine.compiler.JavaCompiler;
@@ -22,7 +23,6 @@ import ngspipesengine.exceptions.EngineException;
 import ngspipesengine.utils.Log;
 import ngspipesengine.utils.Uris;
 import ngspipesengine.utils.Utils;
-import dsl.entities.Pipe;
 
 public abstract class Properties implements IProperties {
 
@@ -40,7 +40,7 @@ public abstract class Properties implements IProperties {
 		EXECUTABLES.put("pipes", (props) -> new PipesCompiler(props));
 	}
 	
-	private static Collection<IConfigurator> getConfigurators(Pipe pipe, int from, int to) {
+	private static Collection<IConfigurator> getConfigurators(Pipeline pipe, int from, int to) {
 		if(to == -1 && from == -1)
 			return pipe.getConfigurators();
 		return (to == -1) ? pipe.getConfigurators(from) : pipe.getConfigurators(from, to);
@@ -103,7 +103,7 @@ public abstract class Properties implements IProperties {
 		load();
 	}
 
-	Pipe pipe;
+	Pipeline pipe;
 	
 	public String getPipelineName() { 
 		return compiler.getName();
@@ -148,8 +148,8 @@ public abstract class Properties implements IProperties {
 			if(method == null)
 				Utils.treatException(log, TAG, "Error creating pipeline instance");
 
-			if(method.getReturnType().equals(Pipe.class)) {
-				pipe = (Pipe) method.invoke(obj, new Object[] { compilerProps.getRepositoryUri()});
+			if(method.getReturnType().equals(Pipeline.class)) {
+				pipe = (Pipeline) method.invoke(obj, new Object[] { compilerProps.getRepositoryUri()});
 				setups = getSetupsFromConfigurator(getConfigurators(pipe, compilerProps.getFrom(), compilerProps.getTo()));	
 			}		
 		} catch (InstantiationException | IllegalAccessException |
