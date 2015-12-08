@@ -1,0 +1,6 @@
+.text-area .content{
+	-fx-background-image:url("../images/i.png");
+	-fx-background-position: center center;
+	-fx-background-repeat: no-repeat;
+	 -fx-background-size: 115 115;
+ }

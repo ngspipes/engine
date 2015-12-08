@@ -19,6 +19,7 @@ import ngspipesengine.configurator.engines.VMEngine;
 import ngspipesengine.dataAccess.Uris;
 import ngspipesengine.logic.Pipeline;
 import ngspipesengine.utils.Dialog;
+import progressReporter.SocketReporter;
 import utils.ComponentException;
 import utils.IInitializable;
 
@@ -38,6 +39,11 @@ public class FXMLRunPipelineController implements IInitializable<Pipeline>{
 		return fxmlFile.getRoot();
 	}
 	
+	private static final String TRACE_TAG = SocketReporter.TRACE_TAG;
+	private static final String ERROR_TAG = SocketReporter.ERROR_TAG;
+	private static final String INFO_TAG = SocketReporter.INFO_TAG;
+	
+	
 	@FXML
 	private Button bCancel;
 	@FXML
@@ -53,7 +59,11 @@ public class FXMLRunPipelineController implements IInitializable<Pipeline>{
 	@FXML
 	private Label lTo;
 	@FXML
-	private TextArea tAComunicationChannel;
+	private TextArea tATrace;
+	@FXML
+	private TextArea tAError;
+	@FXML
+	private TextArea tAInfo;
 	
 	private Pipeline pipeline;
 	private VMEngine vm;
@@ -137,33 +147,33 @@ public class FXMLRunPipelineController implements IInitializable<Pipeline>{
 		}).start();
 	}
 
-	private void setText(String text){
-		Platform.runLater(()->tAComunicationChannel.setText(text));
+	private void setText(TextArea textArea, String text){
+		Platform.runLater(()->textArea.setText(text));
 	}
 	
-	private void appendText(String text){
-		Platform.runLater(()->tAComunicationChannel.appendText(text));
+	private void appendText(TextArea textArea, String text){
+		Platform.runLater(()->textArea.appendText(text));
 	}
 	
 	private void clearText(){
-		Platform.runLater(()->tAComunicationChannel.clear());
+		Platform.runLater(()->tATrace.clear());
 	}
 	
 	private Socket acceptClient() throws IOException {
 		socket.setSoTimeout(1000);
 
-		setText("Loading (can take a few minutes)");
+		setText(tATrace, "Loading (can take a few minutes)");
 		
 		while(!finish.get()){
 			try{
 				return socket.accept();
 			}catch(SocketTimeoutException ex){
 				Platform.runLater(()->{
-					String text = tAComunicationChannel.getText();
+					String text = tATrace.getText();
 					
 					text = text.endsWith("......") ? text.replace("......", "") : text+"."; 
 
-					tAComunicationChannel.setText(text);
+					tATrace.setText(text);
 				});		
 			}
 		}
@@ -174,8 +184,15 @@ public class FXMLRunPipelineController implements IInitializable<Pipeline>{
 	private void answerClient(Socket client) throws IOException {
 		try(BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));){
 			String line;
-			while ((line = in.readLine()) != null)
-				appendText(line + "\n");
+			while ((line = in.readLine()) != null){
+				line+="\n";
+				if(line.startsWith(TRACE_TAG))
+					appendText(tATrace, line.substring(TRACE_TAG.length()));
+				else if(line.startsWith(ERROR_TAG))
+					appendText(tAError, line.substring(ERROR_TAG.length()));
+				else
+					appendText(tAInfo, line.substring(INFO_TAG.length()));
+			}
 		}
 	}
 	
