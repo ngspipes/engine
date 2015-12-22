@@ -119,7 +119,10 @@ public class VMProperties extends Properties {
 			return pipe.getRequiredMemory();
 		return (to == -1) ? pipe.getRequiredMemory(from) : pipe.getRequiredMemory(from, to);
 	}
-	
+
+	private static String getEngineName(String engineName) {
+		return engineName.length() > 1 ? engineName : BASE_VM_NAME;
+	}
 	
 
 	int memory;
@@ -136,7 +139,7 @@ public class VMProperties extends Properties {
 	
 	private VMProperties(String baseEngineName, String engineName, String pipelinePath, 
 							int from, int to) throws EngineException {
-		super(baseEngineName, engineName, pipelinePath, from, to);
+		super(baseEngineName, getEngineName(engineName), pipelinePath, from, to);
 	}
 
 	public VMProperties(String engineName, String pipelinePath, int from, int to) throws EngineException {
@@ -236,7 +239,7 @@ public class VMProperties extends Properties {
 
 	private void setRequiredMemory() throws EngineException {  
 
-		log.debug(TAG, "Setting require memory");   
+		log.debug(TAG, "Setting require memory"); 
 		Utils.executeCommand(getMemoryCommand(), log, TAG, "Error setting require memory");
 
 	}
