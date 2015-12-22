@@ -150,7 +150,8 @@ public abstract class Properties implements IProperties {
 
 			if(method.getReturnType().equals(Pipeline.class)) {
 				pipe = (Pipeline) method.invoke(obj, new Object[] { compilerProps.getRepositoryUri()});
-				setups = getSetupsFromConfigurator(getConfigurators(pipe, compilerProps.getFrom(), compilerProps.getTo()));	
+				setups = getSetupsFromConfigurator(getConfigurators(pipe, compilerProps.getFrom(), compilerProps.getTo()));
+				internalUpdate();
 			}		
 		} catch (InstantiationException | IllegalAccessException |
 				SecurityException | NoSuchMethodException | 
