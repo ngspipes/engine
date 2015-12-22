@@ -1,5 +1,7 @@
 package ngspipesengine.configurator.engines;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +28,18 @@ public abstract class Engine implements IEngine {
 		loadFormatters();
 	}
 
+	private static boolean isConnected() throws IOException {
+		boolean connect = true;
+        URL url = new URL("http://www.google.com");
+        HttpURLConnection urlConnection = (HttpURLConnection)url.openConnection();
+        try {
+			urlConnection.connect();
+		} catch (IOException e) {
+			connect = false;
+		}
+		return connect;
+	}
+	
 	private static void loadFormatters() {
 		OS_PATH_FORMATTERS.put(Utils.WIN_OS_TYPE, Engine::windowsPathFormater);
 		OS_PATH_FORMATTERS.put(Utils.UNIX_OS_TYPE, Engine::unixPathFormater);
@@ -94,8 +108,27 @@ public abstract class Engine implements IEngine {
 		this.props = props;		
 	}
 
+	
+	private void isInternetConnected() throws EngineException {
+		props.getLog().debug(TAG, "Checking network connection");
+		try {
+			if(!isConnected()) {
+				props.getLog().error(TAG, "Unrechable to connect to network");
+				throw new EngineException("Unrechable to connect to network");
+			}
+		} catch (IOException e) {
+			props.getLog().error(TAG, "Error checking internet connection");
+			props.getLog().error(TAG, "\t" + e.getMessage());
+			throw new EngineException("Unrechable to connect to network", e);
+		}
+		props.getLog().debug(TAG, "Network connected");		
+	}
+	
+	
 	@Override
 	public void start() throws EngineException {
+		
+		isInternetConnected();
 		props.getLog().debug(TAG, "Starting");
 		this.cloneEngine();
 		System.out.println("Configurating engine");
