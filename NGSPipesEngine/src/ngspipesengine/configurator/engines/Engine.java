@@ -107,7 +107,37 @@ public abstract class Engine implements IEngine {
 	public Engine(Properties props) throws EngineException {    
 		this.props = props;		
 	}
+	
+	@Override
+	public void start() throws EngineException {
+		
+		isInternetConnected();
+		props.getLog().debug(TAG, "Starting");
+		this.cloneEngine();
+		System.out.println("Configurating engine");
+		this.props.set();
+		createScripts();
+		System.out.println("Starting execute engine");
+		this.internalStart();
+	}
 
+	
+	protected abstract void cloneEngine() throws EngineException;
+	
+	protected abstract void recoverState() throws EngineException;
+
+	protected abstract void internalStart() throws EngineException;
+	
+	protected abstract String getRunnerCommand() throws EngineException;
+
+	protected void createScripts() throws EngineException {
+		props.getLog().debug(TAG, "Create script");
+		Script.setPath(Uris.getActualPipelinePath(props.getPipelineName()));
+		Script.createExecute(props.getSetups(), getRunnerCommand());
+		props.getLog().debug(TAG, "Create script success");
+	}
+
+	
 	
 	private void isInternetConnected() throws EngineException {
 		props.getLog().debug(TAG, "Checking network connection");
@@ -123,34 +153,4 @@ public abstract class Engine implements IEngine {
 		}
 		props.getLog().debug(TAG, "Network connected");		
 	}
-	
-	
-	@Override
-	public void start() throws EngineException {
-		
-		isInternetConnected();
-		props.getLog().debug(TAG, "Starting");
-		this.cloneEngine();
-		System.out.println("Configurating engine");
-		this.props.set();
-		createScripts();
-		System.out.println("Starting execute engine");
-		this.internalStart();
-	}
-
-	protected abstract void cloneEngine() throws EngineException;
-	
-	protected abstract void recoverState() throws EngineException;
-
-	protected abstract void internalStart() throws EngineException;
-	
-	protected abstract String getRunnerCommand() throws EngineException;
-
-	protected void createScripts() throws EngineException {
-		props.getLog().debug(TAG, "Create script");
-		Script.setPath(Uris.getActualPipelinePath(props.getPipelineName()));
-		Script.createExecute(props.getSetups(), getRunnerCommand());
-		props.getLog().debug(TAG, "Create script success");
-	}
-	
 }
