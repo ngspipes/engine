@@ -5,12 +5,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
 
-import jdk.internal.util.xml.impl.ReaderUTF8;
 import ngspipesengine.exceptions.EngineException;
+
 
 public class Utils {
 	
@@ -110,7 +113,7 @@ public class Utils {
 		Runtime rt = Runtime.getRuntime();
 		Process proc = rt.exec(command);
 
-		BufferedReader bf = new BufferedReader(new ReaderUTF8(proc.getInputStream()));
+		BufferedReader bf = new BufferedReader(new InputStreamReader(proc.getInputStream(), Charset.forName("UTF-8")));
 		String line;
 		StringBuilder inputContent = new StringBuilder();
 		try {
@@ -146,7 +149,7 @@ public class Utils {
 	}
     
     private static void logStream(InputStream stream, String tag, Log log) throws IOException{
-            BufferedReader bf = new BufferedReader(new ReaderUTF8(stream));
+    		BufferedReader bf = new BufferedReader(new InputStreamReader(stream, Charset.forName("UTF-8")));
 
             String line;
             StringBuilder msg = new StringBuilder();
@@ -171,7 +174,7 @@ public class Utils {
 	
 	@SuppressWarnings("resource")
 	public static String readStream(Process proc, Log log) {
-		BufferedReader bf = new BufferedReader(new ReaderUTF8(proc.getInputStream()));
+		BufferedReader bf = new BufferedReader(new InputStreamReader(proc.getInputStream(), Charset.forName("UTF-8")));
 		String line;
 		StringBuilder inputContent = new StringBuilder();
 		try {
