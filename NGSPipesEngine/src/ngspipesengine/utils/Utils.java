@@ -3,10 +3,9 @@ package ngspipesengine.utils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.io.InputStreamReader;
-import java.io.BufferedReader;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +32,7 @@ public class Utils {
     public static final String MODIFY_VM = VBOXMANAGE + " modifyvm ";
     public static final String EXECUTE_SCRIPT_COMMAND = "sh %1$s";
     public static final String REGISTER_VM_COMMAND = VBOXMANAGE + " registervm "; 
-    public static final String START_VM_COMMAND = VBOXMANAGE + " startvm "; 
+    public static final String START_VM_COMMAND = "VBOXHeadless -s "; 
     public static final String VM_CLONE_COMMAND = VBOXMANAGE + " clonevm %1$s --name %2$s --register";
 	public static final String POWER_OFF_VM_COMMAND = VBOXMANAGE + " controlvm %1$s poweroff";
 	public static final String SET_PROCESSORS_NUMBER_VM_COMMAND = VBOXMANAGE + " modifyvm %1$s --cpus %2$s";
@@ -172,7 +171,6 @@ public class Utils {
 		return indexOfSlach != -1 ? indexOfSlach : indexOfBackSlach;
 	}
 	
-	@SuppressWarnings("resource")
 	public static String readStream(Process proc, Log log) {
 		BufferedReader bf = new BufferedReader(new InputStreamReader(proc.getInputStream(), Charset.forName("UTF-8")));
 		String line;
