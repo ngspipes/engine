@@ -53,7 +53,7 @@ public class Script {
 		StringBuilder commands = new StringBuilder();
 
 		for (String c : setups) {
-			if(c.contains(ROOT_COMMAND))
+			if(!c.contains(ROOT_COMMAND))
 				commands.append(ROOT_COMMAND).append(" ");
 			
 			commands.append(c).append("\n");
