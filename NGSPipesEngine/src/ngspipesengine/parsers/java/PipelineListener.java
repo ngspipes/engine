@@ -1,6 +1,5 @@
 package ngspipesengine.parsers.java;
 // Generated from Pipeline.g4 by ANTLR 4.5
-import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
