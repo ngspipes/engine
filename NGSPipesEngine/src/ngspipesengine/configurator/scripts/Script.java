@@ -24,7 +24,7 @@ public class Script {
 
 	public static void createExecute(Map<String, List<String>> commands, String runnerCommand) throws EngineException {
 		StringBuilder script = new StringBuilder(BEGIN_SCRIPT);
-		script.append(ROOT_COMMAND).append(UPDATE_COMMAND);
+		script.append(ROOT_COMMAND)/*.append(UPDATE_COMMAND)*/;
 		getScriptContent(commands, script);
 		script	.append("\n").append(ROOT_COMMAND).append(" ")
 				.append(runnerCommand)

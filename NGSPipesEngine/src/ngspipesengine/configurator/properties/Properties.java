@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import configurator.IConfigurator;
+import configurators.IConfigurator;
 import dsl.entities.Pipeline;
 import ngspipesengine.compiler.CompilerProperties;
 import ngspipesengine.compiler.ICompiler;
