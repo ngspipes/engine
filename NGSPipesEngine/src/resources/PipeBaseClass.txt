@@ -1,5 +1,6 @@
 import dsl.language.Pipeline;
 import exceptions.DSLException;
+import exceptions.RepositoryException;
 import progressReporter.SocketReporter;
 import exceptions.ProgressReporterException;
 
@@ -8,7 +9,7 @@ public class %1$s {
 	public static dsl.entities.Pipeline loadPipeline(String repositoryUri) throws DSLException {
 		try {
 			return new Pipeline(%2$s, repositoryUri).%3$sbuild();
-		} catch(DSLException e) {
+		} catch(DSLException | RepositoryException e) {
 			throw new DSLException(":: Error creating pipeline instance :: " + e.getMessage(), e);
 		}
 	}
