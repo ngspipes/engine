@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import configurator.IConfigurator;
-import dsl.entities.Pipeline;
 import ngspipesengine.compiler.CompilerProperties;
 import ngspipesengine.compiler.ICompiler;
 import ngspipesengine.compiler.JavaCompiler;
@@ -23,6 +21,8 @@ import ngspipesengine.exceptions.EngineException;
 import ngspipesengine.utils.Log;
 import ngspipesengine.utils.Uris;
 import ngspipesengine.utils.Utils;
+import configurators.IConfigurator;
+import dsl.entities.Pipeline;
 
 public abstract class Properties implements IProperties {
 
