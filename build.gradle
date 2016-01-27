@@ -1,0 +1,29 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+version = '1.0'
+
+mainClassName = "ngspipesengine.console.NGSPipesEngineConsole"
+
+dependencies {
+    compile fileTree(dir: 'vendor/main', include: '*.jar') 
+}
+
+jar {
+	from('src/main/java/') {
+        include 'resources/'
+    }
+
+}
+
+task moreStartScripts(type: CreateStartScripts) {
+	outputDir = new File(project.buildDir, 'scripts')
+	mainClassName = 'ngspipesengine.NGSPipesEngineApplication'
+	applicationName = 'engine-ui'
+	classpath = jar.outputs.files + project.configurations.runtime
+}
+
+applicationDistribution.into("bin") {
+    from(moreStartScripts)
+    fileMode = 0755
+}
