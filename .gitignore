@@ -3,3 +3,5 @@ NGSPipesEngineUI/bin/
 .settings/
 *.classpath
 *.class
+.gradle
+build/
