@@ -1,5 +1,6 @@
 package ngspipesengine.compiler;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,12 +26,13 @@ public abstract class PipelineCompiler implements ICompiler {
 	}
 	
 	private static String getCompilerCommand(String classPath, String filePath, String name) {
-		String compilerCommand = "javac -cp " + 
-									Engine.OS_PATH_FORMATTERS.get(Utils.OS_TYPE).apply(classPath + Uris.DSL_JAR_NAME) 
+		String cp = Engine.OS_PATH_FORMATTERS.get(Utils.OS_TYPE).apply(
+				classPath + Uris.DSL_JAR_NAME + File.pathSeparator + classPath + Uris.REPOSITORY_JAR_NAME);
+		System.err.println("Using classpath " + cp);
+		String compilerCommand = "javac -cp " + cp
 									+ " "
 									+ Engine.OS_PATH_FORMATTERS.get(Utils.OS_TYPE).apply(filePath + name)
 									+ ".java";
-
 		return compilerCommand;
 	}
 

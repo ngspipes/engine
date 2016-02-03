@@ -19,7 +19,8 @@ public class Uris {
 
     public static final String ENGINE_FOLDER_NAME = "Engine";
     public static final String PIPELINES_FOLDER_NAME = "Pipelines";
-    public static final String DSL_JAR_NAME = "dsl.jar";
+    public static final String DSL_JAR_NAME = "dsl-1.0.jar";
+	public static final String REPOSITORY_JAR_NAME = "repository-1.0.jar";
     public static final String JSON_JAR_NAME = "java-json.jar";
     public static final String OUTPUTS_FOLDER_NAME = "Outputs";
     public static final String INPUTS_FOLDER_NAME = "Inputs";
@@ -35,9 +36,10 @@ public class Uris {
     static final String ENGINE_JAR_PATH = getEngineJarUri();
     static final String RESOURCES = "resources" + SEP;
 	static final String DSL_JAR_ORIGIN_PATH = RESOURCES + DSL_JAR_NAME;
+	static final String REPOSITORY_JAR_ORIGIN_PATH = RESOURCES + REPOSITORY_JAR_NAME;
 	static final String JSON_JAR_ORIGIN_PATH = RESOURCES + JSON_JAR_NAME;
 	public static final String REGISTER_FILE = LOG_FOLDER_PATH + "register.json";
-	static final String VBOX_FILE_RELATIVE_PATH = "../NGSPipesEngineExecutor/NGSPipesEngineExecutor.vbox";
+	static final String VBOX_FILE_RELATIVE_PATH = "./NGSPipesEngineExecutor/NGSPipesEngineExecutor.vbox";
 	
 
 	///////// GUEST DIRECTORIES PATHS ////////
@@ -47,6 +49,7 @@ public class Uris {
     public static final String VM_OUTPUTS_FOLDER_PATH = VM_MAIN_FOLDER + OUTPUTS_FOLDER_NAME;  
     public static final String VM_INPUTS_FOLDER_PATH = VM_MAIN_FOLDER + INPUTS_FOLDER_NAME;  
     public static final String VM_REPOSITORY_FOLDER_PATH = VM_MAIN_FOLDER + REPOSITORY_FOLDER_NAME;
+
 
 
 	public static URL getVboxFilePath() {
@@ -91,6 +94,7 @@ public class Uris {
 		File logDirectory = new File(Uris.LOG_FOLDER_PATH);
 		File pipelinesDirectory = new File(Uris.PIPELINES_FOLDER_PATH);
 		File dslJar = new File(ENGINE_PATH + SEP + DSL_JAR_NAME);
+		File repositoryJar = new File(ENGINE_PATH + SEP + REPOSITORY_JAR_NAME);
 		File jsonJar = new File(ENGINE_PATH + SEP + JSON_JAR_NAME);
 		
 		if(!logDirectory.exists())
@@ -102,6 +106,9 @@ public class Uris {
 		System.out.println("Loading engine resources");
 		if(!dslJar.exists())		
 			copyLibrary(props, tag, DSL_JAR_ORIGIN_PATH);
+
+		if(!repositoryJar.exists())
+			copyLibrary(props, tag, REPOSITORY_JAR_ORIGIN_PATH);
 
 		if(!jsonJar.exists())		
 			copyLibrary(props, tag, JSON_JAR_ORIGIN_PATH);
@@ -152,7 +159,7 @@ public class Uris {
 
 			if (entry.getName().startsWith(jarDir) && !entry.isDirectory()) {
 				File dest = new File(ENGINE_PATH + SEP + entry.getName().substring(jarDir.indexOf("/")+"/".length()));
-				
+
 				File parent = dest.getParentFile();
 
 				if (!parent.exists()) 
@@ -161,6 +168,7 @@ public class Uris {
 				FileOutputStream out = new FileOutputStream(dest);
 				InputStream in = fromJar.getInputStream(entry);
 
+				System.err.println("Copying engine libs to " + dest.getAbsolutePath());
 				try {
 					byte[] buffer = new byte[1024];
 

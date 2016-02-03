@@ -90,6 +90,8 @@ public abstract class Engine implements IEngine {
 					.append(":")
 					.append(formatter.apply(libsPath + Uris.DSL_JAR_NAME))
 					.append(":")
+					.append(formatter.apply(libsPath + Uris.REPOSITORY_JAR_NAME))
+					.append(":")
 					.append(formatter.apply(libsPath + Uris.JSON_JAR_NAME))
 					.append(" ").append(executableName).append(" ").append(mainArgs);
 		
