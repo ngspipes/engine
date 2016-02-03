@@ -5,3 +5,4 @@ NGSPipesEngineUI/bin/
 *.class
 .gradle
 build/
+*.iml
