@@ -6,3 +6,4 @@ NGSPipesEngineUI/bin/
 .gradle
 build/
 *.iml
+.idea/
