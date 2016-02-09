@@ -27,7 +27,7 @@ import ngspipesengine.utils.IO;
 
 public class PipesCompiler extends PipelineCompiler {
 
-	private static final String PIPES_BASE_PATH = "resources/";
+	private static final String PIPES_BASE_PATH = "/";
 
 	public PipesCompiler(CompilerProperties props) {
 		super(props);

@@ -53,7 +53,7 @@ public class Uris {
     public static final String LOG_FOLDER_PATH = ENGINE_PATH  + SEP + "Log" + SEP;
     public static final String PIPELINES_FOLDER_PATH = ENGINE_PATH + SEP + PIPELINES_FOLDER_NAME + SEP;
     static final String ENGINE_JAR_PATH = getEngineJarUri();
-    static final String RESOURCES = "resources" + SEP;
+    static final String RESOURCES = "" + SEP;
 	static final String DSL_JAR_ORIGIN_PATH = RESOURCES + DSL_JAR_NAME;
 	static final String REPOSITORY_JAR_ORIGIN_PATH = RESOURCES + REPOSITORY_JAR_NAME;
 	static final String JSON_JAR_ORIGIN_PATH = RESOURCES + JSON_JAR_NAME;
