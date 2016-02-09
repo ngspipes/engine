@@ -5,25 +5,42 @@ version = '1.0'
 
 mainClassName = "ngspipesengine.console.NGSPipesEngineConsole"
 
+applicationDefaultJvmArgs = ["-Dngspipes.basedir=MY_APP_HOME/"]
+
 dependencies {
     compile fileTree(dir: 'vendor/main', include: '*.jar') 
 }
 
 jar {
-	from('src/main/java/') {
+        from('src/main/java/') {
         include 'resources/'
     }
 
 }
 
 task moreStartScripts(type: CreateStartScripts) {
-	outputDir = new File(project.buildDir, 'scripts')
-	mainClassName = 'ngspipesengine.NGSPipesEngineApplication'
-	applicationName = 'engine-ui'
-	classpath = jar.outputs.files + project.configurations.runtime
+    outputDir = new File(project.buildDir, 'scripts')
+    mainClassName = 'ngspipesengine.NGSPipesEngineApplication'
+    applicationName = 'engine-ui'
+    classpath = jar.outputs.files + project.configurations.runtime
+    defaultJvmOpts = ["-Dngspipes.basedir=MY_APP_HOME/"]
+
+    moreStartScripts {
+        doLast {
+            unixScript.text = unixScript.text.replace('MY_APP_HOME', '\$APP_HOME') 
+            windowsScript.text = windowsScript.text.replace('MY_APP_HOME', '%~dp0..')
+        }
+    }
 }
 
 applicationDistribution.into("bin") {
     from(moreStartScripts)
     fileMode = 0755
+}
+
+startScripts {
+    doLast {
+        unixScript.text = unixScript.text.replace('MY_APP_HOME', '\$APP_HOME') 
+        windowsScript.text = windowsScript.text.replace('MY_APP_HOME', '%~dp0..')
+    }
 }
