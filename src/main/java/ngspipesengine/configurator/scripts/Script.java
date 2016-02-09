@@ -32,7 +32,8 @@ public class Script {
 	static final String END_IF_COMMAND = "fi";
 	static final String SHARED_FOLDER_COMMAND = "if [ ! -f %1$s ]; then\n\tmount -t vboxsf %2$s %1$s";
 	static final String POWER_OFF_MACHINE = "\nsudo /sbin/shutdown -h now";
-	static final String UPDATE_COMMAND = " apt-get update";
+	static final String UPDATE_GRUB_COMMAND = " update-grub\n";
+	static final String UPDATE_COMMAND = " apt-get update\n";
 
 	private static final String ROOT_COMMAND = "sudo";
 	
@@ -43,9 +44,10 @@ public class Script {
 
 	public static void createExecute(Map<String, List<String>> commands, String runnerCommand) throws EngineException {
 		StringBuilder script = new StringBuilder(BEGIN_SCRIPT);
+		script.append(ROOT_COMMAND).append(UPDATE_GRUB_COMMAND);
 		script.append(ROOT_COMMAND).append(UPDATE_COMMAND);
 		getScriptContent(commands, script);
-		script	.append("\n").append(ROOT_COMMAND).append(" ")
+		script.append("\n").append(ROOT_COMMAND).append(" ")
 				.append(runnerCommand)
 				.append(POWER_OFF_MACHINE);
 		IO.writeToFile(getExecuteName(), script.toString(), false);
