@@ -176,7 +176,7 @@ public class VMEngine extends Engine {
 			
 			System.out.println("Getting clone engine");
 			props.setEngineName(getCloneName());
-			System.out.println("Clonning engine");
+			System.out.println("Cloning engine");
 			executeClone();
 
 			props.getLog().debug(TAG, "Cloning success");
@@ -232,7 +232,7 @@ public class VMEngine extends Engine {
 						"Error cloning virtual machine " + props.getBaseEngineName());
 				cd.countDown();
 			} catch(Exception e) {
-				props.getLog().error(TAG, "Error while clonning engine" + e.getMessage());
+				props.getLog().error(TAG, "Error while cloning engine" + e.getMessage());
 			}
 		});
 		
@@ -240,7 +240,7 @@ public class VMEngine extends Engine {
 		thread.start();
 
 		while(cd.getCount() != 0)
-			Utils.wait(5000, () -> System.out.println("...... Clonning engine"));
+			Utils.wait(5000, () -> System.out.println("...... Cloning executor image"));
 	}
 	
 	private String getStartVMCommand() {
