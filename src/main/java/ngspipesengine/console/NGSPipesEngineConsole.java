@@ -106,6 +106,10 @@ public class NGSPipesEngineConsole {
 		VMProperties vmProperties = getVMProperties(cmdLine);
 		VMEngine vm = new VMEngine(vmProperties);
 
+		System.out.println(
+				String.format("Starting executor with %d CPUs and %d GBytes",
+						vmProperties.getProcessorsNumber(),
+						vmProperties.getMemory()/1024));
 		vm.start();
 		initServer(vmProperties);
 		
