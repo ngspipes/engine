@@ -42,8 +42,7 @@ import jfxutils.IInitializable;
 import components.FXMLFile;
 import components.Window;
 import components.animation.magnifier.ButtonMagnifier;
-
-
+import ngspipesengine.utils.WorkQueue;
 
 
 public class FXMLLoadPipelineController implements IInitializable<Consumer<Pipeline>> {
@@ -153,8 +152,8 @@ public class FXMLLoadPipelineController implements IInitializable<Consumer<Pipel
 			try {
 				Window<?, ?> loadingWindow = Dialog.getLoadingWindow("Loading pipeline");
 				loadingWindow.open();
-				
-				new Thread(()->{
+
+				WorkQueue.run(()->{
 					try{
 						Pipeline p = new Pipeline(new File(pipeline), new File(results), new File(inputs), engineName);
 						Platform.runLater(()->{
@@ -164,7 +163,7 @@ public class FXMLLoadPipelineController implements IInitializable<Consumer<Pipel
 					}catch(EngineUIException ex){
 						Platform.runLater(()->Dialog.showError(ex.getMessage()));
 					}
-				}).start();
+				});
 			} catch (ComponentException ex) {
 				Dialog.showError("Error loading load window!");
 			}

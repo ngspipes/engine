@@ -31,6 +31,7 @@ import ngspipesengine.exceptions.EngineException;
 import ngspipesengine.utils.Log;
 import ngspipesengine.utils.Uris;
 import ngspipesengine.utils.Utils;
+import ngspipesengine.utils.WorkQueue;
 
 public class VMEngine extends Engine {
 
@@ -186,19 +187,15 @@ public class VMEngine extends Engine {
 	@Override
 	protected void internalStart() throws EngineException { 
 		props.getLog().debug(TAG, "Starting to run");
-		Thread t = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					System.out.println("Booting engine and installing necessary packages");
-					Utils.executeCommand(getStartVMCommand(), props.getLog(), TAG,
-                            "Error trying running virtual machine");
-				} catch (EngineException e) {
-					e.printStackTrace();
-				}
+		WorkQueue.run(() -> {
+			try {
+				System.out.println("Booting engine and installing necessary packages");
+				Utils.executeCommand(getStartVMCommand(), props.getLog(), TAG,
+						"Error trying running virtual machine");
+			} catch (EngineException e) {
+				e.printStackTrace();
 			}
 		});
-		t.start();
 		//props.getLog().debug(TAG, "Running success");
 	}
 
@@ -225,19 +222,17 @@ public class VMEngine extends Engine {
 
 	private void executeClone() throws EngineException {
 		final CountDownLatch cd = new CountDownLatch(1);
-		Thread thread = new Thread(()->{
-			try{
 
-				Utils.executeCommand(getCloneVMCommand(), props.getLog(), TAG, 
+		WorkQueue.run(()->{
+			try{
+				Utils.executeCommand(getCloneVMCommand(), props.getLog(), TAG,
 						"Error cloning virtual machine " + props.getBaseEngineName());
-				cd.countDown();
 			} catch(Exception e) {
 				props.getLog().error(TAG, "Error while cloning engine" + e.getMessage());
+			} finally {
+				cd.countDown();
 			}
 		});
-		
-		thread.setDaemon(false);
-		thread.start();
 
 		while(cd.getCount() != 0)
 			Utils.wait(5000, () -> System.out.println("...... Cloning executor image"));

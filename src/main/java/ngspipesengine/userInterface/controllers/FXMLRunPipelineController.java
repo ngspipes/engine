@@ -38,6 +38,7 @@ import ngspipesengine.configurator.engines.VMEngine;
 import ngspipesengine.dataAccess.Uris;
 import ngspipesengine.logic.Pipeline;
 import ngspipesengine.utils.Dialog;
+import ngspipesengine.utils.WorkQueue;
 import progressReporter.SocketReporter;
 import jfxutils.ComponentException;
 import jfxutils.IInitializable;
@@ -131,9 +132,9 @@ public class FXMLRunPipelineController implements IInitializable<Pipeline>{
 		}catch(IOException ex){
 			throw new ComponentException("Error creating socket!", ex);
 		}
-		
-		new Thread(()->{
-			try { 
+
+		WorkQueue.run(()->{
+			try {
 				pipeline.properties.setPort(socket.getLocalPort());
 				vm = new VMEngine(pipeline.properties);
 				vm.start();
@@ -141,13 +142,13 @@ public class FXMLRunPipelineController implements IInitializable<Pipeline>{
 				closeSocket();
 				Platform.runLater(()-> Dialog.showError(ex.getMessage()));
 			}
-		}).start();
+		});
 	}
 
 	private void initServer() {
-		new Thread(()->{
+		WorkQueue.run(()->{
 			Socket clientSocket = null;
-			
+
 			try {
 				clientSocket = acceptClient();
 				clearText();
@@ -162,8 +163,7 @@ public class FXMLRunPipelineController implements IInitializable<Pipeline>{
 				closeVM();
 				Platform.runLater(()->bCancel.setDisable(true));
 			}
-			
-		}).start();
+		});
 	}
 
 	private void setText(TextArea textArea, String text){

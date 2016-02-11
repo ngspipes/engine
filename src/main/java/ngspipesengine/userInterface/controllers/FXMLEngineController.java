@@ -41,6 +41,7 @@ import jfxutils.IInitializable;
 
 import components.Window;
 import components.animation.magnifier.ButtonMagnifier;
+import ngspipesengine.utils.WorkQueue;
 
 public class FXMLEngineController implements IInitializable<Void> {
 
@@ -88,16 +89,16 @@ public class FXMLEngineController implements IInitializable<Void> {
 		Tooltip.install(bHelp, new Tooltip("Help"));
 		
 		pipelinesPallet = new PipelineListPallet(tFPipelinesFilter, lvPipelines);
-		new Thread(()->{
+		WorkQueue.run(()->{
 			try {
 				for(Pipeline p : PipelineManager.load())
 					PipelineManager.add(p);
-				
+
 				Platform.runLater(()->pipelinesPallet.load(PipelineManager.getAll()));
 			} catch (EngineUIException ex) {
 				Platform.runLater(()->Dialog.showError("Error loading previous pipelines!"));
 			}
-		}).start();
+		});
 		
 		enginesPallet = new EngineListPallet(tFEnginesFilter, lvEngines);
 		enginesPallet.load(PipelineManager.getEnginesNames());
