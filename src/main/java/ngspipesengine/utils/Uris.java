@@ -1,22 +1,3 @@
-/*-
- * Copyright (c) 2016, NGSPipes Team <ngspipes@gmail.com>
- * All rights reserved.
- *
- * This file is part of NGSPipes <http://ngspipes.github.io/>.
- *
- * This program is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
- * for more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package ngspipesengine.utils;
 
 import java.io.File;
@@ -31,6 +12,7 @@ import java.util.jar.JarFile;
 
 import ngspipesengine.configurator.properties.Properties;
 import ngspipesengine.exceptions.EngineException;
+import ngspipesengine.exceptions.ExecutorImageNotFound;
 
 public class Uris {
 
@@ -53,12 +35,12 @@ public class Uris {
     public static final String LOG_FOLDER_PATH = ENGINE_PATH  + SEP + "Log" + SEP;
     public static final String PIPELINES_FOLDER_PATH = ENGINE_PATH + SEP + PIPELINES_FOLDER_NAME + SEP;
     static final String ENGINE_JAR_PATH = getEngineJarUri();
-    static final String RESOURCES = "";
+    static final String RESOURCES = "resources" + SEP;
 	static final String DSL_JAR_ORIGIN_PATH = RESOURCES + DSL_JAR_NAME;
 	static final String REPOSITORY_JAR_ORIGIN_PATH = RESOURCES + REPOSITORY_JAR_NAME;
 	static final String JSON_JAR_ORIGIN_PATH = RESOURCES + JSON_JAR_NAME;
 	public static final String REGISTER_FILE = LOG_FOLDER_PATH + "register.json";
-	static final String VBOX_FILE_RELATIVE_PATH = "NGSPipesEngineExecutor/NGSPipesEngineExecutor.vbox";
+	static final String VBOX_FILE_RELATIVE_PATH = "./NGSPipesEngineExecutor/NGSPipesEngineExecutor.vbox";
 	
 
 	///////// GUEST DIRECTORIES PATHS ////////
@@ -69,17 +51,18 @@ public class Uris {
     public static final String VM_INPUTS_FOLDER_PATH = VM_MAIN_FOLDER + INPUTS_FOLDER_NAME;  
     public static final String VM_REPOSITORY_FOLDER_PATH = VM_MAIN_FOLDER + REPOSITORY_FOLDER_NAME;
 
-
-
-	public static URL getVboxFilePath() {
+	public static URL getVboxFilePath() throws EngineException {
 		URL url = null;
-		/** TODO: refactor this to throw MalformedURLException*/
-		try {
-			url = new File(System.getProperty("ngspipes.basedir") + VBOX_FILE_RELATIVE_PATH).toURI().toURL();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
+		File file = new File(VBOX_FILE_RELATIVE_PATH);
+		if (!file.exists()) {
+			throw new ExecutorImageNotFound();
 		}
-		 return url;
+		try {
+			url = file.toURI().toURL();
+		} catch(MalformedURLException ex) {
+			throw new EngineException("Error converting executor image filename to URL", ex);
+		}
+		return url;
 	}
 
     public static String getLogPath(String fileName) {

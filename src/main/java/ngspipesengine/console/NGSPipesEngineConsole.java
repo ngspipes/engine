@@ -1,22 +1,3 @@
-/*-
- * Copyright (c) 2016, NGSPipes Team <ngspipes@gmail.com>
- * All rights reserved.
- *
- * This file is part of NGSPipes <http://ngspipes.github.io/>.
- *
- * This program is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
- * for more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package ngspipesengine.console;
 
 import java.io.BufferedReader;
@@ -28,6 +9,7 @@ import java.net.Socket;
 import ngspipesengine.configurator.engines.VMEngine;
 import ngspipesengine.configurator.properties.VMProperties;
 import ngspipesengine.exceptions.EngineException;
+import ngspipesengine.exceptions.ExecutorImageNotFound;
 import ngspipesengine.utils.Utils;
 
 import org.json.JSONException;
@@ -40,6 +22,8 @@ public class NGSPipesEngineConsole {
 	public static final String TO_STEP = "to";
 	public static final String EXECUTOR_NAME = "executor";
 	private static final String APP_NAME = "NGSPipes Engine";
+	private static final String DOWNLOAD_LINK = "http://link.inesc-id.pt/pipes/NGSPipesEngineExecutor.zip";
+	private static final String WIKI_LINK = "https://github.com/ngspipes/engine/wiki#2-install-ngspipes-engine";
 	private static String DEFAULT_EXECUTOR_NAME = "NGSPipesEngineExecutor";
 	private static int DEFAULT_FROM = -1;
 	private static int DEFAULT_TO = -1;
@@ -96,8 +80,17 @@ public class NGSPipesEngineConsole {
 				default : runEngine(cmdLine);
 			}
 
+		} catch (ExecutorImageNotFound ex) {
+			System.out.println();
+			System.out.println("\t ** Error openning the executor image file **");
+			System.out.println("\t Please:");
+			System.out.println("\t\t 1. download it from here " + DOWNLOAD_LINK);
+			System.out.println("\t\t 2. place it inside the working directory as explained here " + WIKI_LINK);
+			System.out.println();
+			System.out.println("\t Thank you for using NGSPipes!");
 		} catch(Exception ex) {
 			System.out.println("::ERROR running engine :: \nstackTrace: " + Utils.getStackTrace(ex));
+		} finally {
 			System.exit(1);
 		}
 	}
@@ -106,10 +99,6 @@ public class NGSPipesEngineConsole {
 		VMProperties vmProperties = getVMProperties(cmdLine);
 		VMEngine vm = new VMEngine(vmProperties);
 
-		System.out.println(
-				String.format("Starting executor with %d CPUs and %d GBytes",
-						vmProperties.getProcessorsNumber(),
-						vmProperties.getMemory()/1024));
 		vm.start();
 		initServer(vmProperties);
 		
@@ -148,7 +137,7 @@ public class NGSPipesEngineConsole {
 			propsVM.setProcessorsNumber(Integer.parseInt(props.getOptionValue(CPUS)));
 		}
 		if (props.hasOption(MEM)) {
-			propsVM.setMemory(Integer.parseInt(props.getOptionValue(MEM)) * 1024);
+			propsVM.setProcessorsNumber(Integer.parseInt(props.getOptionValue(MEM)) * 1024);
 		}
 		
 		return propsVM;

@@ -43,7 +43,7 @@ public class VMEngine extends Engine {
 		return String.format(Utils.DELETE_VM_COMMAND, engineName);
 	}
 	
-	private static String getRegisterVMCommand() {
+	private static String getRegisterVMCommand() throws EngineException {
 		return Utils.REGISTER_VM_COMMAND + Engine.OS_URL_FORMATTERS.get(Utils.OS_TYPE).apply(Uris.getVboxFilePath());
 	}
 	

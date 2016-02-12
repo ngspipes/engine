@@ -1,22 +1,3 @@
-/*-
- * Copyright (c) 2016, NGSPipes Team <ngspipes@gmail.com>
- * All rights reserved.
- *
- * This file is part of NGSPipes <http://ngspipes.github.io/>.
- *
- * This program is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
- * for more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package ngspipesengine.configurator.engines;
 
 import java.io.IOException;
@@ -39,6 +20,7 @@ public abstract class Engine implements IEngine {
 	public static final Map<String, Function<String, String>> OS_PATH_FORMATTERS;
 	public static final Map<String, Function<URL, String>> OS_URL_FORMATTERS;
 	public static final Map<String, Function<String, String>> OS_QUOTATION_MARKS_FORMATTERS;
+	public static final String DOWNLOAD_TIME_MESSAGE = "* Download time of docker images may take some time, depending on you network speed *";
 
 	static {
 		OS_PATH_FORMATTERS = new HashMap<>();
@@ -136,6 +118,7 @@ public abstract class Engine implements IEngine {
 		props.getLog().debug(TAG, "Starting");
 		this.cloneEngine();
 		System.out.println("Configurating engine");
+		System.out.println(DOWNLOAD_TIME_MESSAGE);
 		this.props.set();
 		createScripts();
 		System.out.println("Starting execute engine");
