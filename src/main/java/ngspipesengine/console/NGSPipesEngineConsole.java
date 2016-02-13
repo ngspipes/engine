@@ -137,7 +137,7 @@ public class NGSPipesEngineConsole {
 			propsVM.setProcessorsNumber(Integer.parseInt(props.getOptionValue(CPUS)));
 		}
 		if (props.hasOption(MEM)) {
-			propsVM.setProcessorsNumber(Integer.parseInt(props.getOptionValue(MEM)) * 1024);
+			propsVM.setMemory(Integer.parseInt(props.getOptionValue(MEM)) * 1024);
 		}
 		
 		return propsVM;
