@@ -72,6 +72,7 @@ public class Uris {
 
 	public static URL getVboxFilePath() throws EngineException {
 		URL url = null;
+		//File file = new File(System.getProperty("ngspipes.basedir") + VBOX_FILE_RELATIVE_PATH);
 		File file = new File(VBOX_FILE_RELATIVE_PATH);
 		if (!file.exists()) {
 			throw new ExecutorImageNotFound();
