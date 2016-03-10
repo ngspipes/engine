@@ -67,7 +67,7 @@ public class NGSPipesEngineApplication extends Application {
 			Scene scene = new Scene(root);
 			stage.setScene(scene);
 			stage.show();
-//			stage.setResizable(false);
+			stage.setResizable(false);
 			
 		}catch(ComponentException ex){
 			Dialog.showError("Error loading Engine");

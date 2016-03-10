@@ -23,13 +23,9 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import ngspipesengine.logic.Pipeline;
 import ngspipesengine.logic.PipelineManager;
 import ngspipesengine.userInterface.utils.pallets.EngineListPallet;
@@ -45,6 +41,8 @@ import ngspipesengine.utils.WorkQueue;
 
 public class FXMLEngineController implements IInitializable<Void> {
 
+	@FXML
+	private SplitPane root;
 	@FXML
 	private Button bPlay;
 	@FXML
@@ -161,6 +159,7 @@ public class FXMLEngineController implements IInitializable<Void> {
 			pipelineTab.setContent(root);
 			tPPipelines.getTabs().add(pipelineTab);
 			tPPipelines.getSelectionModel().select(pipelineTab);
+			((Stage)(this.root.getScene().getWindow())).sizeToScene();
 		} catch (Exception ex) {
 			Dialog.showError(ex.getMessage());
 		}
