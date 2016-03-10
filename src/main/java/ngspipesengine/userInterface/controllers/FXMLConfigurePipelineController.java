@@ -269,13 +269,7 @@ public class FXMLConfigurePipelineController implements IInitializable<Data> {
 	}
 
 	private int getMaxProcessors(){
-		OperatingSystemMXBean bean = (OperatingSystemMXBean) ManagementFactoryHelper.getOperatingSystemMXBean();
-		int max = pipeline.getProcessors();
-
-		if(max<bean.getAvailableProcessors())
-			max = bean.getAvailableProcessors();
-
-		return max;
+		return Runtime.getRuntime().availableProcessors();
 	}
 
 }
