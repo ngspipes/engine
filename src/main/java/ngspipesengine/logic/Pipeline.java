@@ -19,11 +19,11 @@
  */
 package ngspipesengine.logic;
 
-import java.io.File;
-
 import ngspipesengine.configurator.properties.VMProperties;
 import ngspipesengine.exceptions.EngineException;
 import ngspipesengine.utils.EngineUIException;
+
+import java.io.File;
 
 public class Pipeline {
 	
@@ -121,6 +121,37 @@ public class Pipeline {
 		this.totalSteps = properties.getTotalSteps();
 		this.memory = properties.getMemory();
 		this.processors = properties.getProcessorsNumber();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if(o == this)
+			return true;
+
+		if(o == null || !(o instanceof Pipeline))
+			return false;
+
+		Pipeline other = (Pipeline)o;
+
+		return 	equals(this.pipeline, other.pipeline) &&
+				equals(this.results, other.results) &&
+				equals(this.inputs, other.inputs) &&
+				equals(this.engineName, other.engineName) &&
+				this.from == other.from &&
+				this.to == other.to &&
+				this.totalSteps == other.totalSteps &&
+				this.memory == other.memory &&
+				this.processors == other.processors;
+	}
+
+	public static boolean equals(Object a, Object b){
+		if(a == b)
+			return true;
+
+		if((a == null && b != null) || (a != null && b == null))
+			return false;
+
+		return a.equals(b);
 	}
 
 }

@@ -19,24 +19,22 @@
  */
 package ngspipesengine.userInterface.controllers;
 
+import components.Window;
+import components.animation.magnifier.ButtonMagnifier;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import jfxutils.ComponentException;
+import jfxutils.IInitializable;
 import ngspipesengine.logic.Pipeline;
 import ngspipesengine.logic.PipelineManager;
 import ngspipesengine.userInterface.utils.pallets.EngineListPallet;
 import ngspipesengine.userInterface.utils.pallets.PipelineListPallet;
 import ngspipesengine.utils.Dialog;
 import ngspipesengine.utils.EngineUIException;
-import jfxutils.ComponentException;
-import jfxutils.IInitializable;
-
-import components.Window;
-import components.animation.magnifier.ButtonMagnifier;
 import ngspipesengine.utils.WorkQueue;
 
 public class FXMLEngineController implements IInitializable<Void> {
@@ -89,8 +87,7 @@ public class FXMLEngineController implements IInitializable<Void> {
 		pipelinesPallet = new PipelineListPallet(tFPipelinesFilter, lvPipelines);
 		WorkQueue.run(()->{
 			try {
-				for(Pipeline p : PipelineManager.load())
-					PipelineManager.add(p);
+				PipelineManager.load();
 
 				Platform.runLater(()->pipelinesPallet.load(PipelineManager.getAll()));
 			} catch (EngineUIException ex) {
