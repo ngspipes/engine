@@ -27,7 +27,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import ngspipesengine.configurator.engines.VMEngine;
 import ngspipesengine.dataAccess.Uris;
-import ngspipesengine.logic.PipelineManager;
+import ngspipesengine.logic.pipeline.PipelineManager;
 import ngspipesengine.utils.Dialog;
 import ngspipesengine.utils.EngineUIException;
 import jfxutils.ComponentException;

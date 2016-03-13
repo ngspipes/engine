@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ngspipesengine.logic;
+package ngspipesengine.logic.pipeline;
 
 import ngspipesengine.configurator.properties.VMProperties;
 import ngspipesengine.exceptions.EngineException;

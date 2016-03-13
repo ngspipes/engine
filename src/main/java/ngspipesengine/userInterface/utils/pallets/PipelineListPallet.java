@@ -22,7 +22,7 @@ package ngspipesengine.userInterface.utils.pallets;
 import javafx.scene.Node;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import ngspipesengine.logic.Pipeline;
+import ngspipesengine.logic.pipeline.Pipeline;
 import ngspipesengine.userInterface.controllers.FXMLPipelineListViewItemController;
 import ngspipesengine.utils.Dialog;
 import jfxutils.ComponentException;
