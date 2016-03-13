@@ -19,14 +19,8 @@
  */
 package ngspipesengine.userInterface.controllers;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketTimeoutException;
-import java.util.concurrent.atomic.AtomicBoolean;
-
+import components.FXMLFile;
+import components.animation.magnifier.ButtonMagnifier;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -34,34 +28,49 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.Tooltip;
-import ngspipesengine.configurator.engines.VMEngine;
-import ngspipesengine.dataAccess.Uris;
-import ngspipesengine.logic.Pipeline;
-import ngspipesengine.utils.Dialog;
-import ngspipesengine.utils.WorkQueue;
-import progressReporter.SocketReporter;
 import jfxutils.ComponentException;
 import jfxutils.IInitializable;
+import ngspipesengine.dataAccess.Uris;
+import ngspipesengine.logic.engine.Engine;
+import ngspipesengine.logic.engine.EngineUIReporter;
+import ngspipesengine.logic.pipeline.Pipeline;
+import ngspipesengine.utils.Dialog;
+import ngspipesengine.utils.WorkQueue;
 
-import components.FXMLFile;
-import components.animation.magnifier.ButtonMagnifier;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 
-public class FXMLRunPipelineController implements IInitializable<Pipeline>{
-		
-	public static Node mount(Pipeline pipeline)  throws ComponentException {
+public class FXMLRunPipelineController implements IInitializable<FXMLRunPipelineController.Data>{
+
+	@FunctionalInterface
+	private static interface ExceptionSupplier<T>{
+		public T get() throws InterruptedException;
+	}
+
+
+	public static Node mount(Data data)  throws ComponentException {
 		String fXMLPath = Uris.FXML_RUN_PIPELINE;
 		
-		FXMLFile<Node, Pipeline> fxmlFile = new FXMLFile<>(fXMLPath, pipeline);
+		FXMLFile<Node, Data> fxmlFile = new FXMLFile<>(fXMLPath, data);
 		
 		fxmlFile.build();
 		
 		return fxmlFile.getRoot();
 	}
-	
-	private static final String TRACE_TAG = SocketReporter.TRACE_TAG;
-	private static final String ERROR_TAG = SocketReporter.ERROR_TAG;
-	private static final String INFO_TAG = SocketReporter.INFO_TAG;
+
+	public static class Data{
+		public final Engine engine;
+
+		public Data(Engine engine){
+			this.engine = engine;
+		}
+	}
+
+	private static final int TIMEOUT = 1000;
+	private static final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
+	private static final double MAGNIFY_AMP = 1.2;
 	
 	
 	@FXML
@@ -84,168 +93,158 @@ public class FXMLRunPipelineController implements IInitializable<Pipeline>{
 	private TextArea tAError;
 	@FXML
 	private TextArea tAInfo;
-	
+
+	private Engine engine;
 	private Pipeline pipeline;
-	private VMEngine vm;
-	private ServerSocket socket;
-	private AtomicBoolean finish = new AtomicBoolean();
-	
+	private EngineUIReporter reporter;
+
+
 	
 	@Override
-	public void init(Pipeline pipeline) throws ComponentException {
-		this.pipeline = pipeline;
+	public void init(Data data) throws ComponentException {
+		this.engine = data.engine;
+		this.pipeline = engine.pipeline;
+		this.reporter = engine.reporter;
+
 		load();
-		run();
+		runReporterThreads();
 	}
-	
+
 	private void load(){
-		lPipeline.setText(pipeline.getPipeline().getAbsolutePath());
-		lResults.setText(pipeline.getResults().getAbsolutePath());
-		lInputs.setText(pipeline.getInputs().getAbsolutePath());
-		lEngineName.setText(pipeline.getEngineName());
-		lFrom.setText(Integer.toString(pipeline.getFrom()));
-		lTo.setText(Integer.toString(pipeline.getTo()));
-		
-		Tooltip.install(lPipeline, new Tooltip(pipeline.getPipeline().getAbsolutePath()));
-		Tooltip.install(lResults, new Tooltip(pipeline.getResults().getAbsolutePath()));
-		Tooltip.install(lInputs, new Tooltip(pipeline.getInputs().getAbsolutePath()));
-		Tooltip.install(lEngineName, new Tooltip(pipeline.getEngineName()));
+		loadLabels();
+		loadCancelButton();
+	}
+
+	private void loadCancelButton() {
 		Tooltip.install(bCancel, new Tooltip("Cancel"));
-		
-		new ButtonMagnifier<Button>(bCancel, 1.2).mount();
-		
+
+		new ButtonMagnifier<>(bCancel, MAGNIFY_AMP).mount();
+
 		bCancel.setOnMouseClicked((e)->{
-			try {
-				finish.set(true);
-				vm.stop();
-				bCancel.setDisable(true);
-			} catch (Exception ex) {
-				Dialog.showError("Error stopping Engine!");
-			}
-		});
-	}
-	
-	private void run() throws ComponentException{
-		try{
-			socket = new ServerSocket(0);
-			initServer();
-		}catch(IOException ex){
-			throw new ComponentException("Error creating socket!", ex);
-		}
+			if(!engine.isStopped())
+				engine.stop();
 
-		WorkQueue.run(()->{
-			try {
-				pipeline.properties.setPort(socket.getLocalPort());
-				vm = new VMEngine(pipeline.properties);
-				vm.start();
-			} catch(Exception ex) {
-				closeSocket();
-				Platform.runLater(()-> Dialog.showError(ex.getMessage()));
-			}
+			bCancel.setDisable(true);
 		});
 	}
 
-	private void initServer() {
-		WorkQueue.run(()->{
-			Socket clientSocket = null;
+	private void loadLabels() {
+		String pipelinePath = pipeline.getPipeline().getAbsolutePath();
+		String resultsPath = pipeline.getResults().getAbsolutePath();
+		String inputsPath = pipeline.getInputs().getAbsolutePath();
+		String engineName = pipeline.getEngineName();
 
-			try {
-				clientSocket = acceptClient();
-				clearText();
-				if(clientSocket!=null)
-					answerClient(clientSocket);
-			} catch (IOException e) {
-				Platform.runLater(()->Dialog.showError("Error on comunication channel!"));
-			} finally{
-				finish.set(true);
-				closeSocket();
-				closeClient(clientSocket);
-				closeVM();
-				Platform.runLater(()->bCancel.setDisable(true));
+		loadLabel(lPipeline, pipelinePath);
+		loadLabel(lResults, resultsPath);
+		loadLabel(lInputs, inputsPath);
+		loadLabel(lEngineName, engineName);
+		loadLabel(lFrom, Integer.toString(pipeline.getFrom()));
+		loadLabel(lTo, Integer.toString(pipeline.getTo()));
+	}
+
+	private void loadLabel(Label label, String text){
+		label.setText(text);
+		Tooltip.install(label, new Tooltip(text));
+	}
+
+	private void runReporterThreads() {
+		WorkQueue.run(this::readTrace);
+		WorkQueue.run(this::readError);
+		WorkQueue.run(this::readInfo);
+	}
+
+	private void readTrace() {
+		AtomicBoolean loaded = new AtomicBoolean(false);
+
+		ExceptionSupplier<String> src = () -> {
+			String s = reporter.getTrace(TIMEOUT, TIME_UNIT);
+
+			if(s==null) {
+				if(!loaded.get())
+					updateLoadMessage();
+			} else {
+				if(!loaded.get()){
+					Platform.runLater(()->tATrace.clear());
+					loaded.set(true);
+				}
 			}
+
+			return s;
+		};
+
+		readReporter(src,
+                    this::trace,
+                    "Error reading Trace!");
+	}
+
+	private void readError(){
+		readReporter(() -> reporter.getError(TIMEOUT, TIME_UNIT),
+					this::error,
+					"Error reading Error!");
+	}
+
+	private void readInfo() {
+		readReporter(() -> reporter.getInfo(TIMEOUT, TIME_UNIT),
+					this::info,
+					"Error reading Info!");
+	}
+
+	private void updateLoadMessage(){
+		String currText = tATrace.getText();
+
+		if(currText == null || currText.isEmpty())
+			currText = "Loading (can take a few minutes)";
+		else
+			currText = currText.endsWith("...") ? currText.replace("...", "") : currText+".";
+
+		String textUpdate = currText;
+		Platform.runLater(() -> tATrace.setText(textUpdate));
+	}
+
+	private void readReporter(ExceptionSupplier<String> src, Consumer<String> dest, String errorMsg){
+		String msg;
+
+		try {
+			while(!reporter.isClosed())
+				if((msg = src.get()) != null)
+					dest.accept(msg);
+
+			drain(src, dest, errorMsg);
+		} catch (InterruptedException e) {
+			Platform.runLater(() -> Dialog.showError(errorMsg));
+		}
+	}
+
+	private void drain(ExceptionSupplier<String> src, Consumer<String> dest, String errorMsg){
+		String msg;
+
+		try {
+			while((msg = src.get()) != null)
+				dest.accept(msg);
+		}catch (InterruptedException e){
+			Platform.runLater(()-> Dialog.showError(errorMsg));
+		}
+	}
+
+	private void trace(String msg){
+		Platform.runLater(()->{
+			tATrace.appendText("\n");
+			tATrace.appendText(msg);
 		});
 	}
 
-	private void setText(TextArea textArea, String text){
-		Platform.runLater(()->textArea.setText(text));
-	}
-	
-	private void appendText(TextArea textArea, String text){
-		Platform.runLater(()->textArea.appendText(text));
-	}
-	
-	private void clearText(){
-		Platform.runLater(()->tATrace.clear());
-	}
-	
-	private Socket acceptClient() throws IOException {
-		socket.setSoTimeout(1000);
-
-		setText(tATrace, "Loading (can take a few minutes)");
-		
-		while(!finish.get()){
-			try{
-				return socket.accept();
-			}catch(SocketTimeoutException ex){
-				Platform.runLater(()->{
-					String text = tATrace.getText();
-					
-					text = text.endsWith("......") ? text.replace("......", "") : text+"."; 
-
-					tATrace.setText(text);
-				});		
-			}
-		}
-		
-		return null;
-	}
-	
-	private void answerClient(Socket client) throws IOException {
-		try(BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));){
-			String line;
-			while ((line = in.readLine()) != null){
-				line+="\n";
-				if(line.startsWith(TRACE_TAG))
-					appendText(tATrace, line.substring(TRACE_TAG.length()));
-				else if(line.startsWith(ERROR_TAG))
-					appendText(tAError, line.substring(ERROR_TAG.length()));
-				else
-					appendText(tAInfo, line.substring(INFO_TAG.length()));
-			}
-		}
-	}
-	
-	private void closeClient(Socket client){
-		if(client == null)
-			return;
-		
-		try {
-			client.close();	
-		} catch (Exception e) {
-			Platform.runLater(()->Dialog.showError("Error closing Socket!"));
-		}
-	}
-	
-	private void closeSocket(){
-		if(socket == null)
-			return;
-		
-		try {
-			socket.close();	
-		} catch (Exception e) {
-			Platform.runLater(()->Dialog.showError("Error closing Socket!"));
-		}
+	private void error(String msg){
+		Platform.runLater(()->{
+			tAError.appendText("\n");
+			tAError.appendText(msg);
+		});
 	}
 
-	private void closeVM() {
-		if(vm == null)
-			return;
-		
-		try {
-			vm.finish();	
-		} catch (Exception e) {
-			Platform.runLater(()->Dialog.showError("Error finishing VMEngine!"));
-		}
+	private void info(String msg){
+		Platform.runLater(()->{
+			tAInfo.appendText("\n");
+			tAInfo.appendText(msg);
+		});
 	}
-	
+
 }
