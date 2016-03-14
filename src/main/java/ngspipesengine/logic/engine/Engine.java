@@ -78,7 +78,7 @@ public class Engine {
     }
 
     public void stop(){
-        stop.set(true);
+        close();
     }
 
     public boolean isStopped(){

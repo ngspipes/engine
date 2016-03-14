@@ -26,7 +26,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 import jfxutils.ComponentException;
 import jfxutils.IInitializable;
 import ngspipesengine.logic.engine.Engine;
@@ -155,6 +154,10 @@ public class FXMLEngineController implements IInitializable<Void> {
 			pipelineTab.setGraphic(new Label(pipeline.getPipeline().getName()));
 			Engine engine = new Engine(pipeline);
 			Node root = FXMLRunPipelineController.mount(new FXMLRunPipelineController.Data(engine));
+			pipelineTab.setOnCloseRequest((e) -> {
+				if(!engine.isStopped())
+					engine.stop();
+			});
 			engine.start();
 			pipelineTab.setContent(root);
 			tPPipelines.getTabs().add(pipelineTab);
