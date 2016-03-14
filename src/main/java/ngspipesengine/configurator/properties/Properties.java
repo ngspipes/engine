@@ -168,7 +168,7 @@ public abstract class Properties implements IProperties {
 				Utils.treatException(log, TAG, "Error creating pipeline instance");
 
 			if(method.getReturnType().equals(Pipeline.class)) {
-				pipe = (Pipeline) method.invoke(obj, new Object[] { compilerProps.getRepositoryUri()});
+				pipe = (Pipeline) method.invoke(obj, compilerProps.getRepositoryUri());
 				setups = getSetupsFromConfigurator(getConfigurators(pipe, compilerProps.getFrom(), compilerProps.getTo()));
 				internalUpdate();
 			}		

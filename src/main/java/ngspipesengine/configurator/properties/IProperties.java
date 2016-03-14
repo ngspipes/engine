@@ -26,28 +26,28 @@ import ngspipesengine.exceptions.EngineException;
 
 public interface IProperties {
 
-	public void set(String... args) throws EngineException;
+	void set(String... args) throws EngineException;
 	
-	public void unset(String... args) throws EngineException;
+	void unset(String... args) throws EngineException;
 
-	public Map<String, List<String>> getSetups();
+	Map<String, List<String>> getSetups();
 
-	public String getInputsPath();
+	String getInputsPath();
 	
-	public String getOutputsPath();
+	String getOutputsPath();
 	
-	public void setInputsPath(String input);
+	void setInputsPath(String input);
 	
-	public void setOutputsPath(String output);
+	void setOutputsPath(String output);
 	
-	public void setFrom(int from);
+	void setFrom(int from);
 	
-	public void setTo(int from);
+	void setTo(int from);
 	
-	public int getFrom();
+	int getFrom();
 	
-	public int getTo();
+	int getTo();
 	
-	public void setPort(int port);
+	void setPort(int port);
 
 }

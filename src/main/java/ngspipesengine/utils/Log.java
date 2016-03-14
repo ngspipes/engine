@@ -39,7 +39,7 @@ public class Log {
 	private static final int JSON_IDENTATION = 5;
 	private static final String JSON_EXTENSION = ".json";
 
-	public static enum MessageType{
+	public enum MessageType{
 		Fatal(),
 		Error(),
 		Warning(),

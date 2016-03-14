@@ -23,11 +23,11 @@ import ngspipesengine.exceptions.EngineException;
 
 public interface IEngine {
 	
-	public void start() throws EngineException;
+	void start() throws EngineException;
 	
-	public void finish() throws EngineException;
+	void finish() throws EngineException;
 	
-	public void clean() throws EngineException;
+	void clean() throws EngineException;
         
-	public void stop() throws EngineException;
+	void stop() throws EngineException;
 }

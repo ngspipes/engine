@@ -24,5 +24,5 @@ import ngspipesengine.exceptions.EngineException;
 @FunctionalInterface
 public interface ICompiler {
 	
-	public void compile() throws EngineException;
+	void compile() throws EngineException;
 }

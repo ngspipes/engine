@@ -45,8 +45,8 @@ import java.util.function.Consumer;
 public class FXMLRunPipelineController implements IInitializable<FXMLRunPipelineController.Data>{
 
 	@FunctionalInterface
-	private static interface ExceptionSupplier<T>{
-		public T get() throws InterruptedException;
+	private interface ExceptionSupplier<T>{
+		T get() throws InterruptedException;
 	}
 
 
