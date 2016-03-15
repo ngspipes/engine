@@ -22,8 +22,13 @@ package ngspipesengine.utils;
 public class WorkQueue {
 
     public static void run(Runnable action){
+        run(action, true, Thread.NORM_PRIORITY);
+    }
+
+    public static void run(Runnable action, boolean deamon, int priority){
         Thread thread = new Thread(action);
-        thread.setDaemon(true);
+        thread.setDaemon(deamon);
+        thread.setPriority(priority);
         thread.start();
     }
 
