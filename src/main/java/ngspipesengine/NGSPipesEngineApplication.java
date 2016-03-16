@@ -19,20 +19,19 @@
  */
 package ngspipesengine;
 
+import components.FXMLFile;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import jfxutils.ComponentException;
 import ngspipesengine.configurator.engines.VMEngine;
 import ngspipesengine.dataAccess.Uris;
 import ngspipesengine.logic.pipeline.PipelineManager;
 import ngspipesengine.utils.Dialog;
 import ngspipesengine.utils.EngineUIException;
-import jfxutils.ComponentException;
-
-import components.FXMLFile;
 
 
 public class NGSPipesEngineApplication extends Application {
@@ -67,7 +66,6 @@ public class NGSPipesEngineApplication extends Application {
 			Scene scene = new Scene(root);
 			stage.setScene(scene);
 			stage.show();
-			stage.setResizable(false);
 			
 		}catch(ComponentException ex){
 			Dialog.showError("Error loading Engine");
