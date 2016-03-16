@@ -47,28 +47,25 @@ public class PipelineManager {
 	}
 
 	public static void load() throws EngineUIException {
-		try {
-			String data = STORE.get(KEY, null);
-
-			synchronized (lock){
+		synchronized (lock){
+			try {
+				String data = STORE.get(KEY, null);
 				PIPELINES =  PipelineSerializer.deserialize(data);
+			} catch (EngineUIException ex) {
+				throw new EngineUIException("Error loading pipelines!", ex);
 			}
-		} catch (EngineUIException ex) {
-			throw new EngineUIException("Error loading pipelines!", ex);
 		}
 	}
 	
 	public static void save() throws EngineUIException{
-		try{
-			STORE.clear();
-
-			synchronized (lock){
+		synchronized (lock){
+			try{
+				STORE.clear();
 				STORE.put(KEY, PipelineSerializer.serialize(PIPELINES));
+				STORE.flush();
+			} catch(BackingStoreException | EngineUIException ex) {
+				throw new EngineUIException("Error saving pipelines!", ex);
 			}
-
-			STORE.flush();
-		}catch(BackingStoreException | EngineUIException ex){
-			throw new EngineUIException("Error saving pipelines!",ex);
 		}
 	}
 
