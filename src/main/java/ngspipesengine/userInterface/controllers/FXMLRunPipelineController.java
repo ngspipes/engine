@@ -31,7 +31,6 @@ import javafx.scene.control.Tooltip;
 import jfxutils.ComponentException;
 import jfxutils.IInitializable;
 import ngspipesengine.dataAccess.Uris;
-import ngspipesengine.logic.engine.Engine;
 import ngspipesengine.logic.engine.EngineUIReporter;
 import ngspipesengine.logic.pipeline.Pipeline;
 import ngspipesengine.utils.Dialog;
@@ -61,10 +60,14 @@ public class FXMLRunPipelineController implements IInitializable<FXMLRunPipeline
 	}
 
 	public static class Data{
-		public final Engine engine;
+		public final Pipeline pipeline;
+		public final EngineUIReporter reporter;
+		public final Runnable onCancel;
 
-		public Data(Engine engine){
-			this.engine = engine;
+		public Data(Pipeline pipeline, EngineUIReporter reporter, Runnable onCancel){
+			this.pipeline = pipeline;
+			this.reporter = reporter;
+			this.onCancel = onCancel;
 		}
 	}
 
@@ -94,17 +97,17 @@ public class FXMLRunPipelineController implements IInitializable<FXMLRunPipeline
 	@FXML
 	private TextArea tAInfo;
 
-	private Engine engine;
 	private Pipeline pipeline;
 	private EngineUIReporter reporter;
+	private Runnable onCancel;
 
 
 	
 	@Override
 	public void init(Data data) throws ComponentException {
-		this.engine = data.engine;
-		this.pipeline = engine.pipeline;
-		this.reporter = engine.reporter;
+		this.pipeline = data.pipeline;
+		this.reporter = data.reporter;
+		this.onCancel = data.onCancel;
 
 		load();
 		runReporterThreads();
@@ -121,9 +124,7 @@ public class FXMLRunPipelineController implements IInitializable<FXMLRunPipeline
 		new ButtonMagnifier<>(bCancel, MAGNIFY_AMP).mount();
 
 		bCancel.setOnMouseClicked((e)->{
-			if(!engine.isStopped())
-				engine.stop();
-
+			onCancel.run();
 			bCancel.setDisable(true);
 		});
 	}
@@ -212,6 +213,8 @@ public class FXMLRunPipelineController implements IInitializable<FXMLRunPipeline
 			drain(src, dest, errorMsg);
 		} catch (InterruptedException e) {
 			Platform.runLater(() -> Dialog.showError(errorMsg));
+		} finally {
+			bCancel.setDisable(true);
 		}
 	}
 

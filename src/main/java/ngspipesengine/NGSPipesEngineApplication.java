@@ -29,6 +29,7 @@ import javafx.stage.Stage;
 import jfxutils.ComponentException;
 import ngspipesengine.configurator.engines.VMEngine;
 import ngspipesengine.dataAccess.Uris;
+import ngspipesengine.logic.engine.EngineManager;
 import ngspipesengine.logic.pipeline.PipelineManager;
 import ngspipesengine.utils.Dialog;
 import ngspipesengine.utils.EngineUIException;
@@ -41,6 +42,7 @@ public class NGSPipesEngineApplication extends Application {
 		stage.setOnCloseRequest((e)->{
 			try {
 				PipelineManager.save();
+				EngineManager.stopAllRunningPipelines();
 				Platform.exit();
 			} catch (EngineUIException ex) {
 				Dialog.showError(ex.getMessage());

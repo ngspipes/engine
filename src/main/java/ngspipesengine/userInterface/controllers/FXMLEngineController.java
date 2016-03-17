@@ -28,7 +28,8 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import jfxutils.ComponentException;
 import jfxutils.IInitializable;
-import ngspipesengine.logic.engine.Engine;
+import ngspipesengine.logic.engine.EngineManager;
+import ngspipesengine.logic.engine.EngineUIReporter;
 import ngspipesengine.logic.pipeline.Pipeline;
 import ngspipesengine.logic.pipeline.PipelineManager;
 import ngspipesengine.userInterface.utils.pallets.EngineListPallet;
@@ -149,21 +150,30 @@ public class FXMLEngineController implements IInitializable<Void> {
 			return;
 		
 		try {
+			EngineUIReporter reporter = new EngineUIReporter();
+			int id = EngineManager.run(pipeline, reporter);
+
 			Tab pipelineTab = new Tab();
+
 			pipelineTab.setClosable(true);
+			pipelineTab.setOnCloseRequest((e) -> stopExecution(id));
+
 			pipelineTab.setGraphic(new Label(pipeline.getPipeline().getName()));
-			Engine engine = new Engine(pipeline);
-			Node root = FXMLRunPipelineController.mount(new FXMLRunPipelineController.Data(engine));
-			pipelineTab.setOnCloseRequest((e) -> {
-				if(!engine.isStopped())
-					engine.stop();
-			});
-			engine.start();
+			Node root = FXMLRunPipelineController.mount(new FXMLRunPipelineController.Data(pipeline, reporter, ()->stopExecution(id)));
+
 			pipelineTab.setContent(root);
 			tPPipelines.getTabs().add(pipelineTab);
 			tPPipelines.getSelectionModel().select(pipelineTab);
 		} catch (Exception ex) {
 			Dialog.showError(ex.getMessage());
+		}
+	}
+
+	private void stopExecution(int id){
+		try{
+			EngineManager.stop(id);
+		}catch (EngineUIException ex){
+			Platform.runLater(()->Dialog.showError(ex.getMessage()));
 		}
 	}
 	
