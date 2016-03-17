@@ -19,12 +19,6 @@
  */
 package ngspipesengine.configurator.engines;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.*;
-
 import ngspipesengine.configurator.properties.VMProperties;
 import ngspipesengine.configurator.scripts.Script;
 import ngspipesengine.exceptions.EngineException;
@@ -32,6 +26,12 @@ import ngspipesengine.utils.Log;
 import ngspipesengine.utils.Uris;
 import ngspipesengine.utils.Utils;
 import ngspipesengine.utils.WorkQueue;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 public class VMEngine extends Engine {
 
@@ -187,15 +187,14 @@ public class VMEngine extends Engine {
 	@Override
 	protected void internalStart() throws EngineException { 
 		props.getLog().debug(TAG, "Starting to run");
-		WorkQueue.run(() -> {
-			try {
-				System.out.println("Booting engine and installing necessary packages");
-				Utils.executeCommand(getStartVMCommand(), props.getLog(), TAG,
-						"Error trying running virtual machine");
-			} catch (EngineException e) {
-				e.printStackTrace();
-			}
-		});
+
+		try {
+			System.out.println("Booting engine and installing necessary packages");
+			Utils.executeCommand(getStartVMCommand(), props.getLog(), TAG,
+					"Error trying running virtual machine");
+		} catch (EngineException e) {
+			e.printStackTrace();
+		}
 		//props.getLog().debug(TAG, "Running success");
 	}
 
