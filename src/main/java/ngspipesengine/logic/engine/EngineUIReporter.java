@@ -39,6 +39,9 @@ public class EngineUIReporter implements IProgressReporter {
     public void open(){}
 
     public void reportTrace(String msg) throws ProgressReporterException {
+        if(isClosed())
+            return;
+
         try {
             traceQueue.put(msg);
         } catch(InterruptedException ex) {
@@ -47,6 +50,9 @@ public class EngineUIReporter implements IProgressReporter {
     }
 
     public void reportError(String msg) throws ProgressReporterException {
+        if(isClosed())
+            return;
+
         try {
             errorQueue.put(msg);
         } catch(InterruptedException ex) {
@@ -55,6 +61,9 @@ public class EngineUIReporter implements IProgressReporter {
     }
 
     public void reportInfo(String msg) throws ProgressReporterException {
+        if(isClosed())
+            return;
+
         try {
             infoQueue.put(msg);
         } catch(InterruptedException ex) {
