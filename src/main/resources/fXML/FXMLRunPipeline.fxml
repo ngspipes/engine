@@ -153,44 +153,37 @@
             <Insets />
          </VBox.margin>
       </HBox>
-      <VBox VBox.vgrow="ALWAYS">
-         <children>
-            <Label text="Trace:">
-               <font>
-                  <Font name="System Bold" size="15.0" />
-               </font>
-               <padding>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </padding>
-            </Label>
-            <TextArea fx:id="tATrace" wrapText="true">
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-            </TextArea>
-            <Label text="Info:" textFill="#1100ff">
-               <font>
-                  <Font name="System Bold" size="15.0" />
-               </font>
-               <padding>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </padding>
-            </Label>
-            <TextArea fx:id="tAInfo" stylesheets="@../css/InfoTextArea.css" wrapText="true" />
-            <Label text="Error:" textFill="RED">
-               <font>
-                  <Font name="System Bold" size="15.0" />
-               </font>
-               <padding>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </padding>
-            </Label>
-            <TextArea fx:id="tAError" stylesheets="@../css/ErrorTextArea.css" wrapText="true" />
-         </children>
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
-      </VBox>
+      <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+        <tabs>
+          <Tab fx:id="tabTrace" text="Trace">
+            <content>
+              <AnchorPane>
+                     <children>
+                        <TextArea fx:id="tATrace" prefHeight="220.0" prefWidth="581.0" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab fx:id="tabInfo" text="Info">
+            <content>
+              <AnchorPane>
+                     <children>
+                        <TextArea fx:id="tAInfo" prefHeight="220.0" prefWidth="581.0" stylesheets="@../css/InfoTextArea.css" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+            <Tab fx:id="tabError" text="Error">
+              <content>
+                <AnchorPane>
+                     <children>
+                        <TextArea fx:id="tAError" prefHeight="220.0" prefWidth="581.0" stylesheets="@../css/ErrorTextArea.css" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+        </tabs>
+      </TabPane>
    </children>
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
