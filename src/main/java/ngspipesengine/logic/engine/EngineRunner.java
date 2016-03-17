@@ -51,9 +51,9 @@ public class EngineRunner {
     private final CountDownLatch runningPipeline = new CountDownLatch(1);
     private final AtomicBoolean stop = new AtomicBoolean();
     private final EngineUIReporter reporter;
+    private final IEngine engine;
     private ServerSocket socket;
     private Socket client;
-    private IEngine engine;
 
 
 
@@ -126,14 +126,21 @@ public class EngineRunner {
     }
 
     private void runPipeline() {
+        runningPipeline.countDown();
+
         try {
-            runningPipeline.countDown();
             engine.start();
         } catch(EngineException ex) {
             stop.set(true);
             Platform.runLater(()-> Dialog.showError(ex.getMessage()));
         } finally {
+            try{
+                engine.finish();
+            } catch(EngineException e) {
+                Platform.runLater(()-> Dialog.showError(e.getMessage()));
+            }
             finished.countDown();
+            stop.set(true);
         }
     }
 
