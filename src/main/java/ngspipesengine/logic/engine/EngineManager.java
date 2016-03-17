@@ -19,7 +19,6 @@
  */
 package ngspipesengine.logic.engine;
 
-import ngspipesengine.configurator.engines.VMEngine;
 import ngspipesengine.exceptions.EngineException;
 import ngspipesengine.logic.pipeline.Pipeline;
 import ngspipesengine.utils.EngineUIException;
@@ -56,17 +55,10 @@ public class EngineManager {
         if(pipeline == null || reporter == null)
             throw new IllegalArgumentException("Pipeline and reporter can not be null!");
 
-        synchronized (LOCK){
-            EngineRunner runner = null;
-            try{
-                runner = new EngineRunner(new VMEngine(pipeline.properties), reporter);
-            } catch(EngineException ex) {
-                throw new EngineUIException("Error during Engine initiation", ex);
-            }
-
+        synchronized(LOCK) {
+            EngineRunner runner = new EngineRunner(pipeline, reporter);
             runner.start();
             RUNNERS.put(++id, runner);
-
             return id;
         }
     }

@@ -22,7 +22,9 @@ package ngspipesengine.logic.engine;
 import exceptions.ProgressReporterException;
 import javafx.application.Platform;
 import ngspipesengine.configurator.engines.IEngine;
+import ngspipesengine.configurator.engines.VMEngine;
 import ngspipesengine.exceptions.EngineException;
+import ngspipesengine.logic.pipeline.Pipeline;
 import ngspipesengine.utils.Dialog;
 import ngspipesengine.utils.WorkQueue;
 import progressReporter.SocketReporter;
@@ -50,15 +52,16 @@ public class EngineRunner {
     private final CountDownLatch finished = new CountDownLatch(1);
     private final CountDownLatch runningPipeline = new CountDownLatch(1);
     private final AtomicBoolean stop = new AtomicBoolean();
+    private final Pipeline pipeline;
     private final EngineUIReporter reporter;
-    private final IEngine engine;
+    private IEngine engine;
     private ServerSocket socket;
     private Socket client;
 
 
 
-    public EngineRunner(IEngine engine, EngineUIReporter reporter){
-        this.engine = engine;
+    public EngineRunner(Pipeline pipeline, EngineUIReporter reporter){
+        this.pipeline = pipeline;
         this.reporter = reporter;
     }
 
@@ -67,7 +70,6 @@ public class EngineRunner {
     public void start() {
         try{
             WorkQueue.run(this::runServer);
-            WorkQueue.run(this::runPipeline);
         } catch(RuntimeException ex) {
             finished.countDown();
             stop.set(true);
@@ -92,10 +94,16 @@ public class EngineRunner {
 
     private void runServer() {
         try {
-            initSocket();
+            initServer();
+        } catch (IOException e) {
+            Platform.runLater(()->Dialog.showError("Error on communication channel!"));
+            close();
+            return;
+        }
 
-            reporter.open();
+        initEngine();
 
+        try {
             attendClient();
         } catch (ProgressReporterException | IOException e) {
             waitPipelineRunning();
@@ -106,9 +114,15 @@ public class EngineRunner {
         }
     }
 
-    private void initSocket() throws IOException {
+    private void initServer() throws IOException {
         socket = new ServerSocket(SOCKET_PORT);
         socket.setSoTimeout(ACCEPT_CLIENT_TIMEOUT);
+        reporter.open();
+    }
+
+    private void initEngine() {
+        pipeline.properties.setPort(socket.getLocalPort());
+        WorkQueue.run(this::runPipeline);
     }
 
     private void attendClient() throws IOException, ProgressReporterException {
@@ -121,16 +135,19 @@ public class EngineRunner {
     public void waitPipelineRunning(){
         try {
             runningPipeline.await();
-            Thread.sleep(1000);
+            Thread.sleep(2000);
         } catch (InterruptedException ex) {}
     }
 
     private void runPipeline() {
-        runningPipeline.countDown();
-
         try {
+            engine = new VMEngine(pipeline.properties);
+            runningPipeline.countDown();
             engine.start();
         } catch(EngineException ex) {
+            if(runningPipeline.getCount() != 0)
+                runningPipeline.countDown();
+
             stop.set(true);
             Platform.runLater(()-> Dialog.showError(ex.getMessage()));
         } finally {
