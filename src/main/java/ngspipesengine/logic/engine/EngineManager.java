@@ -19,6 +19,8 @@
  */
 package ngspipesengine.logic.engine;
 
+import ngspipesengine.configurator.engines.VMEngine;
+import ngspipesengine.configurator.properties.VMProperties;
 import ngspipesengine.exceptions.EngineException;
 import ngspipesengine.logic.pipeline.Pipeline;
 import ngspipesengine.utils.EngineUIException;
@@ -49,6 +51,17 @@ public class EngineManager {
     }
 
 
+
+
+    public static Collection<String> getEnginesNames(){
+        try {
+            return VMEngine.getVMsName();
+        } catch (Exception e) {
+            Collection<String> names = new LinkedList<>();
+            names.add(VMProperties.BASE_VM_NAME);
+            return names;
+        }
+    }
 
     public static int run(Pipeline pipeline, EngineUIReporter reporter) throws EngineUIException {
         if(pipeline == null || reporter == null)

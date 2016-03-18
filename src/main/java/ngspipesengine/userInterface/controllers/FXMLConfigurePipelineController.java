@@ -19,36 +19,26 @@
  */
 package ngspipesengine.userInterface.controllers;
 
-import java.io.File;
-import java.util.Collection;
-import java.util.LinkedList;
-
-import javafx.collections.FXCollections;
-import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
-import javafx.scene.image.ImageView;
-import ngspipesengine.dataAccess.Uris;
-import ngspipesengine.logic.pipeline.Pipeline;
-import ngspipesengine.logic.pipeline.PipelineManager;
-import ngspipesengine.userInterface.controllers.FXMLConfigurePipelineController.Data;
-import ngspipesengine.utils.Dialog;
-import sun.management.ManagementFactoryHelper;
-import jfxutils.ComponentException;
-import jfxutils.IInitializable;
-
 import com.sun.management.OperatingSystemMXBean;
 import components.FXMLFile;
 import components.animation.magnifier.ButtonMagnifier;
+import javafx.collections.FXCollections;
+import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
+import jfxutils.ComponentException;
+import jfxutils.IInitializable;
+import ngspipesengine.dataAccess.Uris;
+import ngspipesengine.logic.engine.EngineManager;
+import ngspipesengine.logic.pipeline.Pipeline;
+import ngspipesengine.userInterface.controllers.FXMLConfigurePipelineController.Data;
+import ngspipesengine.utils.Dialog;
+import sun.management.ManagementFactoryHelper;
 
-
-
-
+import java.io.File;
+import java.util.Collection;
+import java.util.LinkedList;
 
 
 public class FXMLConfigurePipelineController implements IInitializable<Data> {
@@ -65,11 +55,11 @@ public class FXMLConfigurePipelineController implements IInitializable<Data> {
 
 	public static class Data{
 		public final Pipeline pipeline;
-		public final Runnable onFinish;
+		public final Runnable onConfirm;
 
-		public Data(Pipeline pipeline, Runnable onFinish){
+		public Data(Pipeline pipeline, Runnable onConfirm){
 			this.pipeline = pipeline;
-			this.onFinish = onFinish;
+			this.onConfirm = onConfirm;
 		}
 	}
 
@@ -77,13 +67,11 @@ public class FXMLConfigurePipelineController implements IInitializable<Data> {
 	@FXML
 	private TextField tFResults;
 	@FXML
-	private TextField tFInputs;
-	@FXML
 	private Button bResults;
 	@FXML
-	private Button bInputs;
+	private TextField tFInputs;
 	@FXML
-	private Button bOk;
+	private Button bInputs;
 	@FXML 
 	private ComboBox<String> cBEngines;
 	@FXML 
@@ -100,29 +88,31 @@ public class FXMLConfigurePipelineController implements IInitializable<Data> {
 	private Slider sProcessorsQuantity;
 	@FXML
 	private ImageView iVMemoryWarning;
+	@FXML
+	private Button bConfirm;
 
 	private Pipeline pipeline;
-	private Runnable onFinish;
+	private Runnable onConfirm;
 
 	@Override
 	public void init(Data data) {
 		this.pipeline = data.pipeline;
-		this.onFinish = data.onFinish;
+		this.onConfirm = data.onConfirm;
 		load();
 	}
 
 	private void load(){
-		setButtonOkClick();
+		setButtonConfirmClick();
 		setButtonResultsClick();
 		setButtonInputsClick();
 
 		new ButtonMagnifier<Button>(bResults).mount();
 		new ButtonMagnifier<Button>(bInputs).mount();
-		new ButtonMagnifier<Button>(bOk).mount();
+		new ButtonMagnifier<Button>(bConfirm).mount();
 
 		Tooltip.install(bResults, new Tooltip("Search"));
 		Tooltip.install(bInputs, new Tooltip("Search"));
-		Tooltip.install(bOk, new Tooltip("Ok"));
+		Tooltip.install(bConfirm, new Tooltip("Confirm"));
 		Tooltip.install(iVMemoryWarning, new Tooltip("Minimize memory may not allow the entire execution of pipeline!"));
 
 		tFResults.setText(pipeline.getResults().getAbsolutePath());
@@ -153,45 +143,8 @@ public class FXMLConfigurePipelineController implements IInitializable<Data> {
 		});
 	}
 
-	private void setButtonOkClick() {
-		bOk.setOnMouseClicked((e)->{
-			String results = tFResults.getText();
-			String inputs = tFInputs.getText();
-			String engineName = cBEngines.getSelectionModel().getSelectedItem();
-			int from = cBFrom.getSelectionModel().getSelectedItem();
-			int to = cBTo.getSelectionModel().getSelectedItem();
-			int memory = new Double(sMemoryQuantity.getValue()).intValue();
-			int processors = new Double(sProcessorsQuantity.getValue()).intValue();
-
-			if(!results.isEmpty()){
-				if(!new File(results).exists())
-					ngspipesengine.utils.Dialog.showError("Invalid Results folder directory!");
-				else
-					pipeline.setResults(new File(results));
-			}
-			if(!inputs.isEmpty()){
-				if(!new File(inputs).exists())
-					ngspipesengine.utils.Dialog.showError("Invalid Inputs folder directory!");
-				else
-					pipeline.setInputs(new File(inputs));
-			}
-			if(from>to){
-				Dialog.showError("From can't be greater than To!");
-				return;
-			}
-
-			pipeline.setEngineName(engineName);
-			pipeline.setFrom(from);
-			pipeline.setTo(to);
-			pipeline.setMemory(memory);
-			pipeline.setProcessors(processors);
-
-			onFinish.run();
-		});
-	}
-
-	private void loadNamesComboBox(){	
-		cBEngines.setItems(FXCollections.observableArrayList(PipelineManager.getEnginesNames()));
+	private void loadNamesComboBox(){
+		cBEngines.setItems(FXCollections.observableArrayList(EngineManager.getEnginesNames()));
 		cBEngines.getSelectionModel().select(pipeline.getEngineName());
 	}
 
@@ -201,12 +154,7 @@ public class FXMLConfigurePipelineController implements IInitializable<Data> {
 		cBFrom.getSelectionModel().selectedItemProperty().addListener((obs, prev, curr)->{
 			int from = curr;
 			int to = cBTo.getSelectionModel().getSelectedItem();
-			
-			if(to>=from){
-				pipeline.setFrom(from);
-				pipeline.setTo(to);
-				sMemoryQuantity.setValue(pipeline.getMemory());	
-			}
+			updateMemory(from, to);
 		});
 	}
 
@@ -216,29 +164,31 @@ public class FXMLConfigurePipelineController implements IInitializable<Data> {
 		cBTo.getSelectionModel().selectedItemProperty().addListener((obs, prev, curr)->{
 			int from  = cBFrom.getSelectionModel().getSelectedItem();
 			int to = curr;
-			
-			if(to>=from){
-				pipeline.setTo(to);
-				pipeline.setFrom(from);
-				sMemoryQuantity.setValue(pipeline.getMemory());	
-			}
+			updateMemory(from, to);
 		});
 	}
 
-	private Collection<Integer> getNumberOptions(){
-		Collection<Integer> options = new LinkedList<>();
+	private void updateMemory(int from, int to){
+		int prevFrom = pipeline.getFrom();
+		int prevTo = pipeline.getTo();
 
-		for(int i=0; i<pipeline.getTotalSteps(); ++i)
-			options.add(i+1);
+		if(to >= from){
+			pipeline.setFrom(from);
+			pipeline.setTo(to);
 
-		return options;
+			sMemoryQuantity.setValue(pipeline.getMemory());
+
+			pipeline.setFrom(prevFrom);
+			pipeline.setTo(prevTo);
+		}else{
+			Dialog.showError("From can't be greater than To!");
+		}
 	}
 
 	public void loadMemory(){
 		sMemoryQuantity.setMin(1);
 		sMemoryQuantity.setMax(getMaxMemory());
 		sMemoryQuantity.setValue(pipeline.getMemory());
-//		sMemoryQuantity.setShowTickLabels(true);
 		sMemoryQuantity.valueProperty().addListener((obs, prev, curr)->{
 			lMemoryQuantity.setText(curr.intValue()+"");
 		});
@@ -260,7 +210,6 @@ public class FXMLConfigurePipelineController implements IInitializable<Data> {
 		sProcessorsQuantity.setMin(1);
 		sProcessorsQuantity.setMax(getMaxProcessors());
 		sProcessorsQuantity.setValue(pipeline.getProcessors());
-//		sProcessorsQuantity.setShowTickLabels(true);
 		sProcessorsQuantity.valueProperty().addListener((obs, prev, curr)->{
 			lProcessorsQuantity.setText(curr.intValue()+"");
 		});
@@ -270,6 +219,68 @@ public class FXMLConfigurePipelineController implements IInitializable<Data> {
 
 	private int getMaxProcessors(){
 		return Runtime.getRuntime().availableProcessors();
+	}
+
+	private void setButtonConfirmClick() {
+		bConfirm.setOnMouseClicked((e)->{
+			if(!validateValues())
+				return;
+
+			String results = tFResults.getText();
+			String inputs = tFInputs.getText();
+			String engineName = cBEngines.getSelectionModel().getSelectedItem();
+			int from = cBFrom.getSelectionModel().getSelectedItem();
+			int to = cBTo.getSelectionModel().getSelectedItem();
+			int memory = new Double(sMemoryQuantity.getValue()).intValue();
+			int processors = new Double(sProcessorsQuantity.getValue()).intValue();
+
+			pipeline.setResults(new File(results));
+			pipeline.setInputs(new File(inputs));
+			pipeline.setEngineName(engineName);
+			pipeline.setFrom(from);
+			pipeline.setTo(to);
+			pipeline.setMemory(memory);
+			pipeline.setProcessors(processors);
+
+			onConfirm.run();
+		});
+	}
+
+	private boolean validateValues(){
+		String results = tFResults.getText();
+		String inputs = tFInputs.getText();
+		int from = cBFrom.getSelectionModel().getSelectedItem();
+		int to = cBTo.getSelectionModel().getSelectedItem();
+
+		if(results != null && !results.isEmpty()){
+			if(!new File(results).exists()) {
+				Dialog.showError("Invalid Results folder directory!");
+				return false;
+			}
+		}
+
+		if(inputs != null && !inputs.isEmpty()){
+			if(!new File(inputs).exists()){
+				Dialog.showError("Invalid Inputs folder directory!");
+				return false;
+			}
+		}
+
+		if(from>to){
+			Dialog.showError("From can't be greater than To!");
+			return false;
+		}
+
+		return true;
+	}
+
+	private Collection<Integer> getNumberOptions(){
+		Collection<Integer> options = new LinkedList<>();
+
+		for(int i=0; i<pipeline.getTotalSteps(); ++i)
+			options.add(i+1);
+
+		return options;
 	}
 
 }

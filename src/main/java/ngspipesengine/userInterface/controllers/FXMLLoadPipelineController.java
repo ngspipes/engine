@@ -19,9 +19,9 @@
  */
 package ngspipesengine.userInterface.controllers;
 
-import java.io.File;
-import java.util.function.Consumer;
-
+import components.FXMLFile;
+import components.Window;
+import components.animation.magnifier.ButtonMagnifier;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -31,18 +31,17 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
-import ngspipesengine.dataAccess.Uris;
-import ngspipesengine.logic.pipeline.Pipeline;
-import ngspipesengine.logic.pipeline.PipelineManager;
-import ngspipesengine.utils.Dialog;
-import ngspipesengine.utils.EngineUIException;
 import jfxutils.ComponentException;
 import jfxutils.IInitializable;
-
-import components.FXMLFile;
-import components.Window;
-import components.animation.magnifier.ButtonMagnifier;
+import ngspipesengine.dataAccess.Uris;
+import ngspipesengine.logic.engine.EngineManager;
+import ngspipesengine.logic.pipeline.Pipeline;
+import ngspipesengine.utils.Dialog;
+import ngspipesengine.utils.EngineUIException;
 import ngspipesengine.utils.WorkQueue;
+
+import java.io.File;
+import java.util.function.Consumer;
 
 
 public class FXMLLoadPipelineController implements IInitializable<Consumer<Pipeline>> {
@@ -71,15 +70,15 @@ public class FXMLLoadPipelineController implements IInitializable<Consumer<Pipel
 	@FXML
 	private Button bInputs;
 	@FXML
-	private Button bOk;
+	private Button bConfirm;
 	@FXML 
 	private ComboBox<String> cBEngines;
 	
-	private Consumer<Pipeline> onFinish;
+	private Consumer<Pipeline> onConfirm;
 
 	@Override
-	public void init(Consumer<Pipeline> onFinish) {
-		this.onFinish = onFinish;
+	public void init(Consumer<Pipeline> onConfirm) {
+		this.onConfirm = onConfirm;
 		load();
 	}
 	
@@ -92,12 +91,12 @@ public class FXMLLoadPipelineController implements IInitializable<Consumer<Pipel
 		new ButtonMagnifier<Button>(bPipeline).mount();
 		new ButtonMagnifier<Button>(bResults).mount();
 		new ButtonMagnifier<Button>(bInputs).mount();
-		new ButtonMagnifier<Button>(bOk).mount();
+		new ButtonMagnifier<Button>(bConfirm).mount();
 		
 		Tooltip.install(bPipeline, new Tooltip("Search"));
 		Tooltip.install(bResults, new Tooltip("Search"));
 		Tooltip.install(bInputs, new Tooltip("Search"));
-		Tooltip.install(bOk, new Tooltip("Ok"));
+		Tooltip.install(bConfirm, new Tooltip("Confirm"));
 		
 		loadComboBox();
 	}
@@ -130,22 +129,22 @@ public class FXMLLoadPipelineController implements IInitializable<Consumer<Pipel
 	}
 
 	private void setButtonOkClick() {
-		bOk.setOnMouseClicked((e)->{
+		bConfirm.setOnMouseClicked((e)->{
 			String pipeline = tFPipeline.getText();
 			String results = tFResults.getText();
 			String inputs = tFInputs.getText();
 			String engineName = cBEngines.getSelectionModel().getSelectedItem();
 			
 			if(pipeline.isEmpty() || !new File(pipeline).exists()){
-				ngspipesengine.utils.Dialog.showError("Invalid Pipeline directory!");
+				Dialog.showError("Invalid Pipeline directory!");
 				return;
 			}
 			if(results.isEmpty() || !new File(results).exists()){
-				ngspipesengine.utils.Dialog.showError("Invalid Results folder directory!");
+				Dialog.showError("Invalid Results folder directory!");
 				return;
 			}
 			if(inputs.isEmpty() || !new File(inputs).exists()){
-				ngspipesengine.utils.Dialog.showError("Invalid Inputs folder directory!");
+				Dialog.showError("Invalid Inputs folder directory!");
 				return;
 			}
 			
@@ -158,7 +157,7 @@ public class FXMLLoadPipelineController implements IInitializable<Consumer<Pipel
 						Pipeline p = new Pipeline(new File(pipeline), new File(results), new File(inputs), engineName);
 						Platform.runLater(()->{
 							loadingWindow.close();
-							onFinish.accept(p);
+							onConfirm.accept(p);
 						});
 					}catch(EngineUIException ex){
 						Platform.runLater(()->Dialog.showError(ex.getMessage()));
@@ -171,7 +170,7 @@ public class FXMLLoadPipelineController implements IInitializable<Consumer<Pipel
 	}
 
 	private void loadComboBox(){
-		ObservableList<String> names = FXCollections.observableArrayList(PipelineManager.getEnginesNames());
+		ObservableList<String> names = FXCollections.observableArrayList(EngineManager.getEnginesNames());
 		cBEngines.setItems(names);
 		cBEngines.getSelectionModel().select(0);
 	}

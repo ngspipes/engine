@@ -97,7 +97,7 @@ public class FXMLEngineController implements IInitializable<Void> {
 		});
 		
 		enginesPallet = new EngineListPallet(tFEnginesFilter, lvEngines);
-		enginesPallet.load(PipelineManager.getEnginesNames());
+		enginesPallet.load(EngineManager.getEnginesNames());
 		
 		tPPipelines.getSelectionModel().selectedIndexProperty().addListener((obs, prev, curr)->{
 			if(curr.intValue() == 0)
@@ -106,7 +106,7 @@ public class FXMLEngineController implements IInitializable<Void> {
 				turnOffPipelineMode();
 			
 			if(curr.intValue()==1)
-				enginesPallet.load(PipelineManager.getEnginesNames());
+				enginesPallet.load(EngineManager.getEnginesNames());
 		});
 	}
 	

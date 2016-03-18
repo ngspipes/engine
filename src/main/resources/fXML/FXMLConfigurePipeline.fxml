@@ -193,7 +193,7 @@
             <Insets left="20.0" />
          </padding>
       </HBox>
-      <Button id="okBtn" fx:id="bOk" mnemonicParsing="false" prefHeight="33.0" prefWidth="31.0" styleClass="buttons" VBox.vgrow="ALWAYS">
+      <Button id="okBtn" fx:id="bConfirm" mnemonicParsing="false" prefHeight="33.0" prefWidth="31.0" styleClass="buttons" VBox.vgrow="ALWAYS">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>

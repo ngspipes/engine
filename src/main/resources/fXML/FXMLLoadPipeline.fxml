@@ -132,7 +132,7 @@
             </ComboBox>
          </children>
       </HBox>
-      <Button id="okBtn" fx:id="bOk" mnemonicParsing="false" prefHeight="36.0" prefWidth="37.0" styleClass="buttons" VBox.vgrow="ALWAYS">
+      <Button id="okBtn" fx:id="bConfirm" mnemonicParsing="false" prefHeight="36.0" prefWidth="37.0" styleClass="buttons" VBox.vgrow="ALWAYS">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>

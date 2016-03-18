@@ -71,8 +71,8 @@ public class FXMLRunPipelineController implements IInitializable<FXMLRunPipeline
 	}
 
 	private static final int TIMEOUT = 1000;
-	private static final int BLINK_INTERVAL = 500;
 	private static final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
+	private static final int BLINK_INTERVAL = 500;
 	private static final double MAGNIFY_AMP = 1.2;
 	private static final String BLINK_TRACE_ON_STYLE = "-fx-background-color: #badfa3;";
 	private static final String BLINK_TRACE_OFF_STYLE = "-fx-background-color: transparent;";
@@ -305,7 +305,7 @@ public class FXMLRunPipelineController implements IInitializable<FXMLRunPipeline
 	}
 
 	private void blink(Tab tab, AtomicBoolean blinkPermission, String blinkOnStyle, String blinkOffStyle){
-		String style = null;
+		String style;
 		if(blinkPermission.get()) {
 			if(tab.getStyle() == null || tab.getStyle().equals(blinkOffStyle))
 				style = blinkOnStyle;

@@ -19,8 +19,6 @@
  */
 package ngspipesengine.logic.pipeline;
 
-import ngspipesengine.configurator.engines.VMEngine;
-import ngspipesengine.configurator.properties.VMProperties;
 import ngspipesengine.utils.EngineUIException;
 
 import java.util.Collection;
@@ -35,16 +33,6 @@ public class PipelineManager {
 	private static final String KEY = "Pipelines";
 	private static Collection<Pipeline> PIPELINES;
 
-
-	public static Collection<String> getEnginesNames(){
-		try {
-			 return VMEngine.getVMsName();	
-		} catch (Exception e) {
-			Collection<String> names = new LinkedList<>();
-			names.add(VMProperties.BASE_VM_NAME); 
-			return names;
-		}
-	}
 
 	public static void load() throws EngineUIException {
 		synchronized (lock){
