@@ -19,26 +19,26 @@
  */
 package ngspipesengine.configurator.properties;
 
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-
+import dsl.entities.Pipeline;
 import ngspipesengine.configurator.engines.Engine;
 import ngspipesengine.exceptions.EngineException;
 import ngspipesengine.utils.Pair;
 import ngspipesengine.utils.Uris;
 import ngspipesengine.utils.Utils;
-import dsl.entities.Pipeline;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class VMProperties extends Properties {
 
 	private static final String TAG = "VMProperties";
-	private static final List<Pair<String, String>> SHARED_FOLDERS = new LinkedList<Pair<String,String>>();
+	private static final Map<String, String> SHARED_FOLDERS = new HashMap<>();
 	public static final String BASE_VM_NAME = "NGSPipesEngineExecutor";
 	public static final String BASE_CLASS_NAME = "PipeBaseClass.txt";
 
 	static {
-		SHARED_FOLDERS.add(new Pair<String, String>(Uris.ENGINE_FOLDER_NAME, Uris.ENGINE_PATH));
+		SHARED_FOLDERS.put(Uris.ENGINE_FOLDER_NAME, Uris.ENGINE_PATH);
 	}
 	
 	private static String getTagContentOf(String source, String tag) {
@@ -115,7 +115,7 @@ public class VMProperties extends Properties {
 		}
 	}
 
-	private static String getAddSharedFolderCommand(String engineName, Pair<String, String> sharedFolder) {
+	private static String getAddSharedFolderCommand(String engineName, Map.Entry<String, String> sharedFolder) {
 		StringBuilder sharedFolderCommand = new StringBuilder();
 
 		sharedFolderCommand	.append(getSharedFolderCommand(Utils.SHARE_FODLER_ADD_COMMAND, engineName, sharedFolder.getKey()))
@@ -229,31 +229,30 @@ public class VMProperties extends Properties {
 	private void cleanSharedFolders(String engineName) throws EngineException {
 		log.debug(TAG, "Unsetting shared folders properties"); 
 
-		for (Pair<String, String> sharedFolder : SHARED_FOLDERS)
-			Utils.executeCommand(getSharedFolderCommand(Utils.SHARE_FODLER_REMOVE_COMMAND, engineName, 
-								sharedFolder.getKey()), log, 
+		for (Map.Entry<String, String> sharedFolder : SHARED_FOLDERS.entrySet())
+			Utils.executeCommand(getSharedFolderCommand(Utils.SHARE_FODLER_REMOVE_COMMAND, engineName,
+								sharedFolder.getKey()), log,
 								TAG, "Error cleaning shared folders properties");
 	}
 
 	private void setSharedFolders(String engineName) throws EngineException {
 
-		log.debug(TAG, "Setting shared folders properties"); 
+		log.debug(TAG, "Setting shared folders properties");
 
-		for (Pair<String, String> sharedFolder : SHARED_FOLDERS)
+		for (Map.Entry<String, String> sharedFolder : SHARED_FOLDERS.entrySet())
 			Utils.executeCommand(getAddSharedFolderCommand(engineName, sharedFolder), log, 
 								TAG, "Error setting shared folders properties");
 	}
 
 	private void completeSharedFolders() {
-		SHARED_FOLDERS.add(new Pair<String, String>("Pipeline", 
-				Uris.getActualPipelinePath(getPipelineFolder())));
+		SHARED_FOLDERS.put("Pipeline", Uris.getActualPipelinePath(getPipelineFolder()));
 
-		SHARED_FOLDERS.add(new Pair<String, String>(Uris.INPUTS_FOLDER_NAME, getInputsPath()));
+		SHARED_FOLDERS.put(Uris.INPUTS_FOLDER_NAME, getInputsPath());
 
 		if(compilerProps.getRepositoryType().equals("Local"))
-		SHARED_FOLDERS.add(new Pair<String,String>(Uris.REPOSITORY_FOLDER_NAME, this.compilerProps.getRepositoryUri()));
+		SHARED_FOLDERS.put(Uris.REPOSITORY_FOLDER_NAME, this.compilerProps.getRepositoryUri());
 
-		SHARED_FOLDERS.add(new Pair<String, String>(Uris.OUTPUTS_FOLDER_NAME, getOutputsPath()));
+		SHARED_FOLDERS.put(Uris.OUTPUTS_FOLDER_NAME, getOutputsPath());
 	}
 
 	private void setRequiredMemory() throws EngineException {  

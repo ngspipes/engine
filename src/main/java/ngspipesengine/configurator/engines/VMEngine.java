@@ -193,7 +193,7 @@ public class VMEngine extends Engine {
 			Utils.executeCommand(getStartVMCommand(), props.getLog(), TAG,
 					"Error trying running virtual machine");
 		} catch (EngineException e) {
-			e.printStackTrace();
+			props.getLog().error(TAG, Utils.getStackTrace(e));
 		}
 		//props.getLog().debug(TAG, "Running success");
 	}
