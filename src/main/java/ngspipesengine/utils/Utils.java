@@ -113,10 +113,11 @@ public class Utils {
 	
 	public static void treatException(Log log, String tag, Exception e, String msg) throws EngineException {
 		log.error(tag, msg);
-		log.error(tag, "stackTrace: " + getStackTrace(e));
 		
-		if(e != null)
+		if(e != null) {
+			log.error(tag, "stackTrace: " + getStackTrace(e));
 			throw new EngineException(":: " + msg + " ::", e);
+		}
 		throw new EngineException(":: " + msg + " ::");
 	}
 	
