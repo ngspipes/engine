@@ -33,6 +33,8 @@ import ngspipesengine.logic.pipeline.Pipeline;
 import ngspipesengine.utils.Dialog;
 import ngspipesengine.utils.WorkQueue;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
@@ -69,8 +71,16 @@ public class FXMLRunPipelineController implements IInitializable<FXMLRunPipeline
 	}
 
 	private static final int TIMEOUT = 1000;
+	private static final int BLINK_INTERVAL = 500;
 	private static final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
 	private static final double MAGNIFY_AMP = 1.2;
+	private static final String BLINK_TRACE_ON_STYLE = "-fx-background-color: #badfa3;";
+	private static final String BLINK_TRACE_OFF_STYLE = "-fx-background-color: transparent;";
+	private static final String BLINK_INFO_ON_STYLE = "-fx-background-color: #83b7e1;";
+	private static final String BLINK_INFO_OFF_STYLE = "-fx-background-color: transparent;";
+	private static final String BLINK_ERROR_ON_STYLE = "-fx-background-color: #f09292;";
+	private static final String BLINK_ERROR_OFF_STYLE = "-fx-background-color: transparent;";
+
 	
 	
 	@FXML
@@ -88,6 +98,8 @@ public class FXMLRunPipelineController implements IInitializable<FXMLRunPipeline
 	@FXML
 	private Label lTo;
 	@FXML
+	private TabPane tabPaneReporter;
+	@FXML
 	private Tab tabTrace;
 	@FXML
 	private Tab tabInfo;
@@ -99,6 +111,10 @@ public class FXMLRunPipelineController implements IInitializable<FXMLRunPipeline
 	private TextArea tAError;
 	@FXML
 	private TextArea tAInfo;
+
+	private final AtomicBoolean blinkTrace = new AtomicBoolean(false);
+	private final AtomicBoolean blinkInfo = new AtomicBoolean(false);
+	private final AtomicBoolean blinkError = new AtomicBoolean(false);
 
 	private Pipeline pipeline;
 	private EngineUIReporter reporter;
@@ -112,27 +128,13 @@ public class FXMLRunPipelineController implements IInitializable<FXMLRunPipeline
 		this.reporter = data.reporter;
 		this.onCancel = data.onCancel;
 
-		load();
-		runReporterThreads();
-	}
-
-	private void load(){
-		loadLabels();
+		loadPipelineInfo();
 		loadCancelButton();
+		runReporterThreads();
+		loadBlinkEffect();
 	}
 
-	private void loadCancelButton() {
-		Tooltip.install(bCancel, new Tooltip("Cancel"));
-
-		new ButtonMagnifier<>(bCancel, MAGNIFY_AMP).mount();
-
-		bCancel.setOnMouseClicked((e)->{
-			onCancel.run();
-			bCancel.setDisable(true);
-		});
-	}
-
-	private void loadLabels() {
+	private void loadPipelineInfo(){
 		String pipelinePath = pipeline.getPipeline().getAbsolutePath();
 		String resultsPath = pipeline.getResults().getAbsolutePath();
 		String inputsPath = pipeline.getInputs().getAbsolutePath();
@@ -144,6 +146,17 @@ public class FXMLRunPipelineController implements IInitializable<FXMLRunPipeline
 		loadLabel(lEngineName, engineName);
 		loadLabel(lFrom, Integer.toString(pipeline.getFrom()));
 		loadLabel(lTo, Integer.toString(pipeline.getTo()));
+	}
+
+	private void loadCancelButton() {
+		Tooltip.install(bCancel, new Tooltip("Cancel"));
+
+		new ButtonMagnifier<>(bCancel, MAGNIFY_AMP).mount();
+
+		bCancel.setOnMouseClicked((e)->{
+			onCancel.run();
+			bCancel.setDisable(true);
+		});
 	}
 
 	private void loadLabel(Label label, String text){
@@ -179,6 +192,8 @@ public class FXMLRunPipelineController implements IInitializable<FXMLRunPipeline
 		readReporter(src,
                     this::trace,
                     "Error reading Trace!");
+
+		bCancel.setDisable(true);
 	}
 
 	private void readError(){
@@ -216,8 +231,6 @@ public class FXMLRunPipelineController implements IInitializable<FXMLRunPipeline
 			drain(src, dest, errorMsg);
 		} catch (InterruptedException e) {
 			Platform.runLater(() -> Dialog.showError(errorMsg));
-		} finally {
-			bCancel.setDisable(true);
 		}
 	}
 
@@ -251,6 +264,58 @@ public class FXMLRunPipelineController implements IInitializable<FXMLRunPipeline
 			tAInfo.appendText("\n");
 			tAInfo.appendText(msg);
 		});
+	}
+
+	private void loadBlinkEffect() {
+		registerSelectedTabObserver(tabTrace, blinkTrace);
+		registerSelectedTabObserver(tabInfo, blinkInfo);
+		registerSelectedTabObserver(tabError, blinkError);
+
+		registerTextAreaObserver(tabTrace, tATrace, blinkTrace);
+		registerTextAreaObserver(tabInfo, tAInfo, blinkInfo);
+		registerTextAreaObserver(tabError, tAError, blinkError);
+
+		runTimer();
+	}
+
+	private void registerSelectedTabObserver(Tab tab, AtomicBoolean blinkOrder){
+		tabPaneReporter.getSelectionModel().selectedItemProperty().addListener((e, oldTab, newTab)->{
+			if(newTab == tab)
+				blinkOrder.set(false);
+		});
+	}
+
+	private void registerTextAreaObserver(Tab tab, TextArea textArea, AtomicBoolean blinkOrder){
+		textArea.textProperty().addListener((e)->{
+			if(tabPaneReporter.getSelectionModel().getSelectedItem() != tab)
+				blinkOrder.set(true);
+		});
+	}
+
+	private void runTimer(){
+		Timer timer = new Timer("Blink timer", true);
+		timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				blink(tabTrace, blinkTrace, BLINK_TRACE_ON_STYLE, BLINK_TRACE_OFF_STYLE);
+				blink(tabInfo, blinkInfo, BLINK_INFO_ON_STYLE, BLINK_INFO_OFF_STYLE);
+				blink(tabError, blinkError, BLINK_ERROR_ON_STYLE, BLINK_ERROR_OFF_STYLE);
+			}
+		}, BLINK_INTERVAL, BLINK_INTERVAL);
+	}
+
+	private void blink(Tab tab, AtomicBoolean blinkPermission, String blinkOnStyle, String blinkOffStyle){
+		String style = null;
+		if(blinkPermission.get()) {
+			if(tab.getStyle() == null || tab.getStyle().equals(blinkOffStyle))
+				style = blinkOnStyle;
+			else
+				style = blinkOffStyle;
+		} else {
+			style = blinkOffStyle;
+		}
+
+		tab.setStyle(style);
 	}
 
 }

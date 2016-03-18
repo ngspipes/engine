@@ -25,7 +25,6 @@ import ngspipesengine.utils.EngineUIException;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class EngineManager {
 
@@ -98,11 +97,14 @@ public class EngineManager {
 
     public static Collection<Integer> getAllRunningPipelines() {
         synchronized (LOCK){
-            Stream<Integer> ids = RUNNERS.keySet().parallelStream();
+            Collection<Integer> ids = RUNNERS.keySet().parallelStream().collect(Collectors.toList());
 
-            ids = ids.filter((id)->!RUNNERS.get(id).finished());
+            Collection<Integer> returnIds = new LinkedList<>();
+            for(Integer id : ids)
+                if(!RUNNERS.get(id).finished())
+                    returnIds.add(id);
 
-            return ids.count() == 0? new LinkedList<>() : ids.collect(Collectors.toList());
+            return returnIds;
         }
     }
 

@@ -19,18 +19,18 @@
  */
 package ngspipesengine.utils;
 
-import java.io.File;
-import java.util.Optional;
-
+import components.Window;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextInputDialog;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
-import components.Window;
+import java.io.File;
+import java.util.Optional;
 
 
 
@@ -97,5 +97,32 @@ public class Dialog {
     	progressIndicator.setProgress(-1.0);	
     	return new Window<Parent, Void>(progressIndicator, title);
     }
-    
+
+    public static ButtonType getPermissionToStopEngine() {
+        String title = "Stop Engine";
+        String header = "Permission to stop Engine";
+        String text = "This execution has not finished. Do you want to stop execution?";
+
+        return getPermission(title, header, text);
+    }
+
+    public static ButtonType getPermissionToStopEngines() {
+        String title = "Stop Engines";
+        String header = "Permission to stop Engine";
+        String text = "There are pipelines executing. Do you want to stop all Engines?";
+
+        return getPermission(title, header, text);
+    }
+
+    public static ButtonType getPermission(String title, String header, String text) {
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(text);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        return result.get();
+    }
+
 }

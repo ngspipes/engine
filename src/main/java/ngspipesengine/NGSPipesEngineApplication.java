@@ -42,7 +42,13 @@ public class NGSPipesEngineApplication extends Application {
 		stage.setOnCloseRequest((e)->{
 			try {
 				PipelineManager.save();
-				EngineManager.stopAllRunningPipelines();
+
+				if(!EngineManager.getAllRunningPipelines().isEmpty()){
+					EngineManager.stopAllRunningPipelines();
+					Dialog.showInfo("Running Engines were stopped");
+				}
+
+
 				Platform.exit();
 			} catch (EngineUIException ex) {
 				Dialog.showError(ex.getMessage());
