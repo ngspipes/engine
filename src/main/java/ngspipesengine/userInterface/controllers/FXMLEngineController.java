@@ -164,6 +164,7 @@ public class FXMLEngineController implements IInitializable<Void> {
 			pipelineTab.setContent(root);
 			tPPipelines.getTabs().add(pipelineTab);
 			tPPipelines.getSelectionModel().select(pipelineTab);
+			this.root.getScene().getWindow().sizeToScene();
 		} catch (Exception ex) {
 			Dialog.showError(ex.getMessage());
 		}
