@@ -1,127 +1,121 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.*?>
 <?import javafx.geometry.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
-<?import java.lang.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-
-<ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="664.0" prefWidth="407.0" style="-fx-background-color: #D4D4D4;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ngspipesengine.userInterface.controllers.FXMLEngineController">
-  <content>
-    <AnchorPane style="-fx-background-color: #D4D4D4;">
-         <children>
-            <SplitPane fx:id="root" dividerPositions="0.26047904191616766" orientation="VERTICAL" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <items>
-                  <AnchorPane maxHeight="155.0" minHeight="140.0">
+<?import java.net.*?>
+<AnchorPane style="-fx-background-color: #D4D4D4;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ngspipesengine.userInterface.controllers.FXMLEngineController">
+   <children>
+      <SplitPane fx:id="root" dividerPositions="0.26047904191616766" orientation="VERTICAL" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <items>
+            <AnchorPane maxHeight="155.0" minHeight="140.0">
+               <children>
+                  <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <HBox maxHeight="70.0" VBox.vgrow="ALWAYS">
                            <children>
-                              <HBox maxHeight="70.0" VBox.vgrow="ALWAYS">
-                                 <children>
-                                    <ImageView fitHeight="100.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../images/NGSPipes.png" />
-                                       </image>
-                                       <HBox.margin>
-                                          <Insets bottom="10.0" left="10.0" right="10.0" top="15.0" />
-                                       </HBox.margin>
-                                    </ImageView>
-                                    <Button id="infoBtn" fx:id="bInfo" mnemonicParsing="false" prefHeight="48.0" prefWidth="51.0" styleClass="buttons">
-                                       <stylesheets>
-                                          <URL value="@../css/Buttons.css" />
-                                          <URL value="@../css/InfoButton.css" />
-                                       </stylesheets>
-                                       <HBox.margin>
-                                          <Insets bottom="10.0" left="10.0" right="10.0" top="15.0" />
-                                       </HBox.margin>
-                                    </Button>
-                                    <Button id="helpBtn" fx:id="bHelp" mnemonicParsing="false" prefHeight="48.0" prefWidth="52.0" styleClass="buttons">
-                                       <stylesheets>
-                                          <URL value="@../css/Buttons.css" />
-                                          <URL value="@../css/HelpButton.css" />
-                                       </stylesheets>
-                                       <HBox.margin>
-                                          <Insets bottom="10.0" left="10.0" right="10.0" top="15.0" />
-                                       </HBox.margin>
-                                    </Button>
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER_LEFT" VBox.vgrow="ALWAYS">
-                                 <children>
-                                    <Button id="playBtn" fx:id="bPlay" mnemonicParsing="false" prefHeight="43.0" prefWidth="38.0" styleClass="buttons">
-                                       <stylesheets>
-                                          <URL value="@../css/Buttons.css" />
-                                          <URL value="@../css/PlayButton.css" />
-                                       </stylesheets>
-                                       <HBox.margin>
-                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                       </HBox.margin>
-                                    </Button>
-                                    <Button id="addBtn" fx:id="bAdd" mnemonicParsing="false" prefHeight="39.0" prefWidth="35.0" styleClass="buttons">
-                                       <stylesheets>
-                                          <URL value="@../css/Buttons.css" />
-                                          <URL value="@../css/AddButton.css" />
-                                       </stylesheets>
-                                       <HBox.margin>
-                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                       </HBox.margin>
-                                    </Button>
-                                    <Button id="removeBtn" fx:id="bRemove" mnemonicParsing="false" prefHeight="41.0" prefWidth="35.0" styleClass="buttons">
-                                       <stylesheets>
-                                          <URL value="@../css/Buttons.css" />
-                                          <URL value="@../css/RemoveButton.css" />
-                                       </stylesheets>
-                                       <HBox.margin>
-                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                       </HBox.margin>
-                                    </Button>
-                                 </children>
-                              </HBox>
+                              <ImageView fitHeight="100.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/NGSPipes.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="15.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <Button id="infoBtn" fx:id="bInfo" mnemonicParsing="false" prefHeight="48.0" prefWidth="51.0" styleClass="buttons">
+                                 <stylesheets>
+                                    <URL value="@../css/Buttons.css" />
+                                    <URL value="@../css/InfoButton.css" />
+                                 </stylesheets>
+                                 <HBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="15.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button id="helpBtn" fx:id="bHelp" mnemonicParsing="false" prefHeight="48.0" prefWidth="52.0" styleClass="buttons">
+                                 <stylesheets>
+                                    <URL value="@../css/Buttons.css" />
+                                    <URL value="@../css/HelpButton.css" />
+                                 </stylesheets>
+                                 <HBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="15.0" />
+                                 </HBox.margin>
+                              </Button>
                            </children>
-                        </VBox>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" VBox.vgrow="ALWAYS">
+                           <children>
+                              <Button id="playBtn" fx:id="bPlay" mnemonicParsing="false" prefHeight="43.0" prefWidth="38.0" styleClass="buttons">
+                                 <stylesheets>
+                                    <URL value="@../css/Buttons.css" />
+                                    <URL value="@../css/PlayButton.css" />
+                                 </stylesheets>
+                                 <HBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button id="addBtn" fx:id="bAdd" mnemonicParsing="false" prefHeight="39.0" prefWidth="35.0" styleClass="buttons">
+                                 <stylesheets>
+                                    <URL value="@../css/Buttons.css" />
+                                    <URL value="@../css/AddButton.css" />
+                                 </stylesheets>
+                                 <HBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button id="removeBtn" fx:id="bRemove" mnemonicParsing="false" prefHeight="41.0" prefWidth="35.0" styleClass="buttons">
+                                 <stylesheets>
+                                    <URL value="@../css/Buttons.css" />
+                                    <URL value="@../css/RemoveButton.css" />
+                                 </stylesheets>
+                                 <HBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </HBox.margin>
+                              </Button>
+                           </children>
+                        </HBox>
                      </children>
-                  </AnchorPane>
-                  <AnchorPane>
-                     <children>
-                        <TabPane fx:id="tPPipelines" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <tabs>
-                              <Tab closable="false" text="Recent Pipelines">
-                                 <content>
-                                    <VBox style="-fx-background-color: #D4D4D4;">
-                                       <children>
-                                          <TextField fx:id="tFPipelinesFilter" style="-fx-background-radius: 20;">
-                                             <VBox.margin>
-                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                             </VBox.margin>
-                                          </TextField>
-                                          <ListView fx:id="lvPipelines" VBox.vgrow="ALWAYS" />
-                                       </children>
-                                    </VBox>
-                                 </content>
-                              </Tab>
-                              <Tab closable="false" text="Engines">
-                                 <content>
-                                    <VBox style="-fx-background-color: #D4D4D4;">
-                                       <children>
-                                          <TextField fx:id="tFEnginesFilter" style="-fx-background-radius: 20;">
-                                             <VBox.margin>
-                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                             </VBox.margin>
-                                          </TextField>
-                                          <ListView fx:id="lvEngines" VBox.vgrow="ALWAYS" />
-                                       </children>
-                                    </VBox>
-                                 </content>
-                              </Tab>
-                           </tabs>
-                        </TabPane>
-                     </children>
-                  </AnchorPane>
-               </items>
-            </SplitPane>
-         </children></AnchorPane>
-  </content>
-</ScrollPane>
+                  </VBox>
+               </children>
+            </AnchorPane>
+            <AnchorPane>
+               <children>
+                  <TabPane fx:id="tPPipelines" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <tabs>
+                        <Tab closable="false" text="Recent Pipelines">
+                           <content>
+                              <VBox style="-fx-background-color: #D4D4D4;">
+                                 <children>
+                                    <TextField fx:id="tFPipelinesFilter" style="-fx-background-radius: 20;">
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </VBox.margin>
+                                    </TextField>
+                                    <ListView fx:id="lvPipelines" VBox.vgrow="ALWAYS" />
+                                 </children>
+                              </VBox>
+                           </content>
+                        </Tab>
+                        <Tab closable="false" text="Engines">
+                           <content>
+                              <VBox style="-fx-background-color: #D4D4D4;">
+                                 <children>
+                                    <TextField fx:id="tFEnginesFilter" style="-fx-background-radius: 20;">
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </VBox.margin>
+                                    </TextField>
+                                    <ListView fx:id="lvEngines" VBox.vgrow="ALWAYS" />
+                                 </children>
+                              </VBox>
+                           </content>
+                        </Tab>
+                     </tabs>
+                  </TabPane>
+               </children>
+            </AnchorPane>
+         </items>
+      </SplitPane>
+   </children>
+</AnchorPane>
