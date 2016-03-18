@@ -174,7 +174,7 @@ public class FXMLEngineController implements IInitializable<Void> {
 		try{
 			if(EngineManager.getAllRunningPipelines().contains(id)){
 				EngineManager.stop(id);
-				Dialog.showInfo("Running Engine were stopped");
+				Dialog.showInfo("Running Engine was stopped");
 			}
 		}catch (Exception ex){
 			Platform.runLater(()->Dialog.showError(ex.getMessage()));
