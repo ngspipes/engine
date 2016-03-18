@@ -65,7 +65,7 @@ public class NGSPipesEngineApplication extends Application {
 
 	private void loadWindow(Stage stage) throws EngineUIException	{
 		try{
-			
+			stage.setTitle("NGSPipes Engine");
 			String path = Uris.FXML_ENGINE;
 			FXMLFile<Node, ?> fxmlFile = new FXMLFile<>(path);
 			fxmlFile.mount();
