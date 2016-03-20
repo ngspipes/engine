@@ -22,7 +22,6 @@ package ngspipesengine.configurator.properties;
 import dsl.entities.Pipeline;
 import ngspipesengine.configurator.engines.Engine;
 import ngspipesengine.exceptions.EngineException;
-import ngspipesengine.utils.Pair;
 import ngspipesengine.utils.Uris;
 import ngspipesengine.utils.Utils;
 
