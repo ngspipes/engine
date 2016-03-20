@@ -7,8 +7,14 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<HBox alignment="CENTER_LEFT" prefHeight="47.0" prefWidth="317.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ngspipesengine.userInterface.controllers.FXMLPipelineListViewItemController">
+<HBox alignment="CENTER_LEFT" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ngspipesengine.userInterface.controllers.FXMLPipelineListViewItemController">
    <children>
+      <Button id="configureBtn" fx:id="bConfigure" mnemonicParsing="false" prefHeight="34.0" prefWidth="32.0" styleClass="buttons" HBox.hgrow="ALWAYS">
+         <stylesheets>
+            <URL value="@../css/Buttons.css" />
+            <URL value="@../css/ConfigureButton.css" />
+         </stylesheets>
+      </Button>
       <ImageView fitHeight="40.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
          <image>
             <Image url="@../images/filePipeline.png" />
@@ -17,16 +23,10 @@
             <Insets left="15.0" />
          </HBox.margin>
       </ImageView>
-      <Label fx:id="lName" maxHeight="20.0" prefWidth="200.0" text="PipelineName" wrapText="true" HBox.hgrow="ALWAYS">
+      <Label fx:id="lName" text="PipelineName" wrapText="true" HBox.hgrow="ALWAYS">
          <HBox.margin>
             <Insets left="15.0" right="15.0" />
          </HBox.margin>
       </Label>
-      <Button id="configureBtn" fx:id="bConfigure" mnemonicParsing="false" prefHeight="34.0" prefWidth="32.0" styleClass="buttons" HBox.hgrow="ALWAYS">
-         <stylesheets>
-            <URL value="@../css/Buttons.css" />
-            <URL value="@../css/ConfigureButton.css" />
-         </stylesheets>
-      </Button>
    </children>
 </HBox>
