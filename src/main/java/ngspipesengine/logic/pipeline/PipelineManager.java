@@ -19,6 +19,7 @@
  */
 package ngspipesengine.logic.pipeline;
 
+import ngspipesengine.logic.engine.EngineManager;
 import ngspipesengine.utils.EngineUIException;
 
 import java.util.Collection;
@@ -38,10 +39,21 @@ public class PipelineManager {
 		synchronized (lock){
 			try {
 				String data = STORE.get(KEY, null);
-				PIPELINES =  PipelineSerializer.deserialize(data);
+				Collection<Pipeline> pipelines = PipelineSerializer.deserialize(data);
+				validatePipelines(pipelines);
+				PIPELINES =  pipelines;
 			} catch (EngineUIException ex) {
 				throw new EngineUIException("Error loading pipelines!", ex);
 			}
+		}
+	}
+
+	private static void validatePipelines(Collection<Pipeline> pipelines) {
+		Collection<String> enginesNames = EngineManager.getEnginesNames();
+
+		for(Pipeline pipeline : pipelines){
+			if(!enginesNames.contains(pipeline.getEngineName()))
+				pipeline.setEngineName(EngineManager.getEngineDefaultName());
 		}
 	}
 	

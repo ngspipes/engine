@@ -53,6 +53,10 @@ public class EngineManager {
 
 
 
+    public static String getEngineDefaultName(){
+        return VMProperties.BASE_VM_NAME;
+    }
+
     public static Collection<String> getEnginesNames(){
         try {
             return VMEngine.getVMsName();
