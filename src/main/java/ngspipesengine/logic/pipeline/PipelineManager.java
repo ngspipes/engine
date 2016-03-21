@@ -19,18 +19,21 @@
  */
 package ngspipesengine.logic.pipeline;
 
+import ngspipesengine.dataAccess.Uris;
+import ngspipesengine.exceptions.EngineException;
 import ngspipesengine.logic.engine.EngineManager;
 import ngspipesengine.utils.EngineUIException;
+import ngspipesengine.utils.IO;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.prefs.BackingStoreException;
-import java.util.prefs.Preferences;
 
 public class PipelineManager {
-	
+
+	private static final String PREVIOUS_PIPELINES = Uris.PREVIOUS_PIPELINES + Uris.SEP + "pipelines.json";
 	private static final Object lock = new Object();
-	private static final Preferences STORE = Preferences.userNodeForPackage(PipelineManager.class);
 	private static final String KEY = "Pipelines";
 	private static Collection<Pipeline> PIPELINES;
 
@@ -38,11 +41,20 @@ public class PipelineManager {
 	public static void load() throws EngineUIException {
 		synchronized (lock){
 			try {
-				String data = STORE.get(KEY, null);
-				Collection<Pipeline> pipelines = PipelineSerializer.deserialize(data);
-				validatePipelines(pipelines);
-				PIPELINES =  pipelines;
-			} catch (EngineUIException ex) {
+				String serializedPipelines = null;
+
+				File previousPipelines = new File(PREVIOUS_PIPELINES);
+				if(previousPipelines.exists())
+					serializedPipelines = IO.readFile(PREVIOUS_PIPELINES);
+				else{
+					new File(Uris.PREVIOUS_PIPELINES).mkdirs();
+					previousPipelines.createNewFile();
+				}
+
+
+				PIPELINES = PipelineSerializer.deserialize(serializedPipelines);
+				validatePipelines(PIPELINES);
+			} catch (EngineException | IOException ex) {
 				throw new EngineUIException("Error loading pipelines!", ex);
 			}
 		}
@@ -62,10 +74,9 @@ public class PipelineManager {
 	public static void save() throws EngineUIException{
 		synchronized (lock){
 			try{
-				STORE.clear();
-				STORE.put(KEY, PipelineSerializer.serialize(PIPELINES));
-				STORE.flush();
-			} catch(BackingStoreException | EngineUIException ex) {
+				String serializedPipelines = PipelineSerializer.serialize(PIPELINES);
+				IO.writeToFile(PREVIOUS_PIPELINES, serializedPipelines, false);
+			} catch(EngineException ex) {
 				throw new EngineUIException("Error saving pipelines!", ex);
 			}
 		}

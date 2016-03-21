@@ -32,4 +32,9 @@ public class Uris {
     
     public static final String IMAGES_FOLDER =	 				"images";
     public static final String DELETE_IMAGE = 					IMAGES_FOLDER + SEP + "delete.png";
+
+    public static final String NGSPIPES_DIRECTORY = 		    System.getProperty("user.home") + SEP + "NGSPipes";
+    public static final String ENGINE_PATH = 				    NGSPIPES_DIRECTORY + SEP + "Engine";
+
+    public static final String PREVIOUS_PIPELINES =             ENGINE_PATH + SEP + "cache" + SEP + "previous_pipelines";
 }
