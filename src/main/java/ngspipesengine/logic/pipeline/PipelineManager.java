@@ -48,12 +48,14 @@ public class PipelineManager {
 		}
 	}
 
-	private static void validatePipelines(Collection<Pipeline> pipelines) {
+	private static void validatePipelines(Collection<Pipeline> pipelines) throws EngineUIException {
+		String defaultEngineName = EngineManager.getDefaultEngineName();
 		Collection<String> enginesNames = EngineManager.getEnginesNames();
+		enginesNames.add(defaultEngineName);
 
 		for(Pipeline pipeline : pipelines){
 			if(!enginesNames.contains(pipeline.getEngineName()))
-				pipeline.setEngineName(EngineManager.getEngineDefaultName());
+				pipeline.setEngineName(EngineManager.getDefaultEngineName());
 		}
 	}
 	

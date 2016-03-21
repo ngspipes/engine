@@ -41,6 +41,7 @@ import ngspipesengine.utils.EngineUIException;
 import ngspipesengine.utils.WorkQueue;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.function.Consumer;
 
 
@@ -77,12 +78,12 @@ public class FXMLLoadPipelineController implements IInitializable<Consumer<Pipel
 	private Consumer<Pipeline> onConfirm;
 
 	@Override
-	public void init(Consumer<Pipeline> onConfirm) {
+	public void init(Consumer<Pipeline> onConfirm) throws ComponentException {
 		this.onConfirm = onConfirm;
 		load();
 	}
 	
-	private void load(){
+	private void load() throws ComponentException {
 		setButtonOkClick();
 		setButtonPipelineClick();
 		setButtonResultsClick();
@@ -97,8 +98,12 @@ public class FXMLLoadPipelineController implements IInitializable<Consumer<Pipel
 		Tooltip.install(bResults, new Tooltip("Search"));
 		Tooltip.install(bInputs, new Tooltip("Search"));
 		Tooltip.install(bConfirm, new Tooltip("Confirm"));
-		
-		loadComboBox();
+
+		try{
+			loadComboBox();
+		} catch(EngineUIException ex) {
+			throw new ComponentException(ex.getMessage(), ex);
+		}
 	}
 
 	private void setButtonPipelineClick() {
@@ -169,8 +174,12 @@ public class FXMLLoadPipelineController implements IInitializable<Consumer<Pipel
 		});
 	}
 
-	private void loadComboBox(){
-		ObservableList<String> names = FXCollections.observableArrayList(EngineManager.getEnginesNames());
+	private void loadComboBox() throws EngineUIException {
+		String defaultEngineName = EngineManager.getDefaultEngineName();
+		Collection<String> enginesNames = EngineManager.getEnginesNames();
+		enginesNames.add(defaultEngineName);
+
+		ObservableList<String> names = FXCollections.observableArrayList(enginesNames);
 		cBEngines.setItems(names);
 		cBEngines.getSelectionModel().select(0);
 	}

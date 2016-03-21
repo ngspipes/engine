@@ -38,6 +38,9 @@ import ngspipesengine.utils.Dialog;
 import ngspipesengine.utils.EngineUIException;
 import ngspipesengine.utils.WorkQueue;
 
+import java.util.Collection;
+import java.util.LinkedList;
+
 public class FXMLEngineController implements IInitializable<Void> {
 
 	@FXML
@@ -97,7 +100,7 @@ public class FXMLEngineController implements IInitializable<Void> {
 		});
 		
 		enginesPallet = new EngineListPallet(tFEnginesFilter, lvEngines);
-		enginesPallet.load(EngineManager.getEnginesNames());
+		loadEnginesNames();
 		
 		tPPipelines.getSelectionModel().selectedIndexProperty().addListener((obs, prev, curr)->{
 			if(curr.intValue() == 0)
@@ -106,10 +109,20 @@ public class FXMLEngineController implements IInitializable<Void> {
 				turnOffPipelineMode();
 			
 			if(curr.intValue()==1)
-				enginesPallet.load(EngineManager.getEnginesNames());
+				loadEnginesNames();
 		});
 	}
-	
+
+
+	private void loadEnginesNames(){
+		try {
+			Collection<String> enginesNames = EngineManager.getEnginesNames();
+			enginesPallet.load(enginesNames);
+		} catch(EngineUIException e) {
+			Dialog.showError(e.getMessage());
+			enginesPallet.load(new LinkedList<>());
+		}
+	}
 	
 	private void onAdd(){
 		try{

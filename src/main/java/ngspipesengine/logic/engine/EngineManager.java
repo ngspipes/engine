@@ -53,17 +53,21 @@ public class EngineManager {
 
 
 
-    public static String getEngineDefaultName(){
+    public static String getDefaultEngineName(){
         return VMProperties.BASE_VM_NAME;
     }
 
-    public static Collection<String> getEnginesNames(){
+    public static Collection<String> getEnginesNames() throws EngineUIException {
         try {
-            return VMEngine.getVMsName();
+            String defaultEngineName = getDefaultEngineName();
+            Collection<String> enginesNames = VMEngine.getVMsName();
+
+            if(enginesNames.contains(defaultEngineName))
+                enginesNames.remove(defaultEngineName);
+
+            return enginesNames;
         } catch (Exception e) {
-            Collection<String> names = new LinkedList<>();
-            names.add(VMProperties.BASE_VM_NAME);
-            return names;
+            throw new EngineUIException("Error getting Engines names", e);
         }
     }
 
