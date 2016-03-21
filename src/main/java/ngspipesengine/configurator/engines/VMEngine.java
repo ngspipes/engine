@@ -113,10 +113,11 @@ public class VMEngine extends Engine {
 	public static void register() throws EngineException {
 		Log log = new Log("register");
 		if(!isRegisted(log)) {
-			log.debug(TAG, "Resgister beginning");	
+
+			log.debug(TAG, "Register beginning");
 			Utils.executeCommand(getRegisterVMCommand(), log, TAG, "Error registering engine");
 			System.out.println("Register is complete");
-			log.debug(TAG, "Resgister ended");
+			log.debug(TAG, "Register ended");
 		}
 		log.stop();
 	}
