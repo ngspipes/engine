@@ -117,7 +117,7 @@
       </VBox>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
          <children>
-            <Label text="Engine:">
+            <Label minWidth="60.0" text="Engine:">
                <font>
                   <Font size="18.0" />
                </font>
@@ -125,7 +125,7 @@
                   <Insets right="10.0" />
                </HBox.margin>
             </Label>
-            <ComboBox fx:id="cBEngines" prefWidth="150.0">
+            <ComboBox fx:id="cBEngines">
                <HBox.margin>
                   <Insets left="10.0" />
                </HBox.margin>
