@@ -131,7 +131,7 @@ public class EngineManager {
 
     private static void cleanRunners(){
         synchronized (LOCK){
-            for(Integer id : RUNNERS.keySet()){
+            for(Integer id : new LinkedList<>(RUNNERS.keySet())){
                 EngineRunner runner = RUNNERS.get(id);
                 if(runner.finished())
                     RUNNERS.remove(id);
