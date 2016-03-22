@@ -95,7 +95,7 @@ public class Dialog {
     public static Window<Parent, Void> getLoadingWindow(String title) {
     	ProgressIndicator progressIndicator = new ProgressIndicator();
     	progressIndicator.setProgress(-1.0);	
-    	return new Window<Parent, Void>(progressIndicator, title);
+    	return new Window<>(progressIndicator, title);
     }
 
     public static ButtonType getPermissionToStopEngine() {

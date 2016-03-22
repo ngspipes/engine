@@ -19,20 +19,19 @@
  */
 package ngspipesengine.console;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.ServerSocket;
-import java.net.Socket;
-
 import ngspipesengine.configurator.engines.VMEngine;
 import ngspipesengine.configurator.properties.VMProperties;
 import ngspipesengine.exceptions.EngineException;
 import ngspipesengine.exceptions.ExecutorImageNotFound;
 import ngspipesengine.utils.Utils;
-
-import org.json.JSONException;
 import org.apache.commons.cli.*;
+import org.json.JSONException;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 public class NGSPipesEngineConsole {
 
@@ -143,7 +142,7 @@ public class NGSPipesEngineConsole {
 		serverSocket =	new ServerSocket(0);
 
 		// build initial VMProperties with optional arguments
-		VMProperties propsVM = null;
+		VMProperties propsVM;
 		propsVM = new VMProperties(
 				props.hasOption(EXECUTOR_NAME) ? props.getOptionValue(EXECUTOR_NAME) : DEFAULT_EXECUTOR_NAME,
 				props.getOptionValue(PIPES_PATH),

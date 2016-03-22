@@ -51,8 +51,8 @@ public abstract class Properties implements IProperties {
 	}
 
 	private static void loadExecutables() {
-		EXECUTABLES.put("java", (props) -> new JavaCompiler(props));
-		EXECUTABLES.put("pipes", (props) -> new PipesCompiler(props));
+		EXECUTABLES.put("java", JavaCompiler::new);
+		EXECUTABLES.put("pipes", PipesCompiler::new);
 	}
 	
 	private static Collection<IConfigurator> getConfigurators(Pipeline pipe, int from, int to) {
@@ -62,7 +62,7 @@ public abstract class Properties implements IProperties {
 	}
 
 	private static Map<String, List<String>> getSetupsFromConfigurator(Collection<IConfigurator> configurators) {
-		Map<String, List<String>> map = new HashMap<String, List<String>>();
+		Map<String, List<String>> map = new HashMap<>();
 
 		configurators.forEach((configurator)->{
 			if(!map.containsKey(configurator.getName()))

@@ -19,17 +19,17 @@
  */
 package ngspipesengine.compiler;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Supplier;
-
 import ngspipesengine.configurator.engines.Engine;
 import ngspipesengine.exceptions.EngineException;
 import ngspipesengine.utils.IO;
 import ngspipesengine.utils.Uris;
 import ngspipesengine.utils.Utils;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Supplier;
 
 public abstract class PipelineCompiler implements ICompiler {
 
@@ -40,8 +40,8 @@ public abstract class PipelineCompiler implements ICompiler {
 
 	private static void initRepositoryUriProvider(CompilerProperties props) {
 		REPOSITORY_URI_SUPPLIER.put("Local", () -> Uris.VM_REPOSITORY_FOLDER_PATH);
-		REPOSITORY_URI_SUPPLIER.put("Remote", () -> props.getRepositoryUri());
-		REPOSITORY_URI_SUPPLIER.put("Github", () -> props.getRepositoryUri());
+		REPOSITORY_URI_SUPPLIER.put("Remote", props::getRepositoryUri);
+		REPOSITORY_URI_SUPPLIER.put("Github", props::getRepositoryUri);
 	}
 	
 	private static String getCompilerCommand(String classPath, String filePath, String name) {

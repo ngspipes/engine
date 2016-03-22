@@ -51,9 +51,9 @@ public class VMEngine extends Engine {
 		String[] numbers = currVersion.split("\\.");
 		int version = 0;
 		int multiplicand = 100;
-		for(int idx = 0; idx < numbers.length; ++idx) {
-				version += multiplicand * Integer.parseInt(numbers[idx]);
-				multiplicand /= 10;
+		for (String number : numbers) {
+			version += multiplicand * Integer.parseInt(number);
+			multiplicand /= 10;
 		}
 		
 		return version >= VERSION;

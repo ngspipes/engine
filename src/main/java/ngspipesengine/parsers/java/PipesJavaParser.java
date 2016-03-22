@@ -19,16 +19,15 @@
  */
 package ngspipesengine.parsers.java;
 
-import java.net.MalformedURLException;
-import java.util.List;
-
 import ngspipesengine.exceptions.EngineException;
 import ngspipesengine.utils.IO;
 import ngspipesengine.utils.Log;
-
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.RecognitionException;
+
+import java.net.MalformedURLException;
+import java.util.List;
 
 public class PipesJavaParser {
 	
@@ -47,7 +46,7 @@ public class PipesJavaParser {
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		PipelineParser parser = new PipelineParser(tokens);
 		
-		PipelineParser.PipelineContext pipelineCtx = null;
+		PipelineParser.PipelineContext pipelineCtx;
 		try {
 			pipelineCtx = parser.pipeline();
 			log.debug(TAG, "End compiling pipes");

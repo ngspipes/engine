@@ -19,6 +19,10 @@
  */
 package ngspipesengine.utils;
 
+import ngspipesengine.configurator.properties.Properties;
+import ngspipesengine.exceptions.EngineException;
+import ngspipesengine.exceptions.ExecutorImageNotFound;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,10 +32,6 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-
-import ngspipesengine.configurator.properties.Properties;
-import ngspipesengine.exceptions.EngineException;
-import ngspipesengine.exceptions.ExecutorImageNotFound;
 
 public class Uris {
 
@@ -71,7 +71,7 @@ public class Uris {
     public static final String VM_REPOSITORY_FOLDER_PATH = VM_MAIN_FOLDER + REPOSITORY_FOLDER_NAME;
 
 	public static URL getVboxFilePath() throws EngineException {
-		URL url = null;
+		URL url;
 		File file = new File(System.getProperty("ngspipes.basedir") + VBOX_FILE_RELATIVE_PATH);
 		if (!file.exists()) {
 			throw new ExecutorImageNotFound();
@@ -186,20 +186,16 @@ public class Uris {
 				if (!parent.exists()) 
 					parent.mkdirs();
 
-				FileOutputStream out = new FileOutputStream(dest);
-				InputStream in = fromJar.getInputStream(entry);
+				System.out.println("Copying engine libs to " + dest.getAbsolutePath());
 
-				System.err.println("Copying engine libs to " + dest.getAbsolutePath());
-				try {
-					byte[] buffer = new byte[1024];
+				try (FileOutputStream out = new FileOutputStream(dest)){
+					try (InputStream in = fromJar.getInputStream(entry)){
+						byte[] buffer = new byte[1024];
 
-					int s = 0;
-					while ((s = in.read(buffer)) > 0)
-						out.write(buffer, 0, s);
-						
-				} finally {
-					in.close();
-					out.close();
+						int s;
+						while ((s = in.read(buffer)) > 0)
+							out.write(buffer, 0, s);
+					}
 				}
 			}
 		}

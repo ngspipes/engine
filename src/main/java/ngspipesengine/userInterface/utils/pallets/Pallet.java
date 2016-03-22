@@ -19,9 +19,6 @@
  */
 package ngspipesengine.userInterface.utils.pallets;
 
-import java.util.Collection;
-import java.util.LinkedList;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -31,6 +28,9 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+
+import java.util.Collection;
+import java.util.LinkedList;
 
 public abstract class Pallet<T>{
 	
@@ -101,8 +101,7 @@ public abstract class Pallet<T>{
 	}
 	
 	public void refresh(){
-		
-		items.removeAll(items);
+		items.clear();
 		items.addAll(currentItems);
 	}
 	

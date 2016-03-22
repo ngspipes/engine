@@ -34,10 +34,10 @@ import javafx.scene.control.Tooltip;
 import jfxutils.ComponentException;
 import jfxutils.IInitializable;
 import ngspipesengine.dataAccess.Uris;
+import ngspipesengine.exceptions.EngineUIException;
 import ngspipesengine.logic.engine.EngineManager;
 import ngspipesengine.logic.pipeline.Pipeline;
 import ngspipesengine.utils.Dialog;
-import ngspipesengine.exceptions.EngineUIException;
 import ngspipesengine.utils.WorkQueue;
 
 import java.io.File;
@@ -89,10 +89,10 @@ public class FXMLLoadPipelineController implements IInitializable<Consumer<Pipel
 		setButtonResultsClick();
 		setButtonInputsClick();
 		
-		new ButtonMagnifier<Button>(bPipeline).mount();
-		new ButtonMagnifier<Button>(bResults).mount();
-		new ButtonMagnifier<Button>(bInputs).mount();
-		new ButtonMagnifier<Button>(bConfirm).mount();
+		new ButtonMagnifier<>(bPipeline).mount();
+		new ButtonMagnifier<>(bResults).mount();
+		new ButtonMagnifier<>(bInputs).mount();
+		new ButtonMagnifier<>(bConfirm).mount();
 		
 		Tooltip.install(bPipeline, new Tooltip("Search"));
 		Tooltip.install(bResults, new Tooltip("Search"));

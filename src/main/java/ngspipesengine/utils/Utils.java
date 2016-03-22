@@ -127,17 +127,14 @@ public class Utils {
 		Runtime rt = Runtime.getRuntime();
 		Process proc = rt.exec(command);
 
-		BufferedReader bf = new BufferedReader(new InputStreamReader(proc.getInputStream(), Charset.forName("UTF-8")));
-		String line;
-		StringBuilder inputContent = new StringBuilder();
-		try {
-			while((line=bf.readLine()) != null)
-				inputContent.append(line).append("\n");	
+		try (BufferedReader bf = new BufferedReader(new InputStreamReader(proc.getInputStream(), Charset.forName("UTF-8")))) {
+			StringBuilder inputContent = new StringBuilder();
+			String line;
+
+			while ((line = bf.readLine()) != null)
+				inputContent.append(line).append("\n");
+
 			return inputContent.toString();
-		} catch (IOException e) {
-			throw e;
-		} finally {
-			bf.close();
 		}
 	}
 	
@@ -208,7 +205,10 @@ public class Utils {
 	public static void wait(long waitTime, Runnable runner) {
 		long endTime = System.currentTimeMillis() + waitTime;
 		
-		while(System.currentTimeMillis() <= endTime);
+		while(System.currentTimeMillis() <= endTime){
+			try{Thread.sleep(500);}catch(InterruptedException ex){}
+		}
+
 		runner.run();
 	}
 

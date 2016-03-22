@@ -75,7 +75,7 @@ public class JavaCompiler extends PipelineCompiler {
 		int endIdx = content.indexOf(",", beginIdx);
 
 		String repoType = content.substring(beginIdx, endIdx);
-		repoType.trim();
+		repoType = repoType.trim();
 		repoType = repoType.replace("\"", "");		
 		props.setRepositoryType(repoType);
 
@@ -84,7 +84,7 @@ public class JavaCompiler extends PipelineCompiler {
 		endIdx = content.indexOf(";", beginIdx);
 		
 		String repositoryUri = content.substring(beginIdx, endIdx);
-		repositoryUri.trim();
+		repositoryUri = repositoryUri.trim();
 		repositoryUri = repositoryUri.replace("\"", "");
 		props.setRepositoryUri(repositoryUri);
 	}

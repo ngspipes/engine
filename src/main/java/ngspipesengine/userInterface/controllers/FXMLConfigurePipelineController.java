@@ -30,11 +30,11 @@ import javafx.scene.image.ImageView;
 import jfxutils.ComponentException;
 import jfxutils.IInitializable;
 import ngspipesengine.dataAccess.Uris;
+import ngspipesengine.exceptions.EngineUIException;
 import ngspipesengine.logic.engine.EngineManager;
 import ngspipesengine.logic.pipeline.Pipeline;
 import ngspipesengine.userInterface.controllers.FXMLConfigurePipelineController.Data;
 import ngspipesengine.utils.Dialog;
-import ngspipesengine.exceptions.EngineUIException;
 import sun.management.ManagementFactoryHelper;
 
 import java.io.File;
@@ -107,9 +107,9 @@ public class FXMLConfigurePipelineController implements IInitializable<Data> {
 		setButtonResultsClick();
 		setButtonInputsClick();
 
-		new ButtonMagnifier<Button>(bResults).mount();
-		new ButtonMagnifier<Button>(bInputs).mount();
-		new ButtonMagnifier<Button>(bConfirm).mount();
+		new ButtonMagnifier<>(bResults).mount();
+		new ButtonMagnifier<>(bInputs).mount();
+		new ButtonMagnifier<>(bConfirm).mount();
 
 		Tooltip.install(bResults, new Tooltip("Search"));
 		Tooltip.install(bInputs, new Tooltip("Search"));

@@ -76,7 +76,7 @@ public class Log {
 	private static final String THREAD_ID_JSON_KEY = "threadID";
 
 	
-	private final BlockingQueue<Message> QUEUE = new LinkedBlockingQueue<Log.Message>();
+	private final BlockingQueue<Message> QUEUE = new LinkedBlockingQueue<>();
 	String fileName; 
 	public void setFileName(String fileName) { this.fileName = fileName; }
 	
