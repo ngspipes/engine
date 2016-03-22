@@ -28,6 +28,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import jfxutils.ComponentException;
 import jfxutils.IInitializable;
+import ngspipesengine.exceptions.EngineUIException;
 import ngspipesengine.logic.engine.EngineManager;
 import ngspipesengine.logic.engine.EngineUIReporter;
 import ngspipesengine.logic.pipeline.Pipeline;
@@ -35,7 +36,6 @@ import ngspipesengine.logic.pipeline.PipelineManager;
 import ngspipesengine.userInterface.utils.pallets.EngineListPallet;
 import ngspipesengine.userInterface.utils.pallets.PipelineListPallet;
 import ngspipesengine.utils.Dialog;
-import ngspipesengine.exceptions.EngineUIException;
 import ngspipesengine.utils.WorkQueue;
 
 import java.util.Collection;
@@ -51,10 +51,6 @@ public class FXMLEngineController implements IInitializable<Void> {
 	private Button bAdd;
 	@FXML
 	private Button bRemove;
-	@FXML
-	private Button bInfo;
-	@FXML
-	private Button bHelp;
 	@FXML
 	private TextField tFPipelinesFilter;
 	@FXML
@@ -75,8 +71,6 @@ public class FXMLEngineController implements IInitializable<Void> {
 		bAdd.setOnMouseClicked((e)->onAdd());
 		bRemove.setOnMouseClicked((e)->onRemove());
 		bPlay.setOnMouseClicked((e)->onPlay());
-		bInfo.setOnMouseClicked((e)->onInfo());
-		bHelp.setOnMouseClicked((e)->onHelp());
 		
 		new ButtonMagnifier<>(bAdd).mount();
 		new ButtonMagnifier<>(bRemove).mount();
@@ -85,8 +79,6 @@ public class FXMLEngineController implements IInitializable<Void> {
 		Tooltip.install(bAdd, new Tooltip("Add"));
 		Tooltip.install(bRemove, new Tooltip("Remove"));
 		Tooltip.install(bPlay, new Tooltip("Play"));
-		Tooltip.install(bInfo, new Tooltip("Info"));
-		Tooltip.install(bHelp, new Tooltip("Help"));
 		
 		pipelinesPallet = new PipelineListPallet(tFPipelinesFilter, lvPipelines);
 		WorkQueue.run(()->{

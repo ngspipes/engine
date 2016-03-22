@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import java.net.*?>
-<AnchorPane style="-fx-background-color: #D4D4D4;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ngspipesengine.userInterface.controllers.FXMLEngineController">
+
+<AnchorPane minWidth="400.0" style="-fx-background-color: #D4D4D4;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ngspipesengine.userInterface.controllers.FXMLEngineController">
    <children>
       <SplitPane fx:id="root" dividerPositions="0.26047904191616766" orientation="VERTICAL" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <items>
@@ -24,24 +27,6 @@
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="15.0" />
                                  </HBox.margin>
                               </ImageView>
-                              <Button id="infoBtn" fx:id="bInfo" mnemonicParsing="false" prefHeight="48.0" prefWidth="51.0" styleClass="buttons">
-                                 <stylesheets>
-                                    <URL value="@../css/Buttons.css" />
-                                    <URL value="@../css/InfoButton.css" />
-                                 </stylesheets>
-                                 <HBox.margin>
-                                    <Insets bottom="10.0" left="10.0" right="10.0" top="15.0" />
-                                 </HBox.margin>
-                              </Button>
-                              <Button id="helpBtn" fx:id="bHelp" mnemonicParsing="false" prefHeight="48.0" prefWidth="52.0" styleClass="buttons">
-                                 <stylesheets>
-                                    <URL value="@../css/Buttons.css" />
-                                    <URL value="@../css/HelpButton.css" />
-                                 </stylesheets>
-                                 <HBox.margin>
-                                    <Insets bottom="10.0" left="10.0" right="10.0" top="15.0" />
-                                 </HBox.margin>
-                              </Button>
                            </children>
                         </HBox>
                         <HBox alignment="CENTER_LEFT" VBox.vgrow="ALWAYS">
