@@ -101,7 +101,7 @@ public class NGSPipesEngineConsole {
 
 		} catch (ExecutorImageNotFound ex) {
 			System.out.println();
-			System.out.println("\t ** Error openning the executor image file **");
+			System.out.println("\t ** Error opening the executor image file **");
 			System.out.println("\t Please:");
 			System.out.println("\t\t 1. download it from here " + DOWNLOAD_LINK);
 			System.out.println("\t\t 2. place it inside the working directory as explained here " + WIKI_LINK);

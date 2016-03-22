@@ -19,18 +19,13 @@
  */
 package ngspipesengine.utils;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import ngspipesengine.exceptions.EngineException;
+
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
-
-import ngspipesengine.exceptions.EngineException;
 
 
 public class Utils {
@@ -63,7 +58,7 @@ public class Utils {
     public static final String VBOX_GET_HOST_ONLY_COMMAND = LIST_VM_COMMAND + "hostonlyifs";
     public static final String VBOX_CREATE_HOST_ONLY_COMMAND = VBOXMANAGE + " hostonlyif create";
     public static final String VBOX_SHOWINFO_COMMAND = VBOXMANAGE + " showvminfo ";
-    public static final String VBOX_CREAT_HOST_ONLY_ADAPTER_COMMAND = MODIFY_VM + "%1$s --nic2 hostonly";
+    public static final String VBOX_CREATE_HOST_ONLY_ADAPTER_COMMAND = MODIFY_VM + "%1$s --nic2 hostonly";
     public static final String VBOX_CONFIG_HOST_ONLY_ADAPTER_COMMAND = MODIFY_VM + "%1$s --hostonlyadapter2 %2$s";
     public static final String VBOX_DHCP_SERVER_MODIFY_COMMAND = VBOXMANAGE + " dhcpserver modify --ifname %1$s" + 
 																"  --ip 192.168.56.100 --netmask 255.255.255.0 --lowerip" +
@@ -72,8 +67,8 @@ public class Utils {
     public static final String MEMORY_OPTION = " --memory ";
     
     private static final String SHARE_FOLDER_COMMAND = VBOXMANAGE + " sharedfolder ";
-    public static final String SHARE_FODLER_ADD_COMMAND = SHARE_FOLDER_COMMAND + "add ";
-    public static final String SHARE_FODLER_REMOVE_COMMAND = SHARE_FOLDER_COMMAND + "remove ";
+    public static final String SHARE_FOLDER_ADD_COMMAND = SHARE_FOLDER_COMMAND + "add ";
+    public static final String SHARE_FOLDER_REMOVE_COMMAND = SHARE_FOLDER_COMMAND + "remove ";
     public static final String NAME_OPTION = " --name %1$s ";
     public static final String HOST_PATH_OPTION = "--hostpath ";
 	    
@@ -93,7 +88,7 @@ public class Utils {
     }
 
 	public static String getFileNameWithExtension(String fileName) {
-		int idxBegin = getLastSlachIndex(fileName);
+		int idxBegin = getLastSlashIndex(fileName);
 		return (idxBegin != -1) ? fileName.substring(idxBegin + "/".length()) : fileName;
 	}
 	
@@ -162,7 +157,7 @@ public class Utils {
 				
 				return proc.waitFor();
 			} catch (IOException | InterruptedException e) {
-				log.error(TAG, "Error loging command execution" + e.getMessage());
+				log.error(TAG, "Error logging command execution" + e.getMessage());
 			}
 			return 1;
 	}
@@ -185,10 +180,10 @@ public class Utils {
             bf.close();	
     }
 
-	private static int getLastSlachIndex(String fileName) {
-		int indexOfBackSlach = fileName.lastIndexOf("/");
-		int indexOfSlach = fileName.lastIndexOf("\\");
-		return indexOfSlach != -1 ? indexOfSlach : indexOfBackSlach;
+	private static int getLastSlashIndex(String fileName) {
+		int indexOfBackSlash = fileName.lastIndexOf("/");
+		int indexOfSlash = fileName.lastIndexOf("\\");
+		return indexOfSlash != -1 ? indexOfSlash : indexOfBackSlash;
 	}
 	
 	public static String readStream(Process proc, Log log) {

@@ -32,7 +32,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Log {
 
-	private static final int JSON_IDENTATION = 5;
+	private static final int JSON_INDENTATION = 5;
 	private static final String JSON_EXTENSION = ".json";
 
 	public enum MessageType{
@@ -167,7 +167,7 @@ public class Log {
 		
 		try{
 			writer = new PrintWriter(new BufferedWriter(new FileWriter(getLogDir())));
-			writer.println(DATA.toString(JSON_IDENTATION));
+			writer.println(DATA.toString(JSON_INDENTATION));
 		} finally{
 			if(writer!= null)
 				writer.close();

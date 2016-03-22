@@ -19,17 +19,17 @@
  */
 package ngspipesengine.compiler;
 
-import java.net.MalformedURLException;
-
 import ngspipesengine.exceptions.EngineException;
 import ngspipesengine.utils.IO;
+
+import java.net.MalformedURLException;
 
 public class JavaCompiler extends PipelineCompiler {
 
 	private static final String MAIN_CODE = "\tpublic static void main(String[] args) throws DSLException {\n" +
 			"\t\tif(args[0].isEmpty() || args.length == 0)\n" + 
 			"\t\t\tthrow new DSLException(\":: Error running pipeline :: no " +
-			"repository uri especified.\");\n" +
+			"repository uri specified.\");\n" +
 			"\t\ttry {\n\t\t\tPipe pipe = loadPipeline(args[0]);" +
 			"\n\t\t\tif(args.length == 2)\n\t\t\t\tpipe.run(Integer.parseInt(args[1]));" +
 			"\n\t\t\t\telse\n\t\t\t\t\tif(args.length == 3)\n\t\t\t\t\t\t" +
@@ -70,20 +70,20 @@ public class JavaCompiler extends PipelineCompiler {
 	}
 
 
-	private void setRepositoryInfo(String conent) throws EngineException {
-		int beginIdx = conent.indexOf("new Pipeline(") + "new Pipeline(".length();
-		int endIdx = conent.indexOf(",", beginIdx);
+	private void setRepositoryInfo(String content) throws EngineException {
+		int beginIdx = content.indexOf("new Pipeline(") + "new Pipeline(".length();
+		int endIdx = content.indexOf(",", beginIdx);
 
-		String repoType = conent.substring(beginIdx, endIdx);
+		String repoType = content.substring(beginIdx, endIdx);
 		repoType.trim();
 		repoType = repoType.replace("\"", "");		
 		props.setRepositoryType(repoType);
 
 
-		beginIdx = conent.indexOf("repositoryUri =") + "repositoryUri = ".length();
-		endIdx = conent.indexOf(";", beginIdx);
+		beginIdx = content.indexOf("repositoryUri =") + "repositoryUri = ".length();
+		endIdx = content.indexOf(";", beginIdx);
 		
-		String repositoryUri = conent.substring(beginIdx, endIdx);
+		String repositoryUri = content.substring(beginIdx, endIdx);
 		repositoryUri.trim();
 		repositoryUri = repositoryUri.replace("\"", "");
 		props.setRepositoryUri(repositoryUri);

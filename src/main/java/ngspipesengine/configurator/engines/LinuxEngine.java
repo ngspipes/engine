@@ -41,9 +41,9 @@ public class LinuxEngine extends Engine {
 
 	@Override
 	public void finish() throws EngineException {
-		props.getLog().debug(TAG, "Finshing");
+		props.getLog().debug(TAG, "Finishing");
 		System.out.println("Finishing engine");
-		props.getLog().debug(TAG, "Finshing success");
+		props.getLog().debug(TAG, "Finishing success");
 		props.stopLog();
 	}
 

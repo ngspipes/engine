@@ -74,7 +74,7 @@ public class VMProperties extends Properties {
 			runResults = Utils.run(Utils.VBOX_GET_HOST_ONLY_COMMAND);
 
 			if(runResults == null || runResults.isEmpty())
-				throw new EngineException("Error creating and configurating host-only adapter");
+				throw new EngineException("Error creating and configuring host-only adapter");
 				
 			String vboxHostonlyAdapterName = Engine.OS_QUOTATION_MARKS_FORMATTERS.get(Utils.OS_TYPE)
 														.apply(getTagContentOf(runResults, "Name:"));
@@ -86,14 +86,14 @@ public class VMProperties extends Properties {
 			Utils.run(dhcpServerCommand);
 			
 		} catch(IOException | InterruptedException e) {
-			throw new EngineException("Error creating and configurating host-only adapter", e);
+			throw new EngineException("Error creating and configuring host-only adapter", e);
 		}
 	}
 	
 	private static void createAndConfigHostOnlyAdapter(String vmName, String adapterName) throws IOException, InterruptedException {
 		
 		
-		String createCommand = String.format(Utils.VBOX_CREAT_HOST_ONLY_ADAPTER_COMMAND, vmName);
+		String createCommand = String.format(Utils.VBOX_CREATE_HOST_ONLY_ADAPTER_COMMAND, vmName);
 		Utils.run(createCommand);
 		
 		
@@ -117,7 +117,7 @@ public class VMProperties extends Properties {
 	private static String getAddSharedFolderCommand(String engineName, Map.Entry<String, String> sharedFolder) {
 		StringBuilder sharedFolderCommand = new StringBuilder();
 
-		sharedFolderCommand	.append(getSharedFolderCommand(Utils.SHARE_FODLER_ADD_COMMAND, engineName, sharedFolder.getKey()))
+		sharedFolderCommand	.append(getSharedFolderCommand(Utils.SHARE_FOLDER_ADD_COMMAND, engineName, sharedFolder.getKey()))
 							.append(Utils.HOST_PATH_OPTION)
 							.append(Engine.OS_PATH_FORMATTERS.get(Utils.OS_TYPE).apply(sharedFolder.getValue()));
 
@@ -226,10 +226,10 @@ public class VMProperties extends Properties {
 	}
 	
 	private void cleanSharedFolders(String engineName) throws EngineException {
-		log.debug(TAG, "Unsetting shared folders properties"); 
+		log.debug(TAG, "Unsetting shared folders properties");
 
 		for (Map.Entry<String, String> sharedFolder : SHARED_FOLDERS.entrySet())
-			Utils.executeCommand(getSharedFolderCommand(Utils.SHARE_FODLER_REMOVE_COMMAND, engineName,
+			Utils.executeCommand(getSharedFolderCommand(Utils.SHARE_FOLDER_REMOVE_COMMAND, engineName,
 								sharedFolder.getKey()), log,
 								TAG, "Error cleaning shared folders properties");
 	}

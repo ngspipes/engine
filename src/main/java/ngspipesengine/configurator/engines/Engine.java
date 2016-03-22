@@ -19,18 +19,18 @@
  */
 package ngspipesengine.configurator.engines;
 
+import ngspipesengine.configurator.properties.Properties;
+import ngspipesengine.configurator.scripts.Script;
+import ngspipesengine.exceptions.EngineException;
+import ngspipesengine.utils.Uris;
+import ngspipesengine.utils.Utils;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
-
-import ngspipesengine.configurator.properties.Properties;
-import ngspipesengine.configurator.scripts.Script;
-import ngspipesengine.exceptions.EngineException;
-import ngspipesengine.utils.Uris;
-import ngspipesengine.utils.Utils;
 
 public abstract class Engine implements IEngine {
 
@@ -136,7 +136,7 @@ public abstract class Engine implements IEngine {
 		isInternetConnected();
 		props.getLog().debug(TAG, "Starting");
 		this.cloneEngine();
-		System.out.println("Configurating engine");
+		System.out.println("Configuring engine");
 		System.out.println(DOWNLOAD_TIME_MESSAGE);
 		this.props.set();
 		createScripts();
@@ -166,13 +166,13 @@ public abstract class Engine implements IEngine {
 		props.getLog().debug(TAG, "Checking network connection");
 		try {
 			if(!isConnected()) {
-				props.getLog().error(TAG, "Unrechable to connect to network");
-				throw new EngineException("Unrechable to connect to network");
+				props.getLog().error(TAG, "Unreachable to connect to network");
+				throw new EngineException("Unreachable to connect to network");
 			}
 		} catch (IOException e) {
 			props.getLog().error(TAG, "Error checking internet connection");
 			props.getLog().error(TAG, "\t" + e.getMessage());
-			throw new EngineException("Unrechable to connect to network", e);
+			throw new EngineException("Unreachable to connect to network", e);
 		}
 		props.getLog().debug(TAG, "Network connected");		
 	}

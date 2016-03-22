@@ -50,16 +50,16 @@ public class VMEngine extends Engine {
 	private static boolean compareVersions(String currVersion) {		
 		String[] numbers = currVersion.split("\\.");
 		int version = 0;
-		int multiplicator = 100;
+		int multiplicand = 100;
 		for(int idx = 0; idx < numbers.length; ++idx) {
-				version += multiplicator * Integer.parseInt(numbers[idx]);
-				multiplicator /= 10;
+				version += multiplicand * Integer.parseInt(numbers[idx]);
+				multiplicand /= 10;
 		}
 		
 		return version >= VERSION;
 	}
 	
-	private static boolean isRegisted(Log log) throws EngineException {
+	private static boolean isRegistered(Log log) throws EngineException {
 		try {
 			List<String> vms = getVMsName();
 
@@ -68,7 +68,7 @@ public class VMEngine extends Engine {
 					return true;
 			
 		} catch (IOException e) {
-			Utils.treatException(log, TAG, e, "verifying if engine is registed");
+			Utils.treatException(log, TAG, e, "verifying if engine is registered");
 		}
 		return false;
 	}
@@ -112,7 +112,7 @@ public class VMEngine extends Engine {
 	
 	public static void register() throws EngineException {
 		Log log = new Log("register");
-		if(!isRegisted(log)) {
+		if(!isRegistered(log)) {
 
 			log.debug(TAG, "Register beginning");
 			Utils.executeCommand(getRegisterVMCommand(), log, TAG, "Error registering engine");
@@ -153,10 +153,10 @@ public class VMEngine extends Engine {
 	@Override
 	public void finish() throws EngineException {
 		waitUntilRunning();
-		props.getLog().debug(TAG, "Finshing");
+		props.getLog().debug(TAG, "Finishing");
 		System.out.println("Finishing engine");
 		props.unset();
-		props.getLog().debug(TAG, "Finshing success");
+		props.getLog().debug(TAG, "Finishing success");
 		props.stopLog();
 	}
 
@@ -166,7 +166,7 @@ public class VMEngine extends Engine {
 		System.out.println("Stopping engine execution");
 		Utils.executeCommand(getPowerOffVMCommand(), props.getLog(), TAG, "Stopping engine execution");
 		props.unset();
-		props.getLog().debug(TAG, "Execution stoped");
+		props.getLog().debug(TAG, "Execution stopped");
 	}
 	
 	
