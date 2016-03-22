@@ -71,7 +71,7 @@ public class EngineManager {
         }
     }
 
-    public static int run(Pipeline pipeline, EngineUIReporter reporter) throws EngineUIException {
+    public static int run(Pipeline pipeline, EngineUIReporter reporter) {
         if(pipeline == null || reporter == null)
             throw new IllegalArgumentException("Pipeline and reporter can not be null!");
 

@@ -29,10 +29,10 @@ import javafx.stage.Stage;
 import jfxutils.ComponentException;
 import ngspipesengine.configurator.engines.VMEngine;
 import ngspipesengine.dataAccess.Uris;
+import ngspipesengine.exceptions.EngineUIException;
 import ngspipesengine.logic.engine.EngineManager;
 import ngspipesengine.logic.pipeline.PipelineManager;
 import ngspipesengine.utils.Dialog;
-import ngspipesengine.exceptions.EngineUIException;
 
 
 public class NGSPipesEngineApplication extends Application {
@@ -63,7 +63,7 @@ public class NGSPipesEngineApplication extends Application {
 		loadWindow(stage);
 	}
 
-	private void loadWindow(Stage stage) throws EngineUIException	{
+	private void loadWindow(Stage stage) {
 		try{
 			stage.setTitle("NGSPipes Engine");
 			String path = Uris.FXML_ENGINE;

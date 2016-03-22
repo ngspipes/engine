@@ -29,9 +29,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class EngineUIReporter implements IProgressReporter {
 
-    private LinkedBlockingQueue<String> traceQueue = new LinkedBlockingQueue<>();
-    private LinkedBlockingQueue<String> errorQueue = new LinkedBlockingQueue<>();
-    private LinkedBlockingQueue<String> infoQueue = new LinkedBlockingQueue<>();
+    private final LinkedBlockingQueue<String> traceQueue = new LinkedBlockingQueue<>();
+    private final LinkedBlockingQueue<String> errorQueue = new LinkedBlockingQueue<>();
+    private final LinkedBlockingQueue<String> infoQueue = new LinkedBlockingQueue<>();
 
     private final AtomicBoolean closed = new AtomicBoolean();
 

@@ -19,18 +19,18 @@
  */
 package ngspipesengine.configurator.engines;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
-
 import ngspipesengine.configurator.properties.LinuxProperties;
 import ngspipesengine.configurator.properties.VMProperties;
 import ngspipesengine.exceptions.EngineException;
 import ngspipesengine.utils.Utils;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+
 public class EngineSupplier {
 
-	private static String TAG = "EngineSupplier";
+	private static final String TAG = "EngineSupplier";
 	private static final Map<String, Function<String[], IEngine>> ENGINE_SUPPlIER;
 	
 	static {

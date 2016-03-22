@@ -42,9 +42,9 @@ public class NGSPipesEngineConsole {
 	private static final String APP_NAME = "NGSPipes Engine";
 	private static final String DOWNLOAD_LINK = "http://link.inesc-id.pt/pipes/NGSPipesEngineExecutor.zip";
 	private static final String WIKI_LINK = "https://github.com/ngspipes/engine/wiki#2-install-ngspipes-engine";
-	private static String DEFAULT_EXECUTOR_NAME = "NGSPipesEngineExecutor";
-	private static int DEFAULT_FROM = -1;
-	private static int DEFAULT_TO = -1;
+	private static final String DEFAULT_EXECUTOR_NAME = "NGSPipesEngineExecutor";
+	private static final int DEFAULT_FROM = -1;
+	private static final int DEFAULT_TO = -1;
 	public static final String PIPES_PATH = "pipes";
 	public static final String IN_PATH = "in";
 	public static final String OUT_PATH = "out";
@@ -138,7 +138,7 @@ public class NGSPipesEngineConsole {
 		System.out.println("VM " + vmName + " has been deleted");
 	}
 
-	private static VMProperties getVMProperties(CommandLine props) throws JSONException, EngineException, IOException {
+	private static VMProperties getVMProperties(CommandLine props) throws EngineException, IOException {
 		serverSocket =	new ServerSocket(0);
 
 		// build initial VMProperties with optional arguments
