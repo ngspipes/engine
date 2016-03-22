@@ -19,6 +19,14 @@
  */
 package ngspipesengine.configurator.properties;
 
+import configurators.IConfigurator;
+import dsl.entities.Pipeline;
+import ngspipesengine.compiler.*;
+import ngspipesengine.exceptions.EngineException;
+import ngspipesengine.utils.Log;
+import ngspipesengine.utils.Uris;
+import ngspipesengine.utils.Utils;
+
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -30,18 +38,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-
-import configurators.IConfigurator;
-import dsl.entities.Pipeline;
-import ngspipesengine.compiler.CompilerProperties;
-import ngspipesengine.compiler.ICompiler;
-import ngspipesengine.compiler.JavaCompiler;
-import ngspipesengine.compiler.PipelineCompiler;
-import ngspipesengine.compiler.PipesCompiler;
-import ngspipesengine.exceptions.EngineException;
-import ngspipesengine.utils.Log;
-import ngspipesengine.utils.Uris;
-import ngspipesengine.utils.Utils;
 
 public abstract class Properties implements IProperties {
 
@@ -68,9 +64,10 @@ public abstract class Properties implements IProperties {
 	private static Map<String, List<String>> getSetupsFromConfigurator(Collection<IConfigurator> configurators) {
 		Map<String, List<String>> map = new HashMap<String, List<String>>();
 
-		for(IConfigurator configurator : configurators)
+		configurators.forEach((configurator)->{
 			if(!map.containsKey(configurator.getName()))
 				map.put(configurator.getName(), configurator.getSetup());
+		});
 
 		return map;
 	}

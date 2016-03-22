@@ -76,13 +76,13 @@ public class VMEngine extends Engine {
 	private static String getNextCloneNumber(List<String> vmsNames) {
 		
 		List<Integer> numbers = new LinkedList<>();
-		
-		for(String vm : vmsNames) {			
-			if(!vm.equals(VMProperties.BASE_VM_NAME)) { 
+
+		vmsNames.forEach((vm)->{
+			if(!vm.equals(VMProperties.BASE_VM_NAME)) {
 				int idxNumber = VMProperties.BASE_VM_NAME.length();
 				numbers.add(Integer.parseInt(vm.substring(idxNumber)));
 			}
-		}
+		});
 		
 		if(numbers.isEmpty()) return "" + 0;
 		

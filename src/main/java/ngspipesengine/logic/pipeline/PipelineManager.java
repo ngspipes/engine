@@ -21,8 +21,8 @@ package ngspipesengine.logic.pipeline;
 
 import ngspipesengine.dataAccess.Uris;
 import ngspipesengine.exceptions.EngineException;
-import ngspipesengine.logic.engine.EngineManager;
 import ngspipesengine.exceptions.EngineUIException;
+import ngspipesengine.logic.engine.EngineManager;
 import ngspipesengine.utils.IO;
 
 import java.io.File;
@@ -65,10 +65,10 @@ public class PipelineManager {
 		Collection<String> enginesNames = EngineManager.getEnginesNames();
 		enginesNames.add(defaultEngineName);
 
-		for(Pipeline pipeline : pipelines){
+		pipelines.forEach((pipeline)->{
 			if(!enginesNames.contains(pipeline.getEngineName()))
 				pipeline.setEngineName(EngineManager.getDefaultEngineName());
-		}
+		});
 	}
 	
 	public static void save() throws EngineUIException{

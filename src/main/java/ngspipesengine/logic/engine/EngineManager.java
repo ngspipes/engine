@@ -22,8 +22,8 @@ package ngspipesengine.logic.engine;
 import ngspipesengine.configurator.engines.VMEngine;
 import ngspipesengine.configurator.properties.VMProperties;
 import ngspipesengine.exceptions.EngineException;
-import ngspipesengine.logic.pipeline.Pipeline;
 import ngspipesengine.exceptions.EngineUIException;
+import ngspipesengine.logic.pipeline.Pipeline;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -121,9 +121,10 @@ public class EngineManager {
             Collection<Integer> ids = RUNNERS.keySet().parallelStream().collect(Collectors.toList());
 
             Collection<Integer> returnIds = new LinkedList<>();
-            for(Integer id : ids)
+            ids.forEach((id)->{
                 if(!RUNNERS.get(id).finished())
                     returnIds.add(id);
+            });
 
             return returnIds;
         }
