@@ -32,7 +32,7 @@ import ngspipesengine.dataAccess.Uris;
 import ngspipesengine.logic.engine.EngineManager;
 import ngspipesengine.logic.pipeline.PipelineManager;
 import ngspipesengine.utils.Dialog;
-import ngspipesengine.utils.EngineUIException;
+import ngspipesengine.exceptions.EngineUIException;
 
 
 public class NGSPipesEngineApplication extends Application {

@@ -23,7 +23,7 @@ import ngspipesengine.configurator.engines.VMEngine;
 import ngspipesengine.configurator.properties.VMProperties;
 import ngspipesengine.exceptions.EngineException;
 import ngspipesengine.logic.pipeline.Pipeline;
-import ngspipesengine.utils.EngineUIException;
+import ngspipesengine.exceptions.EngineUIException;
 
 import java.util.*;
 import java.util.stream.Collectors;

@@ -37,7 +37,7 @@ import ngspipesengine.dataAccess.Uris;
 import ngspipesengine.logic.engine.EngineManager;
 import ngspipesengine.logic.pipeline.Pipeline;
 import ngspipesengine.utils.Dialog;
-import ngspipesengine.utils.EngineUIException;
+import ngspipesengine.exceptions.EngineUIException;
 import ngspipesengine.utils.WorkQueue;
 
 import java.io.File;

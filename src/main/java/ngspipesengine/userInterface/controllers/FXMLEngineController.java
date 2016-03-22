@@ -35,7 +35,7 @@ import ngspipesengine.logic.pipeline.PipelineManager;
 import ngspipesengine.userInterface.utils.pallets.EngineListPallet;
 import ngspipesengine.userInterface.utils.pallets.PipelineListPallet;
 import ngspipesengine.utils.Dialog;
-import ngspipesengine.utils.EngineUIException;
+import ngspipesengine.exceptions.EngineUIException;
 import ngspipesengine.utils.WorkQueue;
 
 import java.util.Collection;

@@ -20,7 +20,7 @@
 package ngspipesengine.logic.pipeline;
 
 
-import ngspipesengine.utils.EngineUIException;
+import ngspipesengine.exceptions.EngineUIException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

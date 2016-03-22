@@ -21,7 +21,7 @@ package ngspipesengine.logic.pipeline;
 
 import ngspipesengine.configurator.properties.VMProperties;
 import ngspipesengine.exceptions.EngineException;
-import ngspipesengine.utils.EngineUIException;
+import ngspipesengine.exceptions.EngineUIException;
 
 import java.io.File;
 

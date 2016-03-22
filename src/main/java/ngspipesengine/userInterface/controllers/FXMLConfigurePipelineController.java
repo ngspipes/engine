@@ -34,7 +34,7 @@ import ngspipesengine.logic.engine.EngineManager;
 import ngspipesengine.logic.pipeline.Pipeline;
 import ngspipesengine.userInterface.controllers.FXMLConfigurePipelineController.Data;
 import ngspipesengine.utils.Dialog;
-import ngspipesengine.utils.EngineUIException;
+import ngspipesengine.exceptions.EngineUIException;
 import sun.management.ManagementFactoryHelper;
 
 import java.io.File;

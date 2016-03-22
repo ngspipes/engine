@@ -22,7 +22,7 @@ package ngspipesengine.logic.pipeline;
 import ngspipesengine.dataAccess.Uris;
 import ngspipesengine.exceptions.EngineException;
 import ngspipesengine.logic.engine.EngineManager;
-import ngspipesengine.utils.EngineUIException;
+import ngspipesengine.exceptions.EngineUIException;
 import ngspipesengine.utils.IO;
 
 import java.io.File;
