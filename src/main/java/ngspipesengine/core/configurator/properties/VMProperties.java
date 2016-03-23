@@ -23,7 +23,7 @@ import dsl.entities.Pipeline;
 import ngspipesengine.core.configurator.engines.Engine;
 import ngspipesengine.core.exceptions.EngineException;
 import ngspipesengine.core.utils.Uris;
-import ngspipesengine.presentation.ui.utils.Utils;
+import ngspipesengine.core.utils.Utils;
 
 import java.io.IOException;
 import java.util.HashMap;

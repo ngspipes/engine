@@ -19,8 +19,7 @@
  */
 package ngspipesengine.core.utils;
 
-import ngspipesengine.core.utils.Uris;
-import ngspipesengine.presentation.ui.utils.WorkQueue;
+import ngspipesengine.presentation.Utils.WorkQueue;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

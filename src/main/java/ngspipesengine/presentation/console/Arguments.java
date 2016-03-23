@@ -17,19 +17,32 @@
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ngspipesengine.presentation.ui.utils;
+package ngspipesengine.presentation.console;
 
-public class WorkQueue {
 
-    public static void run(Runnable action){
-        run(action, true, Thread.NORM_PRIORITY);
-    }
+public class Arguments {
 
-    public static void run(Runnable action, boolean deamon, int priority){
-        Thread thread = new Thread(action);
-        thread.setDaemon(deamon);
-        thread.setPriority(priority);
-        thread.start();
+    public String pipesPath;
+    public String inputPath;
+    public String outPath;
+    public String executorName;
+    public String cpus;
+    public String mem;
+    public String fromStep;
+    public String toStep;
+
+    public Arguments() { }
+
+    public Arguments(String pipesPath, String inPath, String outPath,
+                     String executorName, String cpus, String mem, String fromStep, String toStep){
+        this.pipesPath = pipesPath;
+        this.inputPath = inPath;
+        this.outPath = outPath;
+        this.executorName = executorName;
+        this.cpus = cpus;
+        this.mem = mem;
+        this.fromStep = fromStep;
+        this.toStep = toStep;
     }
 
 }

@@ -21,7 +21,7 @@ package ngspipesengine.core.compiler;
 
 import ngspipesengine.core.utils.Log;
 import ngspipesengine.core.utils.Uris;
-import ngspipesengine.presentation.ui.utils.Utils;
+import ngspipesengine.core.utils.Utils;
 
 public class CompilerProperties {		
 

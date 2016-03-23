@@ -36,7 +36,7 @@ import ngspipesengine.presentation.logic.pipeline.PipelineManager;
 import ngspipesengine.presentation.ui.pallets.EngineListPallet;
 import ngspipesengine.presentation.ui.pallets.PipelineListPallet;
 import ngspipesengine.presentation.ui.utils.Dialog;
-import ngspipesengine.presentation.ui.utils.WorkQueue;
+import ngspipesengine.presentation.Utils.WorkQueue;
 
 import java.util.Collection;
 import java.util.LinkedList;

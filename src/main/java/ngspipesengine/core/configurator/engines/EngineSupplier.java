@@ -22,7 +22,7 @@ package ngspipesengine.core.configurator.engines;
 import ngspipesengine.core.configurator.properties.LinuxProperties;
 import ngspipesengine.core.configurator.properties.VMProperties;
 import ngspipesengine.core.exceptions.EngineException;
-import ngspipesengine.presentation.ui.utils.Utils;
+import ngspipesengine.core.utils.Utils;
 
 import java.util.HashMap;
 import java.util.Map;

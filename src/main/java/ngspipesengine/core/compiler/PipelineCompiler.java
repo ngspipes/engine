@@ -23,7 +23,7 @@ import ngspipesengine.core.configurator.engines.Engine;
 import ngspipesengine.core.exceptions.EngineException;
 import ngspipesengine.core.utils.IO;
 import ngspipesengine.core.utils.Uris;
-import ngspipesengine.presentation.ui.utils.Utils;
+import ngspipesengine.core.utils.Utils;
 
 import java.io.File;
 import java.net.MalformedURLException;

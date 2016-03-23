@@ -26,7 +26,7 @@ import ngspipesengine.core.configurator.engines.VMEngine;
 import ngspipesengine.core.exceptions.EngineException;
 import ngspipesengine.presentation.logic.pipeline.Pipeline;
 import ngspipesengine.presentation.ui.utils.Dialog;
-import ngspipesengine.presentation.ui.utils.WorkQueue;
+import ngspipesengine.presentation.Utils.WorkQueue;
 import progressReporter.SocketReporter;
 
 import java.io.BufferedReader;

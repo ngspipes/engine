@@ -20,172 +20,141 @@
 package ngspipesengine.presentation.console;
 
 import ngspipesengine.core.configurator.engines.VMEngine;
-import ngspipesengine.core.configurator.properties.VMProperties;
 import ngspipesengine.core.exceptions.EngineException;
 import ngspipesengine.core.exceptions.ExecutorImageNotFound;
-import ngspipesengine.presentation.ui.utils.Utils;
-import org.apache.commons.cli.*;
-import org.json.JSONException;
+import ngspipesengine.core.utils.Utils;
+import ngspipesengine.presentation.exceptions.EngineUIException;
+import ngspipesengine.presentation.logic.engine.EngineManager;
+import ngspipesengine.presentation.logic.engine.EngineReporter;
+import ngspipesengine.presentation.logic.pipeline.Pipeline;
+import org.apache.commons.cli.ParseException;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.ServerSocket;
-import java.net.Socket;
 
 public class NGSPipesEngineConsole {
 
-
-	public static final String FROM_STEP = "from";
-	public static final String TO_STEP = "to";
-	public static final String EXECUTOR_NAME = "executor";
-	private static final String APP_NAME = "NGSPipes Engine";
 	private static final String DOWNLOAD_LINK = "http://link.inesc-id.pt/pipes/NGSPipesEngineExecutor.zip";
 	private static final String WIKI_LINK = "https://github.com/ngspipes/engine/wiki#2-install-ngspipes-engine";
-	private static final String DEFAULT_EXECUTOR_NAME = "NGSPipesEngineExecutor";
-	private static final int DEFAULT_FROM = -1;
-	private static final int DEFAULT_TO = -1;
-	public static final String PIPES_PATH = "pipes";
-	public static final String IN_PATH = "in";
-	public static final String OUT_PATH = "out";
-	public static final String CPUS = "cpus";
-	public static final String MEM = "mem";
-	static ServerSocket serverSocket;
+
 	
 	public static void main(String[] args) {
+		if(args[0].equals("clean"))
+			clean(args[1]);
+		else {
+			Arguments arguments = getArguments(args);
 
-		Options options = new Options();
-		options.addOption(PIPES_PATH, true, "Pipeline path (mandatory)");
-		options.addOption(IN_PATH, true, "Input absolute pathname (mandatory)");
-		options.addOption(OUT_PATH, true, "Output absolute pathname (mandatory)");
-		options.addOption(EXECUTOR_NAME, true, "Executor image name");
-		options.addOption(CPUS, true, "Assigned cores");
-		options.addOption(MEM, true, "Assigned memory");
-		options.addOption(FROM_STEP, true, "Initial pipeline step");
-		options.addOption(TO_STEP, true, "Final pipeline step");
+			if(arguments == null)
+				System.exit(2);
 
-		// create the parser
-		CommandLineParser parser = new DefaultParser();
-		CommandLine cmdLine = null;
-		try {
-			// parse the command line arguments
-			cmdLine = parser.parse( options, args );
-
-			// check mandatory arguments
-			if (!cmdLine.hasOption(PIPES_PATH) || !cmdLine.hasOption(IN_PATH) || !cmdLine.hasOption(OUT_PATH)) {
-				System.err.println("Missing mandatory arguments.");
-				HelpFormatter formatter = new HelpFormatter();
-				formatter.printHelp( APP_NAME, options );
-				System.exit(-1);
-			}
-		}
-		catch( ParseException exp ) {
-			// oops, something went wrong
-			System.err.println( "Parsing failed.  Reason: " + exp.getMessage() );
-			System.exit(1);
-		}
-
-		try {
-			if(!VMEngine.acceptedVBoxVersion()) {
-				System.out.println("Your current version of Virtual Box is to old.\n" +
-						"Yo should have at least 4.3.20 version");
-				System.exit(0);
-			}
-			VMEngine.register();
-
-			switch(args[0]) {
-				case "clean" : clean(args[1]);
-				default : runEngine(cmdLine);
-			}
-
-		} catch (ExecutorImageNotFound ex) {
-			System.out.println();
-			System.out.println("\t ** Error opening the executor image file **");
-			System.out.println("\t Please:");
-			System.out.println("\t\t 1. download it from here " + DOWNLOAD_LINK);
-			System.out.println("\t\t 2. place it inside the working directory as explained here " + WIKI_LINK);
-			System.out.println();
-			System.out.println("\t Thank you for using NGSPipes!");
-		} catch(Exception ex) {
-			System.out.println("::ERROR running engine :: \nstackTrace: " + Utils.getStackTrace(ex));
-		} finally {
-			System.exit(1);
+			run(arguments);
 		}
 	}
 
-	private static void runEngine(CommandLine cmdLine) throws JSONException, EngineException, IOException {
-		VMProperties vmProperties = getVMProperties(cmdLine);
-		VMEngine vm = new VMEngine(vmProperties);
-
-		System.out.println(
-				String.format("Starting executor with %d CPUs and %d GBytes",
-						vmProperties.getProcessorsNumber(),
-						vmProperties.getMemory()/1024));
-
-		vm.start();
-		initServer(vmProperties);
-		
-		System.out.println("Wait to finish engine");
-		vm.finish();
-	}
-
-	private static void clean(String vmName) throws EngineException {
+	private static void clean(String vmName) {
 		try {
 			VMEngine.clean(vmName);
 		} catch(EngineException e) {
-			throw new EngineException("Error cleaning engine", e);
+			System.err.println("Error cleaning " + vmName + "!\n" + Utils.getStackTrace(e));
 		}
 		System.out.println("VM " + vmName + " has been deleted");
 	}
 
-	private static VMProperties getVMProperties(CommandLine props) throws EngineException, IOException {
-		serverSocket =	new ServerSocket(0);
+	private static Arguments getArguments(String[] args) {
+		ArgumentsParser parser = new ArgumentsParser();
 
-		// build initial VMProperties with optional arguments
-		VMProperties propsVM;
-		propsVM = new VMProperties(
-				props.hasOption(EXECUTOR_NAME) ? props.getOptionValue(EXECUTOR_NAME) : DEFAULT_EXECUTOR_NAME,
-				props.getOptionValue(PIPES_PATH),
-				props.hasOption(FROM_STEP) ? Integer.parseInt(props.getOptionValue(FROM_STEP)) : DEFAULT_FROM,
-				props.hasOption(TO_STEP) ? Integer.parseInt(props.getOptionValue(TO_STEP)) : DEFAULT_TO
-		);
-
-		// mandatory arguments
-		propsVM.setInputsPath(props.getOptionValue(IN_PATH));
-		propsVM.setOutputsPath(props.getOptionValue(OUT_PATH));
-		propsVM.setPort(serverSocket.getLocalPort());
-
-		// more optional arguments
-		if (props.hasOption(CPUS)) {
-			propsVM.setProcessorsNumber(Integer.parseInt(props.getOptionValue(CPUS)));
+		Arguments arguments;
+		try {
+			arguments = parser.parse(args);
+		} catch(ParseException ex){
+			System.err.println( "Parsing failed.  Reason: " + ex.getMessage() );
+			System.exit(1);
+			return null;
 		}
-		if (props.hasOption(MEM)) {
-			propsVM.setMemory(Integer.parseInt(props.getOptionValue(MEM)) * 1024);
-		}
-		
-		return propsVM;
+
+		return arguments;
 	}
 
-	public static void initServer(VMProperties vmProperties) throws IOException {
-
+	private static void run(Arguments arguments) {
 		try {
-			Socket clientSocket = serverSocket.accept();   
-			System.out.println("Connection accepted with: " + clientSocket.getInetAddress());
-			
-			BufferedReader in = new BufferedReader(
-					new InputStreamReader(clientSocket.getInputStream()));
-			
-			String inputLine;
-			while ((inputLine = in.readLine()) != null) 
-				System.out.println(inputLine);
-			
-		} catch (IOException e) {
-			System.out.println("Exception caught when trying to listen on port "
-					+ serverSocket.getLocalPort() + " or listening for a connection");
-			System.out.println(e.getMessage());
-		} finally {
-			if(!serverSocket.isClosed())
-				serverSocket.close();
+			if(!VMEngine.acceptedVBoxVersion()) {
+				System.err.println("Your current version of Virtual Box is to old.\n" +
+						"Yo should have at least 4.3.20 version");
+				System.exit(3);
+			}
+
+			VMEngine.register();
+
+			int id = runPipeline(arguments);
+
+			waitForFinish(id);
+		} catch (ExecutorImageNotFound ex) {
+			StringBuilder sb =  new StringBuilder();
+			sb.append("\n");
+			sb.append("\t ** Error opening the executor image file **\n");
+			sb.append("\t Please:\n");
+			sb.append("\t\t 1. download it from here " + DOWNLOAD_LINK + "\n");
+			sb.append("\t\t 2. place it inside the working directory as explained here " + WIKI_LINK + "\n");
+			sb.append("\n");
+			sb.append("\t Thank you for using NGSPipes!");
+			System.out.print(sb.toString());
+		} catch(Exception ex) {
+			System.out.println("::ERROR running engine :: \nstackTrace: " + Utils.getStackTrace(ex));
+			System.exit(1);
 		}
-	}	
+	}
+
+	private static int runPipeline(Arguments arguments) throws EngineUIException {
+		EngineReporter reporter = new ConsoleReporter();
+		Pipeline pipeline = getPipeline(arguments);
+
+		int id = EngineManager.run(pipeline, reporter);
+
+		System.out.println(
+				String.format("Starting executor with %d CPUs and %d GBytes",
+						pipeline.getProcessors(),
+						pipeline.getMemory()/1024));
+
+		return id;
+	}
+
+	private static Pipeline getPipeline(Arguments arguments) throws EngineUIException {
+		Pipeline pipeline = new Pipeline(
+				new File(arguments.pipesPath),
+				new File(arguments.outPath),
+				new File(arguments.inputPath),
+				arguments.executorName
+		);
+
+		if (!arguments.fromStep.equals(ArgumentsParser.DEFAULT_FROM+""))
+			pipeline.setFrom(Integer.parseInt(arguments.fromStep));
+
+		if (!arguments.toStep.equals(ArgumentsParser.DEFAULT_TO+""))
+			pipeline.setTo(Integer.parseInt(arguments.toStep));
+
+		if (!arguments.cpus.equals(ArgumentsParser.DEFAULT_CPUS+""))
+			pipeline.setProcessors(Integer.parseInt(arguments.cpus));
+
+		if (!arguments.mem.equals(ArgumentsParser.DEFAULT_MEM+""))
+			pipeline.setProcessors(Integer.parseInt(arguments.mem) * 1024);
+
+		return pipeline;
+	}
+
+	private static void waitForFinish(int id)throws EngineUIException, IOException {
+		System.out.println("\t::**Press ENTER to cancel**::");
+
+		try(BufferedReader bf = new BufferedReader(new InputStreamReader(System.in))){
+			while(!bf.ready() && EngineManager.getAllRunningPipelines().contains(id))
+				try{ Thread.sleep(1000); } catch(InterruptedException ex) {}
+
+			if(bf.ready() && EngineManager.getAllRunningPipelines().contains(id)){
+				System.out.println("Canceling execution");
+				EngineManager.stop(id);
+			}
+		}
+	}
+
 }

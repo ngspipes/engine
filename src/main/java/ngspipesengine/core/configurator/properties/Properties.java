@@ -25,7 +25,7 @@ import ngspipesengine.core.compiler.*;
 import ngspipesengine.core.exceptions.EngineException;
 import ngspipesengine.core.utils.Log;
 import ngspipesengine.core.utils.Uris;
-import ngspipesengine.presentation.ui.utils.Utils;
+import ngspipesengine.core.utils.Utils;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;

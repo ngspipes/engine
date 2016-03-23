@@ -22,7 +22,6 @@ package ngspipesengine.core.utils;
 import ngspipesengine.core.configurator.properties.Properties;
 import ngspipesengine.core.exceptions.EngineException;
 import ngspipesengine.core.exceptions.ExecutorImageNotFound;
-import ngspipesengine.presentation.ui.utils.Utils;
 
 import java.io.File;
 import java.io.FileOutputStream;

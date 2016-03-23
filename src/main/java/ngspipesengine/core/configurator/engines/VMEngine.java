@@ -24,8 +24,8 @@ import ngspipesengine.core.configurator.scripts.Script;
 import ngspipesengine.core.exceptions.EngineException;
 import ngspipesengine.core.utils.Log;
 import ngspipesengine.core.utils.Uris;
-import ngspipesengine.presentation.ui.utils.Utils;
-import ngspipesengine.presentation.ui.utils.WorkQueue;
+import ngspipesengine.core.utils.Utils;
+import ngspipesengine.presentation.Utils.WorkQueue;
 
 import java.io.IOException;
 import java.util.Collections;
