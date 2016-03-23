@@ -19,8 +19,8 @@
  */
 package ngspipesengine.core.compiler;
 
-import ngspipesengine.presentation.ui.utils.Log;
-import ngspipesengine.presentation.ui.utils.Uris;
+import ngspipesengine.core.utils.Log;
+import ngspipesengine.core.utils.Uris;
 import ngspipesengine.presentation.ui.utils.Utils;
 
 public class CompilerProperties {		

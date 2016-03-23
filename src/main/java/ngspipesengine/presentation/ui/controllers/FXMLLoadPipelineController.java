@@ -33,7 +33,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import jfxutils.ComponentException;
 import jfxutils.IInitializable;
-import ngspipesengine.presentation.dataAccess.Uris;
+import ngspipesengine.presentation.ui.utils.Uris;
 import ngspipesengine.presentation.exceptions.EngineUIException;
 import ngspipesengine.presentation.logic.engine.EngineManager;
 import ngspipesengine.presentation.logic.pipeline.Pipeline;

@@ -27,8 +27,8 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import jfxutils.ComponentException;
 import jfxutils.IInitializable;
-import ngspipesengine.presentation.dataAccess.Uris;
-import ngspipesengine.presentation.logic.engine.EngineUIReporter;
+import ngspipesengine.presentation.ui.utils.Uris;
+import ngspipesengine.presentation.logic.engine.EngineReporter;
 import ngspipesengine.presentation.logic.pipeline.Pipeline;
 import ngspipesengine.presentation.ui.utils.Dialog;
 import ngspipesengine.presentation.ui.utils.WorkQueue;
@@ -60,10 +60,10 @@ public class FXMLRunPipelineController implements IInitializable<FXMLRunPipeline
 
 	public static class Data{
 		public final Pipeline pipeline;
-		public final EngineUIReporter reporter;
+		public final EngineReporter reporter;
 		public final Runnable onCancel;
 
-		public Data(Pipeline pipeline, EngineUIReporter reporter, Runnable onCancel){
+		public Data(Pipeline pipeline, EngineReporter reporter, Runnable onCancel){
 			this.pipeline = pipeline;
 			this.reporter = reporter;
 			this.onCancel = onCancel;
@@ -117,7 +117,7 @@ public class FXMLRunPipelineController implements IInitializable<FXMLRunPipeline
 	private final AtomicBoolean blinkError = new AtomicBoolean(false);
 
 	private Pipeline pipeline;
-	private EngineUIReporter reporter;
+	private EngineReporter reporter;
 	private Runnable onCancel;
 
 

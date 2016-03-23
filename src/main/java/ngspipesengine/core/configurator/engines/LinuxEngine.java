@@ -21,7 +21,7 @@ package ngspipesengine.core.configurator.engines;
 
 import ngspipesengine.core.configurator.properties.LinuxProperties;
 import ngspipesengine.core.exceptions.EngineException;
-import ngspipesengine.presentation.ui.utils.Uris;
+import ngspipesengine.core.utils.Uris;
 import ngspipesengine.presentation.ui.utils.Utils;
 
 public class LinuxEngine extends Engine {

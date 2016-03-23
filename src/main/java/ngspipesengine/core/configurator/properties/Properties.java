@@ -23,8 +23,8 @@ import configurators.IConfigurator;
 import dsl.entities.Pipeline;
 import ngspipesengine.core.compiler.*;
 import ngspipesengine.core.exceptions.EngineException;
-import ngspipesengine.presentation.ui.utils.Log;
-import ngspipesengine.presentation.ui.utils.Uris;
+import ngspipesengine.core.utils.Log;
+import ngspipesengine.core.utils.Uris;
 import ngspipesengine.presentation.ui.utils.Utils;
 
 import java.io.File;

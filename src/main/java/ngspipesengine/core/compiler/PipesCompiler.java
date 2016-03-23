@@ -23,7 +23,7 @@ import java.net.MalformedURLException;
 
 import ngspipesengine.core.exceptions.EngineException;
 import ngspipesengine.core.parsers.java.PipesJavaParser;
-import ngspipesengine.presentation.ui.utils.IO;
+import ngspipesengine.core.utils.IO;
 
 public class PipesCompiler extends PipelineCompiler {
 

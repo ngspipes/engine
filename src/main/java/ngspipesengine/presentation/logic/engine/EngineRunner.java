@@ -53,14 +53,14 @@ public class EngineRunner {
     private final CountDownLatch runningPipeline = new CountDownLatch(1);
     private final AtomicBoolean stop = new AtomicBoolean();
     private final Pipeline pipeline;
-    private final EngineUIReporter reporter;
+    private final EngineReporter reporter;
     private IEngine engine;
     private ServerSocket socket;
     private Socket client;
 
 
 
-    public EngineRunner(Pipeline pipeline, EngineUIReporter reporter){
+    public EngineRunner(Pipeline pipeline, EngineReporter reporter){
         this.pipeline = pipeline;
         this.reporter = reporter;
     }

@@ -20,8 +20,8 @@
 package ngspipesengine.core.parsers.java;
 
 import ngspipesengine.core.exceptions.EngineException;
-import ngspipesengine.presentation.ui.utils.IO;
-import ngspipesengine.presentation.ui.utils.Log;
+import ngspipesengine.core.utils.IO;
+import ngspipesengine.core.utils.Log;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.RecognitionException;

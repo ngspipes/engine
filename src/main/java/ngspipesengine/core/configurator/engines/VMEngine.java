@@ -22,8 +22,8 @@ package ngspipesengine.core.configurator.engines;
 import ngspipesengine.core.configurator.properties.VMProperties;
 import ngspipesengine.core.configurator.scripts.Script;
 import ngspipesengine.core.exceptions.EngineException;
-import ngspipesengine.presentation.ui.utils.Log;
-import ngspipesengine.presentation.ui.utils.Uris;
+import ngspipesengine.core.utils.Log;
+import ngspipesengine.core.utils.Uris;
 import ngspipesengine.presentation.ui.utils.Utils;
 import ngspipesengine.presentation.ui.utils.WorkQueue;
 

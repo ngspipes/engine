@@ -21,8 +21,8 @@ package ngspipesengine.core.compiler;
 
 import ngspipesengine.core.configurator.engines.Engine;
 import ngspipesengine.core.exceptions.EngineException;
-import ngspipesengine.presentation.ui.utils.IO;
-import ngspipesengine.presentation.ui.utils.Uris;
+import ngspipesengine.core.utils.IO;
+import ngspipesengine.core.utils.Uris;
 import ngspipesengine.presentation.ui.utils.Utils;
 
 import java.io.File;

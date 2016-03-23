@@ -31,7 +31,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import ngspipesengine.core.configurator.engines.VMEngine;
-import ngspipesengine.presentation.dataAccess.Uris;
+import ngspipesengine.presentation.ui.utils.Uris;
 import ngspipesengine.presentation.ui.utils.Dialog;
 import components.animation.magnifier.ImageMagnifier;
 

@@ -19,11 +19,11 @@
  */
 package ngspipesengine.presentation.logic.pipeline;
 
-import ngspipesengine.presentation.dataAccess.Uris;
 import ngspipesengine.core.exceptions.EngineException;
+import ngspipesengine.presentation.ui.utils.Uris;
 import ngspipesengine.presentation.exceptions.EngineUIException;
 import ngspipesengine.presentation.logic.engine.EngineManager;
-import ngspipesengine.presentation.ui.utils.IO;
+import ngspipesengine.core.utils.IO;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +34,6 @@ public class PipelineManager {
 
 	private static final String PREVIOUS_PIPELINES = Uris.PREVIOUS_PIPELINES + Uris.SEP + "pipelines.json";
 	private static final Object lock = new Object();
-	private static final String KEY = "Pipelines";
 	private static Collection<Pipeline> PIPELINES;
 
 

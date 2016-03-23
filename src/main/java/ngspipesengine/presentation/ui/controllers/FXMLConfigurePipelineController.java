@@ -29,7 +29,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import jfxutils.ComponentException;
 import jfxutils.IInitializable;
-import ngspipesengine.presentation.dataAccess.Uris;
+import ngspipesengine.presentation.ui.utils.Uris;
 import ngspipesengine.presentation.exceptions.EngineUIException;
 import ngspipesengine.presentation.logic.engine.EngineManager;
 import ngspipesengine.presentation.logic.pipeline.Pipeline;

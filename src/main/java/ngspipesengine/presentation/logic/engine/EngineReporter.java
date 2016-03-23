@@ -27,7 +27,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class EngineUIReporter implements IProgressReporter {
+public class EngineReporter implements IProgressReporter {
 
     private final LinkedBlockingQueue<String> traceQueue = new LinkedBlockingQueue<>();
     private final LinkedBlockingQueue<String> errorQueue = new LinkedBlockingQueue<>();

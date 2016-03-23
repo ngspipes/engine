@@ -20,7 +20,7 @@
 package ngspipesengine.core.compiler;
 
 import ngspipesengine.core.exceptions.EngineException;
-import ngspipesengine.presentation.ui.utils.IO;
+import ngspipesengine.core.utils.IO;
 
 import java.net.MalformedURLException;
 

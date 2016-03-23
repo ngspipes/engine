@@ -20,6 +20,7 @@
 package ngspipesengine.presentation.ui.utils;
 
 import ngspipesengine.core.exceptions.EngineException;
+import ngspipesengine.core.utils.Log;
 
 import java.io.*;
 import java.nio.charset.Charset;

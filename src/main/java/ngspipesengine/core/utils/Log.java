@@ -17,8 +17,10 @@
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ngspipesengine.presentation.ui.utils;
+package ngspipesengine.core.utils;
 
+import ngspipesengine.core.utils.Uris;
+import ngspipesengine.presentation.ui.utils.WorkQueue;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

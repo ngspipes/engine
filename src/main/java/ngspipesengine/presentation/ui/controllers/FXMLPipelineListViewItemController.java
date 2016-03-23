@@ -25,7 +25,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
-import ngspipesengine.presentation.dataAccess.Uris;
+import ngspipesengine.presentation.ui.utils.Uris;
 import ngspipesengine.presentation.logic.pipeline.Pipeline;
 import ngspipesengine.presentation.ui.controllers.FXMLConfigurePipelineController.Data;
 import ngspipesengine.presentation.ui.utils.Dialog;
