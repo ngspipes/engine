@@ -5,12 +5,12 @@ version = '1.0'
 
 distZip.duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
-mainClassName = "ngspipesengine.console.NGSPipesEngineConsole"
+mainClassName = "ngspipesengine.presentation.console.NGSPipesEngineConsole"
 
 applicationDefaultJvmArgs = ["-Dngspipes.basedir=MY_APP_HOME/"]
 
 dependencies {
-    compile fileTree(dir: 'vendor/main', include: '*.jar') 
+    compile fileTree(dir: 'vendor/main', include: '*.jar')
 }
 
 jar {
@@ -22,14 +22,14 @@ jar {
 
 task moreStartScripts(type: CreateStartScripts) {
     outputDir = new File(project.buildDir, 'scripts')
-    mainClassName = 'ngspipesengine.NGSPipesEngineApplication'
+    mainClassName = 'ngspipesengine.presentation.ui.NGSPipesEngineApplication'
     applicationName = 'engine-ui'
     classpath = jar.outputs.files + project.configurations.runtime
     defaultJvmOpts = ["-Dngspipes.basedir=MY_APP_HOME/"]
 
     moreStartScripts {
         doLast {
-            unixScript.text = unixScript.text.replace('MY_APP_HOME', '\$APP_HOME') 
+            unixScript.text = unixScript.text.replace('MY_APP_HOME', '\$APP_HOME')
             windowsScript.text = windowsScript.text.replace('MY_APP_HOME', '%~dp0..')
         }
     }
@@ -42,7 +42,7 @@ applicationDistribution.into("bin") {
 
 startScripts {
     doLast {
-        unixScript.text = unixScript.text.replace('MY_APP_HOME', '\$APP_HOME') 
+        unixScript.text = unixScript.text.replace('MY_APP_HOME', '\$APP_HOME')
         windowsScript.text = windowsScript.text.replace('MY_APP_HOME', '%~dp0..')
     }
 }

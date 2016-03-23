@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.*?>
 <?import java.net.*?>
 
-<AnchorPane minWidth="400.0" style="-fx-background-color: #D4D4D4;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ngspipesengine.userInterface.controllers.FXMLEngineController">
+<AnchorPane minWidth="400.0" style="-fx-background-color: #D4D4D4;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ngspipesengine.presentation.ui.controllers.FXMLEngineController">
    <children>
       <SplitPane fx:id="root" dividerPositions="0.26047904191616766" orientation="VERTICAL" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <items>
