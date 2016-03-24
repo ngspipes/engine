@@ -24,6 +24,7 @@ import ngspipesengine.core.configurator.properties.VMProperties;
 import ngspipesengine.core.exceptions.EngineException;
 import ngspipesengine.presentation.exceptions.EnginePresentationException;
 import ngspipesengine.presentation.logic.pipeline.Pipeline;
+import progressReporter.IProgressReporter;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -71,7 +72,7 @@ public class EngineManager {
         }
     }
 
-    public static int run(Pipeline pipeline, EngineReporter reporter) {
+    public static int run(Pipeline pipeline, IProgressReporter reporter) {
         if(pipeline == null || reporter == null)
             throw new IllegalArgumentException("Pipeline and reporter can not be null!");
 

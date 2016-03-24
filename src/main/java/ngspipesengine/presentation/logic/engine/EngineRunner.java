@@ -27,6 +27,7 @@ import ngspipesengine.core.exceptions.EngineException;
 import ngspipesengine.presentation.logic.pipeline.Pipeline;
 import ngspipesengine.presentation.ui.utils.Dialog;
 import ngspipesengine.presentation.utils.WorkQueue;
+import progressReporter.IProgressReporter;
 import progressReporter.SocketReporter;
 
 import java.io.BufferedReader;
@@ -53,14 +54,14 @@ public class EngineRunner {
     private final CountDownLatch runningPipeline = new CountDownLatch(1);
     private final AtomicBoolean stop = new AtomicBoolean();
     private final Pipeline pipeline;
-    private final EngineReporter reporter;
+    private final IProgressReporter reporter;
     private IEngine engine;
     private ServerSocket socket;
     private Socket client;
 
 
 
-    public EngineRunner(Pipeline pipeline, EngineReporter reporter){
+    public EngineRunner(Pipeline pipeline, IProgressReporter reporter){
         this.pipeline = pipeline;
         this.reporter = reporter;
     }
@@ -95,7 +96,7 @@ public class EngineRunner {
     private void runServer() {
         try {
             initServer();
-        } catch (IOException e) {
+        } catch (IOException | ProgressReporterException e) {
             Platform.runLater(()->Dialog.showError("Error on communication channel!"));
             close();
             return;
@@ -114,7 +115,7 @@ public class EngineRunner {
         }
     }
 
-    private void initServer() throws IOException {
+    private void initServer() throws IOException, ProgressReporterException {
         socket = new ServerSocket(SOCKET_PORT);
         socket.setSoTimeout(ACCEPT_CLIENT_TIMEOUT);
         reporter.open();
@@ -232,7 +233,14 @@ public class EngineRunner {
     }
 
     private ProgressReporterException closeReporter() {
-        reporter.close();
+        if(reporter != null){
+            try{
+                reporter.close();
+            } catch (ProgressReporterException e) {
+                return e;
+            }
+        }
+
         return null;
     }
 
