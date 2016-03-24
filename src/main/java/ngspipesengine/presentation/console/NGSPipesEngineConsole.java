@@ -25,9 +25,9 @@ import ngspipesengine.core.exceptions.ExecutorImageNotFound;
 import ngspipesengine.core.utils.Utils;
 import ngspipesengine.presentation.exceptions.EnginePresentationException;
 import ngspipesengine.presentation.logic.engine.EngineManager;
-import ngspipesengine.presentation.logic.engine.EngineReporter;
 import ngspipesengine.presentation.logic.pipeline.Pipeline;
 import org.apache.commons.cli.ParseException;
+import progressReporter.IProgressReporter;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -107,7 +107,7 @@ public class NGSPipesEngineConsole {
 	}
 
 	private static int runPipeline(Arguments arguments) throws EnginePresentationException {
-		EngineReporter reporter = new ConsoleReporter();
+		IProgressReporter reporter = new ConsoleReporter();
 		Pipeline pipeline = getPipeline(arguments);
 
 		int id = EngineManager.run(pipeline, reporter);
