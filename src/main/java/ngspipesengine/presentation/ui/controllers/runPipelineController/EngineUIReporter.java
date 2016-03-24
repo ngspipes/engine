@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ngspipesengine.presentation.logic.engine;
+package ngspipesengine.presentation.ui.controllers.runPipelineController;
 
 
 import exceptions.ProgressReporterException;
@@ -27,7 +27,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class EngineReporter implements IProgressReporter {
+public class EngineUIReporter implements IProgressReporter {
 
     private final LinkedBlockingQueue<String> traceQueue = new LinkedBlockingQueue<>();
     private final LinkedBlockingQueue<String> errorQueue = new LinkedBlockingQueue<>();
