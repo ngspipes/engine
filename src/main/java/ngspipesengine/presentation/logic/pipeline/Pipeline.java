@@ -30,18 +30,18 @@ public class Pipeline {
 	private final File pipeline;
 	public File getPipeline() { return pipeline; }
 	
-	private File results;
-	public File getResults() { return results; }
-	public void setResults(File results) { 
-		this.results = results; 
-		properties.setOutputsPath(results.getAbsolutePath());
+	private File outputDir;
+	public File getOutputDir() { return outputDir; }
+	public void setOutputDir(File outputDir) {
+		this.outputDir = outputDir;
+		properties.setOutputsPath(outputDir.getAbsolutePath());
 	}
 	
-	private File inputs;
-	public File getInputs() { return inputs; }
-	public void setInputs(File inputs) { 
-		this.inputs = inputs;
-		properties.setInputsPath(inputs.getAbsolutePath());
+	private File inputDir;
+	public File getInputDir() { return inputDir; }
+	public void setInputDir(File inputDir) {
+		this.inputDir = inputDir;
+		properties.setInputsPath(inputDir.getAbsolutePath());
 	}
 	
 	private String engineName;
@@ -86,7 +86,7 @@ public class Pipeline {
 	
 	public final VMProperties properties;
 	
-	public Pipeline(File pipeline, File results, File inputs, String engineName, int from, int to, int memory, int processors) throws EnginePresentationException {
+	public Pipeline(File pipeline, File outputDir, File inputDir, String engineName, int from, int to, int memory, int processors) throws EnginePresentationException {
 		this.pipeline = pipeline;
 		try{
 			this.properties = new VMProperties(pipeline.getAbsolutePath());	
@@ -94,8 +94,8 @@ public class Pipeline {
 			throw new EnginePresentationException("Error loading pipeline!",ex);
 		}
 		
-		setResults(results);
-		setInputs(inputs);
+		setOutputDir(outputDir);
+		setInputDir(inputDir);
 		setEngineName(engineName);
 		setFrom(from);
 		setTo(to);
@@ -104,7 +104,7 @@ public class Pipeline {
 		this.totalSteps = properties.getTotalSteps();
 	}
 	
-	public Pipeline(File pipeline, File results, File inputs, String engineName) throws EnginePresentationException {
+	public Pipeline(File pipeline, File outputDir, File inputDir, String engineName) throws EnginePresentationException {
 		this.pipeline = pipeline;
 		try{
 			this.properties = new VMProperties(pipeline.getAbsolutePath());	
@@ -112,8 +112,8 @@ public class Pipeline {
 			throw new EnginePresentationException("Error loading pipeline!",ex);
 		}
 
-		setResults(results);
-		setInputs(inputs);
+		setOutputDir(outputDir);
+		setInputDir(inputDir);
 		setEngineName(engineName);
 		setFrom(1);
 		setTo(properties.getTotalSteps());
@@ -134,8 +134,8 @@ public class Pipeline {
 		Pipeline other = (Pipeline)o;
 
 		return 	equals(this.pipeline, other.pipeline) &&
-				equals(this.results, other.results) &&
-				equals(this.inputs, other.inputs) &&
+				equals(this.outputDir, other.outputDir) &&
+				equals(this.inputDir, other.inputDir) &&
 				equals(this.engineName, other.engineName) &&
 				this.from == other.from &&
 				this.to == other.to &&

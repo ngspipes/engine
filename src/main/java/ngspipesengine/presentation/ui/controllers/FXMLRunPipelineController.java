@@ -136,8 +136,8 @@ public class FXMLRunPipelineController implements IInitializable<FXMLRunPipeline
 
 	private void loadPipelineInfo(){
 		String pipelinePath = pipeline.getPipeline().getAbsolutePath();
-		String resultsPath = pipeline.getResults().getAbsolutePath();
-		String inputsPath = pipeline.getInputs().getAbsolutePath();
+		String resultsPath = pipeline.getOutputDir().getAbsolutePath();
+		String inputsPath = pipeline.getInputDir().getAbsolutePath();
 		String engineName = pipeline.getEngineName();
 
 		loadLabel(lPipeline, pipelinePath);

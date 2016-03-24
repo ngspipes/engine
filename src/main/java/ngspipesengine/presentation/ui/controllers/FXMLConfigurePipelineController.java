@@ -116,8 +116,8 @@ public class FXMLConfigurePipelineController implements IInitializable<Data> {
 		Tooltip.install(bConfirm, new Tooltip("Confirm"));
 		Tooltip.install(iVMemoryWarning, new Tooltip("Minimize memory may not allow the entire execution of pipeline!"));
 
-		tFResults.setText(pipeline.getResults().getAbsolutePath());
-		tFInputs.setText(pipeline.getInputs().getAbsolutePath());
+		tFResults.setText(pipeline.getOutputDir().getAbsolutePath());
+		tFInputs.setText(pipeline.getInputDir().getAbsolutePath());
 
 		try{
 			loadNamesComboBox();
@@ -244,8 +244,8 @@ public class FXMLConfigurePipelineController implements IInitializable<Data> {
 			int memory = new Double(sMemoryQuantity.getValue()).intValue();
 			int processors = new Double(sProcessorsQuantity.getValue()).intValue();
 
-			pipeline.setResults(new File(results));
-			pipeline.setInputs(new File(inputs));
+			pipeline.setOutputDir(new File(results));
+			pipeline.setInputDir(new File(inputs));
 			pipeline.setEngineName(engineName);
 			pipeline.setFrom(from);
 			pipeline.setTo(to);

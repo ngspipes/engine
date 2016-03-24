@@ -32,8 +32,8 @@ import java.util.LinkedList;
 public class PipelineSerializer {
 
     private static final String PIPELINE_JSON_KEY = "Pipeline";
-    private static final String RESULTS_JSON_KEY = "Results";
-    private static final String INPUTS_JSON_KEY = "Inputs";
+    private static final String OUTPUT_DIR_JSON_KEY = "OutputDir";
+    private static final String INPUT_DIR_JSON_KEY = "InputDir";
     private static final String ENGINE_NAME_JSON_KEY = "EngineName";
     private static final String FROM_JSON_KEY = "From";
     private static final String TO_JSON_KEY = "To";
@@ -60,15 +60,15 @@ public class PipelineSerializer {
     public static Pipeline deserialize(JSONObject data) throws EnginePresentationException {
         try {
             String pipeline = data.getString(PIPELINE_JSON_KEY);
-            String results = data.getString(RESULTS_JSON_KEY);
-            String inputs = data.getString(INPUTS_JSON_KEY);
+            String outputDir = data.getString(OUTPUT_DIR_JSON_KEY);
+            String inputDir = data.getString(INPUT_DIR_JSON_KEY);
             String engineName = data.getString(ENGINE_NAME_JSON_KEY);
             int from = data.getInt(FROM_JSON_KEY);
             int to = data.getInt(TO_JSON_KEY);
             int memory = data.getInt(MEMORY_JSON_KEY);
             int processors = data.getInt(PROCESSORS_JSON_KEY);
 
-            return new Pipeline(new File(pipeline), new File(results), new File(inputs), engineName, from, to, memory, processors);
+            return new Pipeline(new File(pipeline), new File(outputDir), new File(inputDir), engineName, from, to, memory, processors);
         } catch(JSONException ex) {
             throw new EnginePresentationException("Error deserialize pipeline!", ex);
         }
@@ -89,8 +89,8 @@ public class PipelineSerializer {
 
         try {
             data.put(PIPELINE_JSON_KEY, pipeline.getPipeline().getAbsolutePath());
-            data.put(RESULTS_JSON_KEY, pipeline.getResults().getAbsolutePath());
-            data.put(INPUTS_JSON_KEY, pipeline.getInputs().getAbsolutePath());
+            data.put(OUTPUT_DIR_JSON_KEY, pipeline.getOutputDir().getAbsolutePath());
+            data.put(INPUT_DIR_JSON_KEY, pipeline.getInputDir().getAbsolutePath());
             data.put(ENGINE_NAME_JSON_KEY, pipeline.getEngineName());
             data.put(FROM_JSON_KEY, pipeline.getFrom());
             data.put(TO_JSON_KEY, pipeline.getTo());
