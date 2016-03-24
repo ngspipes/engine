@@ -38,7 +38,7 @@ import ngspipesengine.presentation.exceptions.EnginePresentationException;
 import ngspipesengine.presentation.logic.engine.EngineManager;
 import ngspipesengine.presentation.logic.pipeline.Pipeline;
 import ngspipesengine.presentation.ui.utils.Dialog;
-import ngspipesengine.presentation.Utils.WorkQueue;
+import ngspipesengine.presentation.utils.WorkQueue;
 
 import java.io.File;
 import java.util.Collection;

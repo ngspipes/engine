@@ -31,7 +31,7 @@ import java.util.function.BiFunction;
 public class Utils {
 	
 	private static final String LOCKED_VM = "Locked";
-	private static final String TAG = "Utils";
+	private static final String TAG = "utils";
     private static final String ERROR_TAG =  "Error";
     private static final String INPUT_TAG = "Input";
 

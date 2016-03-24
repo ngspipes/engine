@@ -31,7 +31,7 @@ import ngspipesengine.presentation.ui.utils.Uris;
 import ngspipesengine.presentation.logic.engine.EngineReporter;
 import ngspipesengine.presentation.logic.pipeline.Pipeline;
 import ngspipesengine.presentation.ui.utils.Dialog;
-import ngspipesengine.presentation.Utils.WorkQueue;
+import ngspipesengine.presentation.utils.WorkQueue;
 
 import java.util.Timer;
 import java.util.TimerTask;
