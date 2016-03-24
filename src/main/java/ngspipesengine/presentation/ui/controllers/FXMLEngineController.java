@@ -28,7 +28,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import jfxutils.ComponentException;
 import jfxutils.IInitializable;
-import ngspipesengine.presentation.exceptions.EngineUIException;
+import ngspipesengine.presentation.exceptions.EnginePresentationException;
 import ngspipesengine.presentation.logic.engine.EngineManager;
 import ngspipesengine.presentation.logic.engine.EngineReporter;
 import ngspipesengine.presentation.logic.pipeline.Pipeline;
@@ -86,7 +86,7 @@ public class FXMLEngineController implements IInitializable<Void> {
 				PipelineManager.load();
 
 				Platform.runLater(()->pipelinesPallet.load(PipelineManager.getAll()));
-			} catch (EngineUIException ex) {
+			} catch (EnginePresentationException ex) {
 				Platform.runLater(()->Dialog.showError("Error loading previous pipelines!"));
 			}
 		});
@@ -110,7 +110,7 @@ public class FXMLEngineController implements IInitializable<Void> {
 		try {
 			Collection<String> enginesNames = EngineManager.getEnginesNames();
 			enginesPallet.load(enginesNames);
-		} catch(EngineUIException e) {
+		} catch(EnginePresentationException e) {
 			Dialog.showError(e.getMessage());
 			enginesPallet.load(new LinkedList<>());
 		}

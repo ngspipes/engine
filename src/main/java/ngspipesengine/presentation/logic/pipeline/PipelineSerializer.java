@@ -20,7 +20,7 @@
 package ngspipesengine.presentation.logic.pipeline;
 
 
-import ngspipesengine.presentation.exceptions.EngineUIException;
+import ngspipesengine.presentation.exceptions.EnginePresentationException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,7 +40,7 @@ public class PipelineSerializer {
     private static final String MEMORY_JSON_KEY = "Memory";
     private static final String PROCESSORS_JSON_KEY = "Processors";
 
-    public static Collection<Pipeline> deserialize(String data) throws EngineUIException {
+    public static Collection<Pipeline> deserialize(String data) throws EnginePresentationException {
         Collection<Pipeline> pipelines = new LinkedList<>();
 
         try {
@@ -51,13 +51,13 @@ public class PipelineSerializer {
                     pipelines.add(deserialize(array.getJSONObject(i)));
             }
         }catch (JSONException ex) {
-            throw new EngineUIException("Error deserialize pipelines", ex);
+            throw new EnginePresentationException("Error deserialize pipelines", ex);
         }
 
         return pipelines;
     }
 
-    public static Pipeline deserialize(JSONObject data) throws EngineUIException {
+    public static Pipeline deserialize(JSONObject data) throws EnginePresentationException {
         try {
             String pipeline = data.getString(PIPELINE_JSON_KEY);
             String results = data.getString(RESULTS_JSON_KEY);
@@ -70,12 +70,12 @@ public class PipelineSerializer {
 
             return new Pipeline(new File(pipeline), new File(results), new File(inputs), engineName, from, to, memory, processors);
         } catch(JSONException ex) {
-            throw new EngineUIException("Error deserialize pipeline!", ex);
+            throw new EnginePresentationException("Error deserialize pipeline!", ex);
         }
     }
 
 
-    public static String serialize(Collection<Pipeline> pipelines) throws EngineUIException {
+    public static String serialize(Collection<Pipeline> pipelines) throws EnginePresentationException {
         JSONArray data = new JSONArray();
 
         for(Pipeline pipeline : pipelines)
@@ -84,7 +84,7 @@ public class PipelineSerializer {
         return data.toString();
     }
 
-    public static JSONObject serialize(Pipeline pipeline) throws EngineUIException {
+    public static JSONObject serialize(Pipeline pipeline) throws EnginePresentationException {
         JSONObject data = new JSONObject();
 
         try {
@@ -97,7 +97,7 @@ public class PipelineSerializer {
             data.put(MEMORY_JSON_KEY, pipeline.getMemory());
             data.put(PROCESSORS_JSON_KEY, pipeline.getProcessors());
         }catch (JSONException ex) {
-            throw new EngineUIException("Error serialize pipeline", ex);
+            throw new EnginePresentationException("Error serialize pipeline", ex);
         }
 
         return data;

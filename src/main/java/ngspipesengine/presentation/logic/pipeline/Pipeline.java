@@ -21,7 +21,7 @@ package ngspipesengine.presentation.logic.pipeline;
 
 import ngspipesengine.core.configurator.properties.VMProperties;
 import ngspipesengine.core.exceptions.EngineException;
-import ngspipesengine.presentation.exceptions.EngineUIException;
+import ngspipesengine.presentation.exceptions.EnginePresentationException;
 
 import java.io.File;
 
@@ -86,12 +86,12 @@ public class Pipeline {
 	
 	public final VMProperties properties;
 	
-	public Pipeline(File pipeline, File results, File inputs, String engineName, int from, int to, int memory, int processors) throws EngineUIException {
+	public Pipeline(File pipeline, File results, File inputs, String engineName, int from, int to, int memory, int processors) throws EnginePresentationException {
 		this.pipeline = pipeline;
 		try{
 			this.properties = new VMProperties(pipeline.getAbsolutePath());	
 		}catch(EngineException ex){
-			throw new EngineUIException("Error loading pipeline!",ex);
+			throw new EnginePresentationException("Error loading pipeline!",ex);
 		}
 		
 		setResults(results);
@@ -104,12 +104,12 @@ public class Pipeline {
 		this.totalSteps = properties.getTotalSteps();
 	}
 	
-	public Pipeline(File pipeline, File results, File inputs, String engineName) throws EngineUIException {
+	public Pipeline(File pipeline, File results, File inputs, String engineName) throws EnginePresentationException {
 		this.pipeline = pipeline;
 		try{
 			this.properties = new VMProperties(pipeline.getAbsolutePath());	
 		}catch(EngineException ex){
-			throw new EngineUIException("Error loading pipeline!",ex);
+			throw new EnginePresentationException("Error loading pipeline!",ex);
 		}
 
 		setResults(results);

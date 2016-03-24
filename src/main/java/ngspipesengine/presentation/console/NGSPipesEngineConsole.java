@@ -23,7 +23,7 @@ import ngspipesengine.core.configurator.engines.VMEngine;
 import ngspipesengine.core.exceptions.EngineException;
 import ngspipesengine.core.exceptions.ExecutorImageNotFound;
 import ngspipesengine.core.utils.Utils;
-import ngspipesengine.presentation.exceptions.EngineUIException;
+import ngspipesengine.presentation.exceptions.EnginePresentationException;
 import ngspipesengine.presentation.logic.engine.EngineManager;
 import ngspipesengine.presentation.logic.engine.EngineReporter;
 import ngspipesengine.presentation.logic.pipeline.Pipeline;
@@ -106,7 +106,7 @@ public class NGSPipesEngineConsole {
 		}
 	}
 
-	private static int runPipeline(Arguments arguments) throws EngineUIException {
+	private static int runPipeline(Arguments arguments) throws EnginePresentationException {
 		EngineReporter reporter = new ConsoleReporter();
 		Pipeline pipeline = getPipeline(arguments);
 
@@ -120,7 +120,7 @@ public class NGSPipesEngineConsole {
 		return id;
 	}
 
-	private static Pipeline getPipeline(Arguments arguments) throws EngineUIException {
+	private static Pipeline getPipeline(Arguments arguments) throws EnginePresentationException {
 		Pipeline pipeline = new Pipeline(
 				new File(arguments.pipesPath),
 				new File(arguments.outPath),
@@ -143,7 +143,7 @@ public class NGSPipesEngineConsole {
 		return pipeline;
 	}
 
-	private static void waitForFinish(int id)throws EngineUIException, IOException {
+	private static void waitForFinish(int id)throws EnginePresentationException, IOException {
 		System.out.println("\t::**Press ENTER to cancel**::");
 
 		try(BufferedReader bf = new BufferedReader(new InputStreamReader(System.in))){

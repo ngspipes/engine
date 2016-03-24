@@ -30,7 +30,7 @@ import javafx.scene.image.ImageView;
 import jfxutils.ComponentException;
 import jfxutils.IInitializable;
 import ngspipesengine.presentation.ui.utils.Uris;
-import ngspipesengine.presentation.exceptions.EngineUIException;
+import ngspipesengine.presentation.exceptions.EnginePresentationException;
 import ngspipesengine.presentation.logic.engine.EngineManager;
 import ngspipesengine.presentation.logic.pipeline.Pipeline;
 import ngspipesengine.presentation.ui.controllers.FXMLConfigurePipelineController.Data;
@@ -121,7 +121,7 @@ public class FXMLConfigurePipelineController implements IInitializable<Data> {
 
 		try{
 			loadNamesComboBox();
-		} catch(EngineUIException ex) {
+		} catch(EnginePresentationException ex) {
 			throw new ComponentException(ex.getMessage(), ex);
 		}
 
@@ -149,7 +149,7 @@ public class FXMLConfigurePipelineController implements IInitializable<Data> {
 		});
 	}
 
-	private void loadNamesComboBox() throws EngineUIException {
+	private void loadNamesComboBox() throws EnginePresentationException {
 		String defaultEngineName = EngineManager.getDefaultEngineName();
 		Collection<String> enginesNames = EngineManager.getEnginesNames();
 		enginesNames.add(defaultEngineName);

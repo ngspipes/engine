@@ -19,15 +19,15 @@
  */
 package ngspipesengine.presentation.exceptions;
 
-public class EngineUIException extends Exception {
+public class EnginePresentationException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 
 
-	public EngineUIException(){}
+	public EnginePresentationException(){}
 	
-	public EngineUIException(String msg){ super(msg); }
+	public EnginePresentationException(String msg){ super(msg); }
 	
-	public EngineUIException(String msg, Throwable cause){ super(msg, cause); }
+	public EnginePresentationException(String msg, Throwable cause){ super(msg, cause); }
 	
 }

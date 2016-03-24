@@ -29,7 +29,7 @@ import javafx.stage.Stage;
 import jfxutils.ComponentException;
 import ngspipesengine.core.configurator.engines.VMEngine;
 import ngspipesengine.presentation.ui.utils.Uris;
-import ngspipesengine.presentation.exceptions.EngineUIException;
+import ngspipesengine.presentation.exceptions.EnginePresentationException;
 import ngspipesengine.presentation.logic.engine.EngineManager;
 import ngspipesengine.presentation.logic.pipeline.PipelineManager;
 import ngspipesengine.presentation.ui.utils.Dialog;
@@ -50,7 +50,7 @@ public class NGSPipesEngineApplication extends Application {
 
 
 				Platform.exit();
-			} catch (EngineUIException ex) {
+			} catch (EnginePresentationException ex) {
 				Dialog.showError(ex.getMessage());
 			}
 		});

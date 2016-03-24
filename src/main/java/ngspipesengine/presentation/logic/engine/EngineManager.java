@@ -22,7 +22,7 @@ package ngspipesengine.presentation.logic.engine;
 import ngspipesengine.core.configurator.engines.VMEngine;
 import ngspipesengine.core.configurator.properties.VMProperties;
 import ngspipesengine.core.exceptions.EngineException;
-import ngspipesengine.presentation.exceptions.EngineUIException;
+import ngspipesengine.presentation.exceptions.EnginePresentationException;
 import ngspipesengine.presentation.logic.pipeline.Pipeline;
 
 import java.util.*;
@@ -57,7 +57,7 @@ public class EngineManager {
         return VMProperties.BASE_VM_NAME;
     }
 
-    public static Collection<String> getEnginesNames() throws EngineUIException {
+    public static Collection<String> getEnginesNames() throws EnginePresentationException {
         try {
             String defaultEngineName = getDefaultEngineName();
             Collection<String> enginesNames = VMEngine.getVMsName();
@@ -67,7 +67,7 @@ public class EngineManager {
 
             return enginesNames;
         } catch (Exception e) {
-            throw new EngineUIException("Error getting Engines names", e);
+            throw new EnginePresentationException("Error getting Engines names", e);
         }
     }
 
@@ -83,7 +83,7 @@ public class EngineManager {
         }
     }
 
-    public static void stop(int id) throws EngineUIException {
+    public static void stop(int id) throws EnginePresentationException {
         synchronized (LOCK){
             EngineRunner runner = RUNNERS.get(id);
 
@@ -94,19 +94,19 @@ public class EngineManager {
                 if(!runner.finished())
                     runner.stop();
             } catch(EngineException ex) {
-                throw new EngineUIException("Error stopping Engine!", ex);
+                throw new EnginePresentationException("Error stopping Engine!", ex);
             }
         }
     }
 
-    public static void stopAllRunningPipelines() throws EngineUIException {
-        EngineUIException ex = null;
+    public static void stopAllRunningPipelines() throws EnginePresentationException {
+        EnginePresentationException ex = null;
 
         synchronized (LOCK){
             for(Integer id : getAllRunningPipelines()){
                 try{
                     stop(id);
-                } catch (EngineUIException e) {
+                } catch (EnginePresentationException e) {
                     ex = e;
                 }
             }

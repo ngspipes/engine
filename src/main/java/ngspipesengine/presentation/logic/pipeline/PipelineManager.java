@@ -21,7 +21,7 @@ package ngspipesengine.presentation.logic.pipeline;
 
 import ngspipesengine.core.exceptions.EngineException;
 import ngspipesengine.presentation.ui.utils.Uris;
-import ngspipesengine.presentation.exceptions.EngineUIException;
+import ngspipesengine.presentation.exceptions.EnginePresentationException;
 import ngspipesengine.presentation.logic.engine.EngineManager;
 import ngspipesengine.core.utils.IO;
 
@@ -37,7 +37,7 @@ public class PipelineManager {
 	private static Collection<Pipeline> PIPELINES;
 
 
-	public static void load() throws EngineUIException {
+	public static void load() throws EnginePresentationException {
 		synchronized (lock){
 			try {
 				String serializedPipelines = null;
@@ -54,12 +54,12 @@ public class PipelineManager {
 				PIPELINES = PipelineSerializer.deserialize(serializedPipelines);
 				validatePipelines(PIPELINES);
 			} catch (EngineException | IOException ex) {
-				throw new EngineUIException("Error loading pipelines!", ex);
+				throw new EnginePresentationException("Error loading pipelines!", ex);
 			}
 		}
 	}
 
-	private static void validatePipelines(Collection<Pipeline> pipelines) throws EngineUIException {
+	private static void validatePipelines(Collection<Pipeline> pipelines) throws EnginePresentationException {
 		String defaultEngineName = EngineManager.getDefaultEngineName();
 		Collection<String> enginesNames = EngineManager.getEnginesNames();
 		enginesNames.add(defaultEngineName);
@@ -70,13 +70,13 @@ public class PipelineManager {
 		});
 	}
 	
-	public static void save() throws EngineUIException{
+	public static void save() throws EnginePresentationException {
 		synchronized (lock){
 			try{
 				String serializedPipelines = PipelineSerializer.serialize(PIPELINES);
 				IO.writeToFile(PREVIOUS_PIPELINES, serializedPipelines, false);
 			} catch(EngineException ex) {
-				throw new EngineUIException("Error saving pipelines!", ex);
+				throw new EnginePresentationException("Error saving pipelines!", ex);
 			}
 		}
 	}

@@ -34,7 +34,7 @@ import javafx.scene.control.Tooltip;
 import jfxutils.ComponentException;
 import jfxutils.IInitializable;
 import ngspipesengine.presentation.ui.utils.Uris;
-import ngspipesengine.presentation.exceptions.EngineUIException;
+import ngspipesengine.presentation.exceptions.EnginePresentationException;
 import ngspipesengine.presentation.logic.engine.EngineManager;
 import ngspipesengine.presentation.logic.pipeline.Pipeline;
 import ngspipesengine.presentation.ui.utils.Dialog;
@@ -101,7 +101,7 @@ public class FXMLLoadPipelineController implements IInitializable<Consumer<Pipel
 
 		try{
 			loadComboBox();
-		} catch(EngineUIException ex) {
+		} catch(EnginePresentationException ex) {
 			throw new ComponentException(ex.getMessage(), ex);
 		}
 	}
@@ -164,7 +164,7 @@ public class FXMLLoadPipelineController implements IInitializable<Consumer<Pipel
 							loadingWindow.close();
 							onConfirm.accept(p);
 						});
-					}catch(EngineUIException ex){
+					}catch(EnginePresentationException ex){
 						Platform.runLater(()->Dialog.showError(ex.getMessage()));
 					}
 				});
@@ -174,7 +174,7 @@ public class FXMLLoadPipelineController implements IInitializable<Consumer<Pipel
 		});
 	}
 
-	private void loadComboBox() throws EngineUIException {
+	private void loadComboBox() throws EnginePresentationException {
 		String defaultEngineName = EngineManager.getDefaultEngineName();
 		Collection<String> enginesNames = EngineManager.getEnginesNames();
 		enginesNames.add(defaultEngineName);
