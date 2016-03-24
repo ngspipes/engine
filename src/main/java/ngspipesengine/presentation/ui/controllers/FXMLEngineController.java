@@ -30,7 +30,8 @@ import jfxutils.ComponentException;
 import jfxutils.IInitializable;
 import ngspipesengine.presentation.exceptions.EnginePresentationException;
 import ngspipesengine.presentation.logic.engine.EngineManager;
-import ngspipesengine.presentation.logic.engine.EngineReporter;
+import ngspipesengine.presentation.ui.controllers.runPipelineController.FXMLRunPipelineController;
+import ngspipesengine.presentation.ui.controllers.runPipelineController.EngineUIReporter;
 import ngspipesengine.presentation.logic.pipeline.Pipeline;
 import ngspipesengine.presentation.logic.pipeline.PipelineManager;
 import ngspipesengine.presentation.ui.pallets.EngineListPallet;
@@ -155,7 +156,7 @@ public class FXMLEngineController implements IInitializable<Void> {
 			return;
 		
 		try {
-			EngineReporter reporter = new EngineReporter();
+			EngineUIReporter reporter = new EngineUIReporter();
 			int id = EngineManager.run(pipeline, reporter);
 
 			Tab pipelineTab = new Tab();

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ngspipesengine.presentation.ui.controllers;
+package ngspipesengine.presentation.ui.controllers.runPipelineController;
 
 import components.FXMLFile;
 import components.animation.magnifier.ButtonMagnifier;
@@ -28,7 +28,6 @@ import javafx.scene.control.*;
 import jfxutils.ComponentException;
 import jfxutils.IInitializable;
 import ngspipesengine.presentation.ui.utils.Uris;
-import ngspipesengine.presentation.logic.engine.EngineReporter;
 import ngspipesengine.presentation.logic.pipeline.Pipeline;
 import ngspipesengine.presentation.ui.utils.Dialog;
 import ngspipesengine.presentation.utils.WorkQueue;
@@ -60,10 +59,10 @@ public class FXMLRunPipelineController implements IInitializable<FXMLRunPipeline
 
 	public static class Data{
 		public final Pipeline pipeline;
-		public final EngineReporter reporter;
+		public final EngineUIReporter reporter;
 		public final Runnable onCancel;
 
-		public Data(Pipeline pipeline, EngineReporter reporter, Runnable onCancel){
+		public Data(Pipeline pipeline, EngineUIReporter reporter, Runnable onCancel){
 			this.pipeline = pipeline;
 			this.reporter = reporter;
 			this.onCancel = onCancel;
@@ -117,7 +116,7 @@ public class FXMLRunPipelineController implements IInitializable<FXMLRunPipeline
 	private final AtomicBoolean blinkError = new AtomicBoolean(false);
 
 	private Pipeline pipeline;
-	private EngineReporter reporter;
+	private EngineUIReporter reporter;
 	private Runnable onCancel;
 
 
