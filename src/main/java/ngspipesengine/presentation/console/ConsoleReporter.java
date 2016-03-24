@@ -19,10 +19,9 @@
  */
 package ngspipesengine.presentation.console;
 
-import exceptions.ProgressReporterException;
-import ngspipesengine.presentation.logic.engine.EngineReporter;
+import progressReporter.IProgressReporter;
 
-public class ConsoleReporter extends EngineReporter{
+public class ConsoleReporter implements IProgressReporter {
 
     private static final String TRACE_TAG = "TRACE";
     private static final String ERROR_TAG = "ERROR";
@@ -30,21 +29,24 @@ public class ConsoleReporter extends EngineReporter{
 
 
     @Override
-    public void reportTrace(String msg) throws ProgressReporterException {
+    public void open() { }
+
+    @Override
+    public void reportTrace(String msg) {
         System.out.println(TRACE_TAG + "\t" + msg);
-        super.reportTrace(msg);
     }
 
     @Override
-    public void reportError(String msg) throws ProgressReporterException {
+    public void reportError(String msg) {
         System.out.println(ERROR_TAG + "\t" + msg);
-        super.reportError(msg);
     }
 
     @Override
-    public void reportInfo(String msg) throws ProgressReporterException {
+    public void reportInfo(String msg) {
         System.out.println(INFO_TAG + "\t" + msg);
-        super.reportInfo(msg);
     }
+
+    @Override
+    public void close() { }
 
 }
