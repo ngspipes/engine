@@ -41,8 +41,8 @@ public class ArgumentsParser {
     public static final String TO_STEP = "to";
 
     public static final String DEFAULT_EXECUTOR_NAME = "NGSPipesEngineExecutor";
-    public static final int DEFAULT_CPUS = -1;
-    public static final int DEFAULT_MEM = -1;
+    public static final int DEFAULT_CPUS = 0;
+    public static final int DEFAULT_MEM = 0;
     public static final int DEFAULT_FROM = -1;
     public static final int DEFAULT_TO = -1;
 

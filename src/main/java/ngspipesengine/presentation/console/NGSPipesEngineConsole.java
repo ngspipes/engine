@@ -134,11 +134,11 @@ public class NGSPipesEngineConsole {
 		if (!arguments.toStep.equals(ArgumentsParser.DEFAULT_TO+""))
 			pipeline.setTo(Integer.parseInt(arguments.toStep));
 
+		if (!arguments.mem.equals(ArgumentsParser.DEFAULT_MEM+""))
+			pipeline.setMemory(Integer.parseInt(arguments.mem) * 1024);
+
 		if (!arguments.cpus.equals(ArgumentsParser.DEFAULT_CPUS+""))
 			pipeline.setProcessors(Integer.parseInt(arguments.cpus));
-
-		if (!arguments.mem.equals(ArgumentsParser.DEFAULT_MEM+""))
-			pipeline.setProcessors(Integer.parseInt(arguments.mem) * 1024);
 
 		return pipeline;
 	}
