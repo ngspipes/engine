@@ -20,12 +20,11 @@
 package ngspipesengine.presentation.logic.engine;
 
 import exceptions.ProgressReporterException;
-import javafx.application.Platform;
 import ngspipesengine.core.configurator.engines.IEngine;
 import ngspipesengine.core.configurator.engines.VMEngine;
 import ngspipesengine.core.exceptions.EngineException;
+import ngspipesengine.presentation.exceptions.EnginePresentationException;
 import ngspipesengine.presentation.logic.pipeline.Pipeline;
-import ngspipesengine.presentation.ui.utils.Dialog;
 import ngspipesengine.presentation.utils.WorkQueue;
 import progressReporter.IProgressReporter;
 import progressReporter.SocketReporter;
@@ -39,6 +38,7 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 public class EngineRunner {
 
@@ -53,17 +53,20 @@ public class EngineRunner {
     private final CountDownLatch finished = new CountDownLatch(1);
     private final CountDownLatch runningPipeline = new CountDownLatch(1);
     private final AtomicBoolean stop = new AtomicBoolean();
-    private final Pipeline pipeline;
-    private final IProgressReporter reporter;
     private IEngine engine;
     private ServerSocket socket;
     private Socket client;
 
+    private final Pipeline pipeline;
+    private final IProgressReporter reporter;
+    private final Consumer<EnginePresentationException> onException;
 
 
-    public EngineRunner(Pipeline pipeline, IProgressReporter reporter){
+
+    public EngineRunner(Pipeline pipeline, IProgressReporter reporter, Consumer<EnginePresentationException> onException){
         this.pipeline = pipeline;
         this.reporter = reporter;
+        this.onException = onException;
     }
 
 
@@ -94,36 +97,46 @@ public class EngineRunner {
 
 
     private void runServer() {
-        try {
-            initServer();
-        } catch (IOException | ProgressReporterException e) {
-            Platform.runLater(()->Dialog.showError("Error on communication channel!"));
-            close();
-            return;
-        }
+        try{
+            if(initServer()){
+                initEngine();
 
-        initEngine();
-
-        try {
-            attendClient();
-        } catch (ProgressReporterException | IOException e) {
-            waitPipelineRunning();
-            try{ stopVM(); } catch (EngineException ex) {}
-            Platform.runLater(()->Dialog.showError("Error on communication channel!"));
-        } finally{
+                try {
+                    attendClient();
+                } catch (ProgressReporterException | IOException e) {
+                    waitPipelineRunning();
+                    try{ stopVM(); } catch (EngineException ex) {
+                        onException.accept(new EnginePresentationException("Error stopping Engine!", ex));
+                    }
+                    onException.accept(new EnginePresentationException("Error on communication channel!", e));
+                }
+            }
+        }finally{
             close();
         }
     }
 
-    private void initServer() throws IOException, ProgressReporterException {
-        socket = new ServerSocket(SOCKET_PORT);
-        socket.setSoTimeout(ACCEPT_CLIENT_TIMEOUT);
-        reporter.open();
+    private boolean initServer() {
+        try {
+            socket = new ServerSocket(SOCKET_PORT);
+            socket.setSoTimeout(ACCEPT_CLIENT_TIMEOUT);
+            reporter.open();
+            return true;
+        } catch (IOException | ProgressReporterException e) {
+            onException.accept(new EnginePresentationException("Error initializing server!", e));
+            return false;
+        }
     }
 
     private void initEngine() {
         pipeline.properties.setPort(socket.getLocalPort());
-        WorkQueue.run(this::runPipeline);
+        WorkQueue.run(()->{
+            try{
+                runPipeline();
+            } catch(EngineException ex) {
+                onException.accept(new EnginePresentationException("Error running pipeline!", ex));
+            }
+        });
     }
 
     private void attendClient() throws IOException, ProgressReporterException {
@@ -140,7 +153,7 @@ public class EngineRunner {
         } catch (InterruptedException ex) {}
     }
 
-    private void runPipeline() {
+    private void runPipeline() throws EngineException {
         try {
             engine = new VMEngine(pipeline.properties);
             runningPipeline.countDown();
@@ -149,16 +162,16 @@ public class EngineRunner {
             if(runningPipeline.getCount() != 0)
                 runningPipeline.countDown();
 
-            stop.set(true);
-            Platform.runLater(()-> Dialog.showError(ex.getMessage()));
+            throw ex;
         } finally {
             try{
                 engine.finish();
             } catch(EngineException e) {
-                Platform.runLater(()-> Dialog.showError(e.getMessage()));
+                throw e;
+            } finally{
+                finished.countDown();
+                stop.set(true);
             }
-            finished.countDown();
-            stop.set(true);
         }
     }
 
@@ -166,7 +179,9 @@ public class EngineRunner {
         while(!stop.get()){
             try{
                 return socket.accept();
-            }catch(SocketTimeoutException ex){}
+            }catch(SocketTimeoutException ex){
+                /*Timout is set to 1000 seconds, to leave accept() and check while condition*/
+            }
         }
 
         return null;
@@ -174,6 +189,7 @@ public class EngineRunner {
 
     private void answerClient() throws IOException, ProgressReporterException {
         Reader stream = new InputStreamReader(client.getInputStream());
+
         try(BufferedReader in = new BufferedReader(stream)){
             String line;
             while ((line = in.readLine()) != null && !stop.get())
@@ -199,49 +215,39 @@ public class EngineRunner {
     }
 
 
-    private void close(){
-        IOException socketException = closeSocket();
-        IOException clientException = closeClient();
-        ProgressReporterException reporterException = closeReporter();
-
-        if(socketException != null || clientException != null || reporterException != null)
-            Platform.runLater(()->Dialog.showError("Error closing EngineRunner!"));
-    }
-
-    private IOException closeSocket() {
-        if(socket != null && !socket.isClosed()){
-            try {
-                socket.close();
-            } catch (IOException e) {
-                return e;
-            }
+    private void close() {
+        try{
+            closeSocket();
+        } catch(IOException e) {
+            onException.accept(new EnginePresentationException("Error closing EngineRunner socket!", e));
         }
 
-        return null;
-    }
-
-    private IOException closeClient() {
-        if(client != null && !client.isClosed()){
-            try {
-                client.close();
-            } catch (IOException e) {
-                return e;
-            }
+        try{
+            closeClient();
+        } catch(IOException e) {
+            onException.accept(new EnginePresentationException("Error closing EngineRunner client!", e));
         }
 
-        return null;
+        try{
+            closeReporter();
+        } catch(ProgressReporterException e) {
+            onException.accept(new EnginePresentationException("Error closing EngineRunner reporter!", e));
+        }
     }
 
-    private ProgressReporterException closeReporter() {
-        if(reporter != null){
-            try{
+    private void closeSocket() throws IOException {
+        if(socket != null && !socket.isClosed())
+            socket.close();
+    }
+
+    private void closeClient() throws IOException {
+        if(client != null && !client.isClosed())
+            client.close();
+    }
+
+    private void closeReporter() throws ProgressReporterException {
+        if(reporter != null)
                 reporter.close();
-            } catch (ProgressReporterException e) {
-                return e;
-            }
-        }
-
-        return null;
     }
 
 }

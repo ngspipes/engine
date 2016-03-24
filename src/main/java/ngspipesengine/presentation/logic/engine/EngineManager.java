@@ -27,6 +27,7 @@ import ngspipesengine.presentation.logic.pipeline.Pipeline;
 import progressReporter.IProgressReporter;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class EngineManager {
@@ -72,12 +73,12 @@ public class EngineManager {
         }
     }
 
-    public static int run(Pipeline pipeline, IProgressReporter reporter) {
+    public static int run(Pipeline pipeline, IProgressReporter reporter, Consumer<EnginePresentationException> onException) {
         if(pipeline == null || reporter == null)
             throw new IllegalArgumentException("Pipeline and reporter can not be null!");
 
         synchronized(LOCK) {
-            EngineRunner runner = new EngineRunner(pipeline, reporter);
+            EngineRunner runner = new EngineRunner(pipeline, reporter, onException);
             runner.start();
             RUNNERS.put(++id, runner);
             return id;
@@ -122,7 +123,7 @@ public class EngineManager {
             Collection<Integer> ids = RUNNERS.keySet().parallelStream().collect(Collectors.toList());
 
             Collection<Integer> returnIds = new LinkedList<>();
-            ids.forEach((id)->{
+            ids.forEach((id) -> {
                 if(!RUNNERS.get(id).finished())
                     returnIds.add(id);
             });

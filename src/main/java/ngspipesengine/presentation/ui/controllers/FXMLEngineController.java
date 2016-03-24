@@ -30,10 +30,10 @@ import jfxutils.ComponentException;
 import jfxutils.IInitializable;
 import ngspipesengine.presentation.exceptions.EnginePresentationException;
 import ngspipesengine.presentation.logic.engine.EngineManager;
-import ngspipesengine.presentation.ui.controllers.runPipelineController.FXMLRunPipelineController;
-import ngspipesengine.presentation.ui.controllers.runPipelineController.EngineUIReporter;
 import ngspipesengine.presentation.logic.pipeline.Pipeline;
 import ngspipesengine.presentation.logic.pipeline.PipelineManager;
+import ngspipesengine.presentation.ui.controllers.runPipelineController.EngineUIReporter;
+import ngspipesengine.presentation.ui.controllers.runPipelineController.FXMLRunPipelineController;
 import ngspipesengine.presentation.ui.pallets.EngineListPallet;
 import ngspipesengine.presentation.ui.pallets.PipelineListPallet;
 import ngspipesengine.presentation.ui.utils.Dialog;
@@ -157,7 +157,7 @@ public class FXMLEngineController implements IInitializable<Void> {
 		
 		try {
 			EngineUIReporter reporter = new EngineUIReporter();
-			int id = EngineManager.run(pipeline, reporter);
+			int id = EngineManager.run(pipeline, reporter, (ex)->Platform.runLater(()->Dialog.showError(ex.getMessage())));
 
 			Tab pipelineTab = new Tab();
 

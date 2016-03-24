@@ -110,7 +110,7 @@ public class NGSPipesEngineConsole {
 		IProgressReporter reporter = new ConsoleReporter();
 		Pipeline pipeline = getPipeline(arguments);
 
-		int id = EngineManager.run(pipeline, reporter);
+		int id = EngineManager.run(pipeline, reporter, Throwable::printStackTrace);
 
 		System.out.println(
 				String.format("Starting executor with %d CPUs and %d GBytes",
