@@ -59,7 +59,7 @@ public class Uris {
 	static final String REPOSITORY_JAR_ORIGIN_PATH = RESOURCES + REPOSITORY_JAR_NAME;
 	static final String JSON_JAR_ORIGIN_PATH = RESOURCES + JSON_JAR_NAME;
 	public static final String REGISTER_FILE = LOG_FOLDER_PATH + "register.json";
-	static final String VBOX_FILE_RELATIVE_PATH = "./NGSPipesEngineExecutor/NGSPipesEngineExecutor.vbox";
+	static final String VBOX_FILE_RELATIVE_PATH = "../NGSPipesEngineExecutor/NGSPipesEngineExecutor.vbox";
 	
 
 	///////// GUEST DIRECTORIES PATHS ////////
@@ -73,7 +73,7 @@ public class Uris {
 	public static URL getVboxFilePath() throws EngineException {
 		URL url;
 		File file = new File(System.getProperty("ngspipes.basedir") + VBOX_FILE_RELATIVE_PATH);
-		if (!file.exists()) {
+		if (file == null || !file.exists()) {
 			throw new ExecutorImageNotFound();
 		}
 		try {
