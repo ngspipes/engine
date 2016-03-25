@@ -99,7 +99,7 @@ public class NGSPipesEngineConsole {
 			sb.append("\t\t 2. place it inside the working directory as explained here " + WIKI_LINK + "\n");
 			sb.append("\n");
 			sb.append("\t Thank you for using NGSPipes!");
-			System.out.print(sb.toString());
+			System.out.println(sb.toString());
 		} catch(Exception ex) {
 			System.out.println("::ERROR running engine :: \nstackTrace: " + Utils.getStackTrace(ex));
 			System.exit(1);
