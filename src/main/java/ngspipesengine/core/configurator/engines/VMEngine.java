@@ -28,7 +28,6 @@ import ngspipesengine.core.utils.Utils;
 import ngspipesengine.presentation.utils.WorkQueue;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -42,12 +41,12 @@ public class VMEngine extends Engine {
 	private static String getDeleteVMCommand(String engineName) {
 		return String.format(Utils.DELETE_VM_COMMAND, engineName);
 	}
-	
+
 	private static String getRegisterVMCommand() throws EngineException {
 		return Utils.REGISTER_VM_COMMAND + Engine.OS_URL_FORMATTERS.get(Utils.OS_TYPE).apply(Uris.getVboxFilePath());
 	}
-	
-	private static boolean compareVersions(String currVersion) {		
+
+	private static boolean compareVersions(String currVersion) {
 		String[] numbers = currVersion.split("\\.");
 		int version = 0;
 		int multiplicand = 100;
@@ -55,10 +54,10 @@ public class VMEngine extends Engine {
 			version += multiplicand * Integer.parseInt(number);
 			multiplicand /= 10;
 		}
-		
+
 		return version >= VERSION;
 	}
-	
+
 	private static boolean isRegistered(Log log) throws EngineException {
 		try {
 			List<String> vms = getVMsName();
@@ -66,39 +65,21 @@ public class VMEngine extends Engine {
 			for(String vm : vms)
 				if(vm.equals(VMProperties.BASE_VM_NAME))
 					return true;
-			
+
 		} catch (IOException e) {
 			Utils.treatException(log, TAG, e, "verifying if engine is registered");
 		}
 		return false;
 	}
 
-	private static String getNextCloneNumber(List<String> vmsNames) {
-		
-		List<Integer> numbers = new LinkedList<>();
-
-		vmsNames.forEach((vm)->{
-			if(!vm.equals(VMProperties.BASE_VM_NAME)) {
-				int idxNumber = VMProperties.BASE_VM_NAME.length();
-				numbers.add(Integer.parseInt(vm.substring(idxNumber)));
-			}
-		});
-		
-		if(numbers.isEmpty()) return "" + 0;
-		
-		Collections.sort(numbers);
-		
-		return "" + (numbers.get(numbers.size() -1) + 1);
-	}
-	
 	public static void clean(String engineName) throws EngineException {
 		Log clean = new Log("clean");
 		System.out.println("Cleaning engine");
-		Utils.executeCommand(getDeleteVMCommand(engineName), clean, TAG, 
+		Utils.executeCommand(getDeleteVMCommand(engineName), clean, TAG,
 				"Error deleting virtual machine " + engineName);
 		clean.stop();
 	}
-	
+
 	public static boolean acceptedVBoxVersion() throws EngineException {
 		try {
 			String result = Utils.run(Utils.VBOX_VERSION_COMMAND);
@@ -109,7 +90,7 @@ public class VMEngine extends Engine {
 			throw new EngineException("Error getting VirtualBox version", e);
 		}
 	}
-	
+
 	public static void register() throws EngineException {
 		Log log = new Log("register");
 		if(!isRegistered(log)) {
@@ -124,11 +105,11 @@ public class VMEngine extends Engine {
 
 	public static List<String> getVMsName() throws IOException {
 		List<String> vmsName = new LinkedList<>();
-		String runResults = Utils.run(Utils.LIST_VMS_COMMAND);		
-		
+		String runResults = Utils.run(Utils.LIST_VMS_COMMAND);
+
 		if(runResults == null || runResults.isEmpty())
 			return vmsName;
-		
+
 		String[] vms = runResults.split("\n");
 
 		for(String vm : vms)
@@ -137,14 +118,13 @@ public class VMEngine extends Engine {
 
 		return vmsName;
 	}
-	
-	
 
-	
+
+
 	public VMEngine(VMProperties properties) throws EngineException {
 		super(properties);
 	}
-	
+
 	@Override
 	public void clean() throws EngineException {
 		clean(props.getEngineName());
@@ -156,37 +136,39 @@ public class VMEngine extends Engine {
 		props.getLog().debug(TAG, "Finishing");
 		System.out.println("Finishing engine");
 		props.unset();
+		unregisterEngine();
 		props.getLog().debug(TAG, "Finishing success");
 		props.stopLog();
 	}
 
 	@Override
 	public void stop() throws EngineException {
+
 		props.getLog().debug(TAG, "Stopping execution");
 		System.out.println("Stopping engine execution");
-		Utils.executeCommand(getPowerOffVMCommand(), props.getLog(), TAG, "Stopping engine execution");
-		props.unset();
+
+		if(isVMRunning()) {
+			Utils.executeCommand(getPowerOffVMCommand(), props.getLog(), TAG, "Stopping engine execution");
+			props.unset();
+		}
+		unregisterEngine();
 		props.getLog().debug(TAG, "Execution stopped");
 	}
-	
-	
+
+
 	@Override
 	protected void cloneEngine() throws EngineException {
 
 		if(shouldClone()) {
 			props.getLog().debug(TAG, "Cloning");
-			
-			System.out.println("Getting clone engine");
-			props.setEngineName(getCloneName());
 			System.out.println("Cloning engine");
 			executeClone();
-
 			props.getLog().debug(TAG, "Cloning success");
 		}
 	}
-	
+
 	@Override
-	protected void internalStart() throws EngineException { 
+	protected void internalStart() throws EngineException {
 		props.getLog().debug(TAG, "Starting to run");
 
 		try {
@@ -196,7 +178,7 @@ public class VMEngine extends Engine {
 		} catch (EngineException e) {
 			props.getLog().error(TAG, Utils.getStackTrace(e));
 		}
-		//props.getLog().debug(TAG, "Running success");
+		props.getLog().debug(TAG, "Running success");
 	}
 
 	@Override
@@ -206,17 +188,36 @@ public class VMEngine extends Engine {
 		Script.createExecute(props.getSetups(), getRunnerCommand());
 		props.getLog().debug(TAG, "Create script success");
 	}
-	
+
 	@Override
 	protected String getRunnerCommand() throws EngineException {
 		return getRunCommand(Uris.VM_PIPELINE_PATH,
-				Uris.VM_ENGINE_PATH, props.getCompiler().getName(), 
+				Uris.VM_ENGINE_PATH, props.getCompiler().getName(),
 				props.getCompiler().getMainArguments(props.getSpecificsArguments()));
 	}
 
 	@Override
-	protected void recoverState() throws EngineException {
-		
+	protected void registerEngine() throws EngineException {
+		synchronized (lockObject) {
+			System.out.println("Registering engine");
+			props.getLog().debug(TAG, "Registering engine");
+			if(	WORKING_ENGINES.contains(props.getEngineName()) ||
+					props.getEngineName().equals(props.getBaseEngineName()))
+				props.setEngineName(getCloneName());
+
+			WORKING_ENGINES.add(props.getEngineName());
+			System.out.println("Engine registered");
+			props.getLog().debug(TAG, "Engine registered");
+		}
+	}
+
+	@Override
+	protected void unregisterEngine() throws EngineException {
+		synchronized (lockObject) {
+			WORKING_ENGINES.remove(props.getEngineName());
+			System.out.println("Engine unregister");
+			props.getLog().debug(TAG, "Engine unregister");
+		}
 	}
 
 
@@ -237,70 +238,94 @@ public class VMEngine extends Engine {
 		while(cd.getCount() != 0)
 			Utils.wait(5000, () -> System.out.println("...... Cloning executor image"));
 	}
-	
+
 	private String getStartVMCommand() {
 		return Utils.START_VM_COMMAND + props.getEngineName();
 	}
-	
+
 	private String getPowerOffVMCommand() {
 		return String.format(Utils.POWER_OFF_VM_COMMAND, props.getEngineName());
 	}
-	
+
 	private String getCloneVMCommand() {
 		return String.format(Utils.VM_CLONE_COMMAND, props.getBaseEngineName(), props.getEngineName());
 	}
-	
+
 	private String getCloneName() throws EngineException {
-		String vmCloneNumber;
-		try {
-			List<String> vmsName = getVMsName();
-			vmCloneNumber = getNextCloneNumber(vmsName);
-			return props.getBaseEngineName() + vmCloneNumber;
-		} catch (IOException e) {
-			Utils.treatException(props.getLog(), TAG, e, "Error getting clone engine name");
-		}
-				
-		return null;
-	}	
-	
-	private boolean shouldClone() throws EngineException {
-			try {
-				return areVMsRunning(Utils.run(Utils.LIST_RUNNING_VMS_COMMAND, 
-												props.getLog(), Utils::readStream));
-			} catch (IOException e) {
-				Utils.treatException(props.getLog(), TAG, e, "Error checking if engine is running");
-			}
-			
-			return false;
+
+		if(WORKING_ENGINES.size() == 0)
+			return props.getBaseEngineName() + "0";
+
+		return props.getBaseEngineName() + getNextCloneNumber();
 	}
 
-	private boolean areVMsRunning(Object result) throws IOException {
-		
-		String runningVMs = (String)result;
-		if(!runningVMs.contains(props.getEngineName()) 
-				&& !props.getBaseEngineName().equals(props.getEngineName()))
-			return false;
-		
-		List<String> vms = getVMsName();
-		for(String vm : vms) {
-			if(!runningVMs.contains(vm) 
-					&& !props.getBaseEngineName().equals(vm)) {
-				props.setEngineName(vm);
-				return false;
-			}
+	private String getNextCloneNumber() {
+		WORKING_ENGINES.sort(this::engineNameComparator);
+
+		String biggestVmNameNumber = WORKING_ENGINES.get(WORKING_ENGINES.size() - 1);
+
+		int biggestVmNumber = Integer.parseInt(biggestVmNameNumber.substring(biggestVmNameNumber.length() - 1));
+
+		if(biggestVmNumber >= WORKING_ENGINES.size() - 1)
+			biggestVmNumber = searchFreeVm(biggestVmNumber);
+
+		return (biggestVmNumber + 1) + "";
+	}
+
+	private int searchFreeVm(int biggestVmNumber) {
+		int [] freeEngines = new int[WORKING_ENGINES.size() - 1];
+
+		for (int idx = 0; idx < WORKING_ENGINES.size() - 1; idx++)
+			freeEngines[idx] = (engineNumberComparator(WORKING_ENGINES.get(idx), idx) == 0) ? 0 : 1;
+
+		for (int idx = freeEngines.length - 1; idx >= 0 ; idx++) {
+			if(freeEngines[idx] == 1)
+				return freeEngines[idx];
 		}
-		
-		return true;
+
+		return biggestVmNumber;
+	}
+
+	private int engineNumberComparator(String eName, int number) {
+		int e1 = Integer.parseInt(eName.substring(eName.length() - 2));
+		return number - e1;
+	}
+
+	private int engineNameComparator(String eName1, String eName2) {
+		int e1 = Integer.parseInt(eName1.substring(eName1.length() - 2));
+		int e2 = Integer.parseInt(eName2.substring(eName2.length() - 2));
+		return e1 - e2;
+	}
+
+	private boolean shouldClone() throws EngineException {
+		try {
+			List<String> vms = getVMsName();
+			return !vms.contains(props.getEngineName());
+		} catch (IOException e) {
+			Utils.treatException(props.getLog(), TAG, e, "Error checking if engine is running");
+		}
+		return false;
+	}
+
+	private boolean isVMRunning() throws EngineException {
+		String runningVMs = "";
+		try {
+			runningVMs = (String)Utils.run(	Utils.LIST_RUNNING_VMS_COMMAND,
+					props.getLog(), Utils::readStream);
+		} catch (IOException e) {
+			Utils.treatException(props.getLog(), TAG, e, "Error checking if engine is running");
+		}
+
+		return runningVMs.contains(props.getEngineName());
 	}
 
 	private void waitUntilRunning() throws EngineException {
 		boolean running = true;
 		while(running)
 			try {
-				running = areVMsRunning(Utils.run(Utils.LIST_RUNNING_VMS_COMMAND, 
-											props.getLog(), Utils::readStream));
+				running = isVMRunning();
 				Thread.sleep(1000);
-			} catch (InterruptedException | IOException e) {
+			} catch (InterruptedException e) {
 				Utils.treatException(props.getLog(), TAG, e, "Error checking if engine is running");
 			}
 	}

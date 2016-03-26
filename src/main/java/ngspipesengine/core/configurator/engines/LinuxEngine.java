@@ -28,15 +28,15 @@ public class LinuxEngine extends Engine {
 
 	private static final String rootCommand = "sudo";
 	private static final String TAG = "LinuxEngine";
-	
+
 	// GET LINUX TYPE cat /etc/issue
-	
-	
+
+
 	public LinuxEngine(LinuxProperties props) throws EngineException {
 		super(props);
 	}
 
-	
+
 	public String getRootCommand() { return rootCommand; }
 
 	@Override
@@ -65,12 +65,12 @@ public class LinuxEngine extends Engine {
 	@Override
 	protected String getRunnerCommand() throws EngineException {
 		return getRunCommand(Uris.PIPELINES_FOLDER_PATH + props.getPipelineFolder(),
-				Uris.ENGINE_PATH + Uris.SEP, props.getCompiler().getName(), 
+				Uris.ENGINE_PATH + Uris.SEP, props.getCompiler().getName(),
 				props.getCompiler().getMainArguments(props.getSpecificsArguments()));
 	}
 
 
-	
+
 	private String getExecuteScriptCommand() {
 		return rootCommand + " " + String.format(Utils.EXECUTE_SCRIPT_COMMAND, getScriptPath());
 	}
@@ -84,14 +84,14 @@ public class LinuxEngine extends Engine {
 	@Override
 	public void stop() throws EngineException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 
 	@Override
-	protected void recoverState() throws EngineException {
-		// TODO Auto-generated method stub
-		
-	}
-		
+	protected void registerEngine() throws EngineException {}
+
+	@Override
+	protected void unregisterEngine() throws EngineException {}
+
 }

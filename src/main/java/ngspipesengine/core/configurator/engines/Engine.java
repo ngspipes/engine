@@ -10,7 +10,7 @@
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ // * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
  * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
  * for more details.
  *
@@ -29,17 +29,24 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 import java.util.function.Function;
 
 public abstract class Engine implements IEngine {
 
 
 	private static final String TAG = "Engine";
+	protected static final List<String> WORKING_ENGINES = new LinkedList<>();
+	protected static final Object lockObject = new Object();
 	public static final Map<String, Function<String, String>> OS_PATH_FORMATTERS;
 	public static final Map<String, Function<URL, String>> OS_URL_FORMATTERS;
 	public static final Map<String, Function<String, String>> OS_QUOTATION_MARKS_FORMATTERS;
 	public static final String DOWNLOAD_TIME_MESSAGE = "* Download time of docker images may take some time, depending on you network speed *";
+
+
 
 	static {
 		OS_PATH_FORMATTERS = new HashMap<>();
@@ -50,27 +57,27 @@ public abstract class Engine implements IEngine {
 
 	private static boolean isConnected() throws IOException {
 		boolean connect = true;
-        URL url = new URL("http://www.google.com");
-        HttpURLConnection urlConnection = (HttpURLConnection)url.openConnection();
-        try {
+		URL url = new URL("http://www.google.com");
+		HttpURLConnection urlConnection = (HttpURLConnection)url.openConnection();
+		try {
 			urlConnection.connect();
 		} catch (IOException e) {
 			connect = false;
 		}
 		return connect;
 	}
-	
+
 	private static void loadFormatters() {
 		OS_PATH_FORMATTERS.put(Utils.WIN_OS_TYPE, Engine::windowsPathFormater);
 		OS_PATH_FORMATTERS.put(Utils.UNIX_OS_TYPE, Engine::unixPathFormater);
-		
+
 		OS_URL_FORMATTERS.put(Utils.WIN_OS_TYPE, Engine::windowsUrlFormater);
 		OS_URL_FORMATTERS.put(Utils.UNIX_OS_TYPE, Engine::unixUrlFormater);
-		
+
 		OS_QUOTATION_MARKS_FORMATTERS.put(Utils.UNIX_OS_TYPE, Engine::unixQuotationMarks);
 		OS_QUOTATION_MARKS_FORMATTERS.put(Utils.WIN_OS_TYPE, Engine::windowsQuotationMarks);
 	}
-	
+
 	private static String windowsPathFormater(String path) {
 		if(!path.contains(" "))
 			return path;
@@ -84,7 +91,7 @@ public abstract class Engine implements IEngine {
 
 		return path.replace(" ", "\\ ");
 	}
-	
+
 	private static String windowsUrlFormater(URL url) {
 		return url.getPath().substring(1);
 	}
@@ -92,7 +99,7 @@ public abstract class Engine implements IEngine {
 	private static String unixUrlFormater(URL url) {
 		return url.getPath();
 	}
-	
+
 	private static String windowsQuotationMarks(String source) {
 		return "\"" + source + "\"";
 	}
@@ -103,38 +110,38 @@ public abstract class Engine implements IEngine {
 
 	protected static String getRunCommand(String pipelinePath, String libsPath, String executableName, String mainArgs) {
 		StringBuilder runCommand = new StringBuilder("java -cp ");
-		
+
 		Function<String, String> formatter = OS_PATH_FORMATTERS.get(Utils.OS_TYPE);
-		
+
 		runCommand	.append(formatter.apply(pipelinePath))
-					.append(":")
-					.append(formatter.apply(libsPath + Uris.DSL_JAR_NAME))
-					.append(":")
-					.append(formatter.apply(libsPath + Uris.REPOSITORY_JAR_NAME))
-					.append(":")
-					.append(formatter.apply(libsPath + Uris.JSON_JAR_NAME))
-					.append(" ").append(executableName).append(" ").append(mainArgs);
-		
+				.append(":")
+				.append(formatter.apply(libsPath + Uris.DSL_JAR_NAME))
+				.append(":")
+				.append(formatter.apply(libsPath + Uris.REPOSITORY_JAR_NAME))
+				.append(":")
+				.append(formatter.apply(libsPath + Uris.JSON_JAR_NAME))
+				.append(" ").append(executableName).append(" ").append(mainArgs);
+
 		return runCommand.toString();
 	}
-	
+
 	public static String formatter(String path) {
 		return OS_PATH_FORMATTERS.get(Utils.OS_TYPE).apply(path);
 	}
 
-	
-	
+
 	protected final Properties props;
-	
-	public Engine(Properties props) throws EngineException {    
-		this.props = props;		
+
+	public Engine(Properties props) throws EngineException {
+		this.props = props;
 	}
-	
+
 	@Override
 	public void start() throws EngineException {
-		
+
 		isInternetConnected();
 		props.getLog().debug(TAG, "Starting");
+		this.registerEngine();
 		this.cloneEngine();
 		System.out.println("Configuring engine");
 		System.out.println(DOWNLOAD_TIME_MESSAGE);
@@ -144,13 +151,14 @@ public abstract class Engine implements IEngine {
 		this.internalStart();
 	}
 
-	
 	protected abstract void cloneEngine() throws EngineException;
-	
-	protected abstract void recoverState() throws EngineException;
+
+	protected abstract void registerEngine() throws EngineException;
+
+	protected abstract void unregisterEngine() throws EngineException;
 
 	protected abstract void internalStart() throws EngineException;
-	
+
 	protected abstract String getRunnerCommand() throws EngineException;
 
 	protected void createScripts() throws EngineException {
@@ -160,8 +168,8 @@ public abstract class Engine implements IEngine {
 		props.getLog().debug(TAG, "Create script success");
 	}
 
-	
-	
+
+
 	private void isInternetConnected() throws EngineException {
 		props.getLog().debug(TAG, "Checking network connection");
 		try {
@@ -174,6 +182,6 @@ public abstract class Engine implements IEngine {
 			props.getLog().error(TAG, "\t" + e.getMessage());
 			throw new EngineException("Unreachable to connect to network", e);
 		}
-		props.getLog().debug(TAG, "Network connected");		
+		props.getLog().debug(TAG, "Network connected");
 	}
 }
