@@ -144,6 +144,7 @@ public class VMEngine extends Engine {
 	@Override
 	public void stop() throws EngineException {
 
+		super.stop();
 		props.getLog().debug(TAG, "Stopping execution");
 		System.out.println("Stopping engine execution");
 

@@ -130,6 +130,7 @@ public abstract class Engine implements IEngine {
 	}
 
 
+	protected volatile boolean stop;
 	protected final Properties props;
 
 	public Engine(Properties props) throws EngineException {
@@ -143,12 +144,20 @@ public abstract class Engine implements IEngine {
 		props.getLog().debug(TAG, "Starting");
 		this.registerEngine();
 		this.cloneEngine();
-		System.out.println("Configuring engine");
-		System.out.println(DOWNLOAD_TIME_MESSAGE);
-		this.props.set();
-		createScripts();
-		System.out.println("Starting execute engine");
-		this.internalStart();
+
+		if(!stop) {
+			System.out.println("Configuring engine");
+			System.out.println(DOWNLOAD_TIME_MESSAGE);
+			this.props.set();
+			createScripts();
+			System.out.println("Starting execute engine");
+			this.internalStart();
+		}
+	}
+
+	@Override
+	public void stop() throws EngineException {
+		stop = true;
 	}
 
 	protected abstract void cloneEngine() throws EngineException;
@@ -167,8 +176,6 @@ public abstract class Engine implements IEngine {
 		Script.createExecute(props.getSetups(), getRunnerCommand());
 		props.getLog().debug(TAG, "Create script success");
 	}
-
-
 
 	private void isInternetConnected() throws EngineException {
 		props.getLog().debug(TAG, "Checking network connection");
