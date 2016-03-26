@@ -8,7 +8,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox alignment="CENTER" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ngspipesengine.presentation.ui.controllers.FXMLLoadPipelineController">
+<VBox alignment="CENTER" minWidth="350.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ngspipesengine.presentation.ui.controllers.FXMLLoadPipelineController">
    <children>
       <VBox VBox.vgrow="ALWAYS">
          <children>
