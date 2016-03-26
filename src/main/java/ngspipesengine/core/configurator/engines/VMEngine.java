@@ -154,6 +154,7 @@ public class VMEngine extends Engine {
 		}
 		unregisterEngine();
 		props.getLog().debug(TAG, "Execution stopped");
+		System.out.println("Execution stopped");
 	}
 
 
