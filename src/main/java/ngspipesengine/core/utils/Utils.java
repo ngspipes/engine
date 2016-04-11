@@ -48,7 +48,8 @@ public class Utils {
     public static final String REGISTER_VM_COMMAND = VBOXMANAGE + " registervm "; 
     public static final String START_VM_COMMAND = "VBoxHeadless -s "; 
     public static final String VM_CLONE_COMMAND = VBOXMANAGE + " clonevm %1$s --name %2$s --register";
-	public static final String POWER_OFF_VM_COMMAND = VBOXMANAGE + " controlvm %1$s poweroff";
+	//public static final String POWER_OFF_VM_COMMAND = VBOXMANAGE + " controlvm %1$s poweroff";
+	public static final String ACPI_POWER_BUTTON_VM_COMMAND = VBOXMANAGE + " controlvm %1$s acpipowerbutton";
 	public static final String SET_PROCESSORS_NUMBER_VM_COMMAND = VBOXMANAGE + " modifyvm %1$s --cpus %2$s";
     public static final String DELETE_VM_COMMAND = VBOXMANAGE + " unregistervm %1$s --delete"; 
     private static final String LIST_VM_COMMAND = VBOXMANAGE + " list ";

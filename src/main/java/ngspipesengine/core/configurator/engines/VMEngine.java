@@ -147,7 +147,17 @@ public class VMEngine extends Engine {
 
 		if(isVMRunning()) {
 			Utils.executeCommand(getPowerOffVMCommand(), props.getLog(), TAG, "Stopping engine execution");
-			props.unset();
+
+			long initTime = System.currentTimeMillis();
+			while(isVMRunning() && !spentAMinute(initTime)) {
+				sleep(1000);
+				initTime = System.currentTimeMillis();
+			}
+
+			if(!isVMRunning())
+				props.unset();
+			else
+				clean();
 		}
 
 		unregisterEngine();
