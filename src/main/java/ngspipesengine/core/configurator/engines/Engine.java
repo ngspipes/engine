@@ -39,8 +39,6 @@ public abstract class Engine implements IEngine {
 
 
 	private static final String TAG = "Engine";
-	protected static final List<String> WORKING_ENGINES = new LinkedList<>();
-	protected static final Object lockObject = new Object();
 	public static final Map<String, Function<String, String>> OS_PATH_FORMATTERS;
 	public static final Map<String, Function<URL, String>> OS_URL_FORMATTERS;
 	public static final Map<String, Function<String, String>> OS_QUOTATION_MARKS_FORMATTERS;

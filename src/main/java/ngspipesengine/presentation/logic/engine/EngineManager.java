@@ -20,7 +20,7 @@
 package ngspipesengine.presentation.logic.engine;
 
 import ngspipesengine.core.configurator.engines.VMEngine;
-import ngspipesengine.core.configurator.properties.VMProperties;
+import ngspipesengine.core.configurator.engines.VMManager;
 import ngspipesengine.core.exceptions.EngineException;
 import ngspipesengine.presentation.exceptions.EnginePresentationException;
 import ngspipesengine.presentation.logic.pipeline.Pipeline;
@@ -56,7 +56,7 @@ public class EngineManager {
 
 
     public static String getDefaultEngineName(){
-        return VMProperties.BASE_VM_NAME;
+        return VMManager.BASE_VM_NAME;
     }
 
     public static Collection<String> getEnginesNames() throws EnginePresentationException {

@@ -21,7 +21,7 @@ package ngspipesengine.presentation.console;
 
 
 import ngspipesengine.core.configurator.engines.VMEngine;
-import ngspipesengine.core.configurator.properties.VMProperties;
+import ngspipesengine.core.configurator.engines.VMManager;
 import org.apache.commons.cli.*;
 
 import java.io.File;
@@ -152,7 +152,7 @@ public class ArgumentsParser {
         boolean valid = true;
 
         if(name != null && !name.isEmpty()){
-            if(!name.equals(VMProperties.BASE_VM_NAME)){
+            if(!name.equals(VMManager.BASE_VM_NAME)){
                 try{
                     if(!VMEngine.getVMsName().contains(name)) {
                         System.err.println("Nonexistent executor!");

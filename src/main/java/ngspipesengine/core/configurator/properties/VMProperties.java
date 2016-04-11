@@ -21,6 +21,7 @@ package ngspipesengine.core.configurator.properties;
 
 import dsl.entities.Pipeline;
 import ngspipesengine.core.configurator.engines.Engine;
+import ngspipesengine.core.configurator.engines.VMManager;
 import ngspipesengine.core.exceptions.EngineException;
 import ngspipesengine.core.utils.Uris;
 import ngspipesengine.core.utils.Utils;
@@ -33,7 +34,6 @@ public class VMProperties extends Properties {
 
 	private static final String TAG = "VMProperties";
 	private static final Map<String, String> SHARED_FOLDERS = new HashMap<>();
-	public static final String BASE_VM_NAME = "NGSPipesEngineExecutor";
 	public static final String BASE_CLASS_NAME = "PipeBaseClass.txt";
 
 	static {
@@ -139,7 +139,7 @@ public class VMProperties extends Properties {
 	}
 
 	private static String getEngineName(String engineName) {
-		return engineName.length() > 1 ? engineName : BASE_VM_NAME;
+		return engineName.length() > 1 ? engineName : VMManager.BASE_VM_NAME;
 	}
 	
 
@@ -161,7 +161,7 @@ public class VMProperties extends Properties {
 	}
 
 	public VMProperties(String engineName, String pipelinePath, int from, int to) throws EngineException {
-		this(BASE_VM_NAME, engineName, pipelinePath, from, to);
+		this(VMManager.BASE_VM_NAME, engineName, pipelinePath, from, to);
 	}
 
 	public VMProperties(String engineName, String pipelinePath, int from) throws EngineException {
@@ -173,7 +173,7 @@ public class VMProperties extends Properties {
 	}
 	
 	public VMProperties(String pipelinePath) throws EngineException {
-		super(BASE_VM_NAME, pipelinePath, -1, -1);
+		super(VMManager.BASE_VM_NAME, pipelinePath, -1, -1);
 	}
 
 	@Override
