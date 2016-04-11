@@ -63,7 +63,7 @@ public class VMEngine extends Engine {
 			List<String> vms = getVMsName();
 
 			for(String vm : vms)
-				if(vm.equals(VMProperties.BASE_VM_NAME))
+				if(vm.equals(VMManager.BASE_VM_NAME))
 					return true;
 
 		} catch (IOException e) {
@@ -113,7 +113,7 @@ public class VMEngine extends Engine {
 		String[] vms = runResults.split("\n");
 
 		for(String vm : vms)
-			if(vm.startsWith("\"" + VMProperties.BASE_VM_NAME))
+			if(vm.startsWith("\"" + VMManager.BASE_VM_NAME))
 				vmsName.add(vm.substring(1, vm.indexOf("\"", 1)));
 
 		return vmsName;
@@ -133,8 +133,7 @@ public class VMEngine extends Engine {
 	@Override
 	public void finish() throws EngineException {
 		waitUntilRunning();
-		props.getLog().debug(TAG, "Finishing");
-		System.out.println("Finishing engine");
+		report("Finishing engine");
 		props.unset();
 		unregisterEngine();
 		props.getLog().debug(TAG, "Finishing success");
@@ -143,18 +142,16 @@ public class VMEngine extends Engine {
 
 	@Override
 	public void stop() throws EngineException {
-
 		super.stop();
-		props.getLog().debug(TAG, "Stopping execution");
-		System.out.println("Stopping engine execution");
+		report("Stopping engine execution");
 
 		if(isVMRunning()) {
 			Utils.executeCommand(getPowerOffVMCommand(), props.getLog(), TAG, "Stopping engine execution");
 			props.unset();
 		}
+
 		unregisterEngine();
-		props.getLog().debug(TAG, "Execution stopped");
-		System.out.println("Execution stopped");
+		report("Execution stopped");
 	}
 
 
@@ -162,8 +159,7 @@ public class VMEngine extends Engine {
 	protected void cloneEngine() throws EngineException {
 
 		if(shouldClone()) {
-			props.getLog().debug(TAG, "Cloning");
-			System.out.println("Cloning engine");
+			report("Cloning engine");
 			executeClone();
 			props.getLog().debug(TAG, "Cloning success");
 		}
@@ -200,28 +196,35 @@ public class VMEngine extends Engine {
 
 	@Override
 	protected void registerEngine() throws EngineException {
-		synchronized (lockObject) {
-			System.out.println("Registering engine");
-			props.getLog().debug(TAG, "Registering engine");
-			if(	WORKING_ENGINES.contains(props.getEngineName()) ||
-					props.getEngineName().equals(props.getBaseEngineName()))
-				props.setEngineName(getCloneName());
-
-			WORKING_ENGINES.add(props.getEngineName());
-			System.out.println("Engine registered");
-			props.getLog().debug(TAG, "Engine registered");
-		}
+		report("Registering engine");
+		props.setEngineName(VMManager.register(props.getEngineName()));
+		report("Engine registered");
 	}
 
 	@Override
 	protected void unregisterEngine() throws EngineException {
-		synchronized (lockObject) {
-			WORKING_ENGINES.remove(props.getEngineName());
-			System.out.println("Engine unregister");
-			props.getLog().debug(TAG, "Engine unregister");
+		VMManager.unregister(props.getEngineName());
+		report("Engine unregister");
+	}
+
+
+
+	private void sleep(long milliseconds) {
+		try {
+			Thread.sleep(milliseconds);
+		} catch (InterruptedException e) {
+			//throw new EngineException();
 		}
 	}
 
+	private boolean spentAMinute(long initTime) {
+		return ((System.currentTimeMillis() - initTime) > 60000) ? true : false;
+	}
+
+	private void report(String msg) {
+		System.out.println(msg);
+		props.getLog().debug(TAG, msg);
+	}
 
 	private void executeClone() throws EngineException {
 		final CountDownLatch cd = new CountDownLatch(1);
@@ -246,57 +249,11 @@ public class VMEngine extends Engine {
 	}
 
 	private String getPowerOffVMCommand() {
-		return String.format(Utils.POWER_OFF_VM_COMMAND, props.getEngineName());
+		return String.format(Utils.ACPI_POWER_BUTTON_VM_COMMAND, props.getEngineName());
 	}
 
 	private String getCloneVMCommand() {
 		return String.format(Utils.VM_CLONE_COMMAND, props.getBaseEngineName(), props.getEngineName());
-	}
-
-	private String getCloneName() throws EngineException {
-
-		if(WORKING_ENGINES.size() == 0)
-			return props.getBaseEngineName() + "0";
-
-		return props.getBaseEngineName() + getNextCloneNumber();
-	}
-
-	private String getNextCloneNumber() {
-		WORKING_ENGINES.sort(this::engineNameComparator);
-
-		String biggestVmNameNumber = WORKING_ENGINES.get(WORKING_ENGINES.size() - 1);
-
-		int biggestVmNumber = Integer.parseInt(biggestVmNameNumber.substring(biggestVmNameNumber.length() - 1));
-
-		if(biggestVmNumber >= WORKING_ENGINES.size() - 1)
-			biggestVmNumber = searchFreeVm(biggestVmNumber);
-
-		return (biggestVmNumber + 1) + "";
-	}
-
-	private int searchFreeVm(int biggestVmNumber) {
-		int [] freeEngines = new int[WORKING_ENGINES.size() - 1];
-
-		for (int idx = 0; idx < WORKING_ENGINES.size() - 1; idx++)
-			freeEngines[idx] = (engineNumberComparator(WORKING_ENGINES.get(idx), idx) == 0) ? 0 : 1;
-
-		for (int idx = freeEngines.length - 1; idx >= 0 ; idx++) {
-			if(freeEngines[idx] == 1)
-				return freeEngines[idx];
-		}
-
-		return biggestVmNumber;
-	}
-
-	private int engineNumberComparator(String eName, int number) {
-		int e1 = Integer.parseInt(eName.substring(eName.length() - 2));
-		return number - e1;
-	}
-
-	private int engineNameComparator(String eName1, String eName2) {
-		int e1 = Integer.parseInt(eName1.substring(eName1.length() - 2));
-		int e2 = Integer.parseInt(eName2.substring(eName2.length() - 2));
-		return e1 - e2;
 	}
 
 	private boolean shouldClone() throws EngineException {
