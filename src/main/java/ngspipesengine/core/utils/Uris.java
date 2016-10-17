@@ -125,11 +125,8 @@ public class Uris {
 			pipelinesDirectory.mkdirs();		
 
 		System.out.println("Loading engine resources");
-		if(!dslJar.exists())		
-			copyLibrary(props, tag, DSL_JAR_ORIGIN_PATH);
-
-		if(!repositoryJar.exists())
-			copyLibrary(props, tag, REPOSITORY_JAR_ORIGIN_PATH);
+		copyLibrary(props, tag, DSL_JAR_ORIGIN_PATH);
+		copyLibrary(props, tag, REPOSITORY_JAR_ORIGIN_PATH);
 
 		if(!jsonJar.exists())		
 			copyLibrary(props, tag, JSON_JAR_ORIGIN_PATH);
