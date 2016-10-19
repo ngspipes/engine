@@ -37,7 +37,7 @@ public class PipelineManager {
 	private static Collection<Pipeline> PIPELINES;
 
 
-	public static void load() throws EnginePresentationException {
+	public static void load() {
 		synchronized (lock){
 			try {
 				String serializedPipelines = getSerializedPipelines();
@@ -45,8 +45,8 @@ public class PipelineManager {
 				PIPELINES = PipelineSerializer.deserialize(serializedPipelines);
 
 				cleanPipelines(PIPELINES);
-			} catch (EngineException | IOException ex) {
-				throw new EnginePresentationException("Error loading pipelines!", ex);
+			} catch (EnginePresentationException | EngineException | IOException ex) {
+			//	throw new EnginePresentationException("Error loading pipelines!", ex);
 			} finally{
 				if(PIPELINES == null)
 					PIPELINES = new LinkedList<>();
