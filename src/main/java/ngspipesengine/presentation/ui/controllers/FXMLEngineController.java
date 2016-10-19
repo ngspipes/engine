@@ -83,13 +83,8 @@ public class FXMLEngineController implements IInitializable<Void> {
 		
 		pipelinesPallet = new PipelineListPallet(tFPipelinesFilter, lvPipelines);
 		WorkQueue.run(()->{
-			try {
-				PipelineManager.load();
-
-				Platform.runLater(()->pipelinesPallet.load(PipelineManager.getAll()));
-			} catch (EnginePresentationException ex) {
-				Platform.runLater(()->Dialog.showError("Error loading previous pipelines!"));
-			}
+			PipelineManager.load();
+			Platform.runLater(()->pipelinesPallet.load(PipelineManager.getAll()));
 		});
 		
 		enginesPallet = new EngineListPallet(tFEnginesFilter, lvEngines);
