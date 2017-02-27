@@ -114,8 +114,8 @@ public class Uris {
 
 		File logDirectory = new File(Uris.LOG_FOLDER_PATH);
 		File pipelinesDirectory = new File(Uris.PIPELINES_FOLDER_PATH);
-		File dslJar = new File(ENGINE_PATH + SEP + DSL_JAR_NAME);
-		File repositoryJar = new File(ENGINE_PATH + SEP + REPOSITORY_JAR_NAME);
+	//	File dslJar = new File(ENGINE_PATH + SEP + DSL_JAR_NAME);
+	//	File repositoryJar = new File(ENGINE_PATH + SEP + REPOSITORY_JAR_NAME);
 		File jsonJar = new File(ENGINE_PATH + SEP + JSON_JAR_NAME);
 		
 		if(!logDirectory.exists())
